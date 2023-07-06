@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class ShopMenu : MonoBehaviour
 {
+    public TextMeshProUGUI money;
     public TextMeshProUGUI itemTitle;
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemPrice;
@@ -15,8 +16,8 @@ public class ShopMenu : MonoBehaviour
 
     Purchasable currentPurchasable;
 
-    float totalMoney;
-    float currentMoney;
+    const float totalMoney = 200.00f;
+    float currentMoney = totalMoney;
 
     public enum Categories {SUBSTRATE,ORNAMENTS,LIVEPLANTS,HIDES,HEATING};
     public List<GameObject> categoryUIs = new List<GameObject>();
@@ -29,6 +30,7 @@ public class ShopMenu : MonoBehaviour
     {
         //instantiate the uis
         //connect their buttons up
+        money.text = "Your cash: £" + currentMoney.ToString("#.00");
         foreach(Purchasable purchasable in purchasables)
         {
             GameObject instance = Instantiate(purchasePrefab);
@@ -62,10 +64,24 @@ public class ShopMenu : MonoBehaviour
     void Select(Purchasable purchasable)
     {
         buy.onClick.RemoveAllListeners();
-        //buy.onClick.AddListener(delegate { }); //connect buy to inventory's get function based on this purchasable
+        buy.onClick.AddListener(Buy);
         itemTitle.text = purchasable.displayName;
         itemPrice.text = purchasable.price.ToString();
         itemDescription.text = purchasable.description;
         mesh.mesh = purchasable.model;
+    }
+
+    void Buy()
+    {
+        //make the inventory buy this item
+        if (currentMoney-currentPurchasable.price > 0.00)
+        {
+            currentMoney -= currentPurchasable.price;
+        }
+        else
+        {
+            print("Not enough money!");
+        }
+        money.text = "Your cash: £" + currentMoney.ToString("#.00");
     }
 }
