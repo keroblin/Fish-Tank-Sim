@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 586ec84cdced4ec4f81bad6af536362a, type: 3}
-  m_Name: Goldfish
+  m_Name: Guppy
   m_EditorClassIdentifier: 
   minPH: 6.5
-  maxPH: 8.5
-  minHardness: 5
-  maxHardness: 12
-  minTemp: 33
-  maxTemp: 80
-  minLight: 0.3
-  maxLight: 1
-  fishIcon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  maxPH: 8
+  minHardness: 6
+  maxHardness: 8
+  minTemp: 68
+  maxTemp: 78
+  minLight: 0.4
+  maxLight: 0.8
+  fishIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   fishMesh: {fileID: 0}
-  fishName: Goldfish
+  fishName: Guppy

@@ -9,8 +9,15 @@ public class ShopMenu : ItemList
 {
     public Button buy;
 
+    public override void OnReady()
+    {
+        purchasables = Manager.Instance.allPurchasables;
+        base.OnReady();
+    }
+
     public override void PurchaseableSetter(PurchasableUI purchasableUI)
     {
+        Debug.Log("Instantiating on shopmenu " + purchasableUI.displayName);
         purchasableUI.button.onClick.AddListener(delegate { Select(purchasableUI.purchasable); });
     }
 
@@ -23,16 +30,7 @@ public class ShopMenu : ItemList
 
     void Buy()
     {
-        //make the inventory buy this item
-        if (currentMoney-currentPurchasable.price > 0.00)
-        {
-            currentMoney -= currentPurchasable.price;
-            //add to inventory here
-            money.text = "Your cash: £" + currentMoney.ToString("#.00");
-        }
-        else
-        {
-            print("Not enough money!");
-        }
+        Manager.Instance.Buy(currentPurchasable);
+        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
     }
 }

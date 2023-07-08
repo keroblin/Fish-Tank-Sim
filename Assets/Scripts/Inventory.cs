@@ -9,6 +9,14 @@ public class Inventory : ItemList
     public Button place;
     public Button sell;
 
+    public override void OnReady()
+    {
+        Manager.Instance.onBuy.AddListener(UpdateInv);
+        Manager.Instance.onSell.AddListener(UpdateInv);
+        UpdateInv();
+        base.OnReady();
+    }
+
     public override void PurchaseableSetter(PurchasableUI purchasableUI)
     {
         purchasableUI.button.onClick.AddListener(delegate { Select(purchasableUI.purchasable); });
@@ -23,6 +31,18 @@ public class Inventory : ItemList
         base.Select(purchasable);
     }
 
+    void UpdateInv()
+    {
+        purchasables = Manager.Instance.inventory;
+        //DELETE ME ASAP //////////////////////////////////
+        foreach (PurchasableUI ui in purchasableUIs) //VERY VERY TEMPORARY AND EXPENSIVE JUST TO TEST UNTIL I DO POOLING
+        {
+            Destroy(ui.gameObject);
+        }
+        purchasableUIs.Clear();
+        base.OnReady();
+    }
+
     void Place()
     {
         //open placing menu
@@ -32,7 +52,11 @@ public class Inventory : ItemList
     void Sell()
     {
         //remove from inventory here
-        currentMoney += currentPurchasable.price;
-        money.text = "Your cash: £" + currentMoney.ToString("#.00");
+        Manager.Instance.Sell(currentPurchasable);
+        UpdateInv();
+        
+        //purchasableUIs.Remove(currentPurchasable);
+        //need some way to update it here
+        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
     }
 }

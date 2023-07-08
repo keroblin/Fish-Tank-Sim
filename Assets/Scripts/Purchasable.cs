@@ -9,8 +9,8 @@ public class Purchasable : ScriptableObject
     public string displayName;
     public string description;
     public float price;
-    public ShopMenu.Categories category;
-    public float pHmod;
+    public ItemList.Categories category;
+    public float pHMod;
     public float dGHMod;
     public float lightMod;
     public float tempMod;
