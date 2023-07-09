@@ -31,14 +31,19 @@ public class Manager : MonoBehaviour
     public UnityEvent onBuy;
     public UnityEvent onSell;
 
+    bool useDefault = false;
+
     private void Awake()
     {
         //replace these w saved values
         currentMoney = totalMoney;
-        tankPh = basePh;
-        tankLight = baseLight;
-        tankTemp = baseTemp;
-        tankHardness = baseHardness;
+        if(useDefault)
+        {
+            tankPh = basePh;
+            tankLight = baseLight;
+            tankTemp = baseTemp;
+            tankHardness = baseHardness;
+        }
         Instance = this;
     }
     private void Start()

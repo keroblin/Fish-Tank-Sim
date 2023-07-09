@@ -17,6 +17,9 @@ public class CategoryList : MonoBehaviour
     {
     }
 
+    //to implement! was buggy
+    //auto connect category buttons to their objects to toggle
+
     /*void Start()
     {
         for (int i = 0; i < categoryUIs.Count-1; i++)

@@ -18,17 +18,21 @@ public class Fish: ScriptableObject
     {
         float happiness = CalculateHappiness();
         Debug.Log(happiness + " is " + fishName + "'s happiness");
-        if(happiness < 0.5)
+
+        if(happiness > 0.55)
         {
-            return Manager.Instance.sad;
+            Debug.Log(fishName + " is happy ");
+            return Manager.Instance.happy;
         }
-        else if (happiness < 0.2)
+        else if(happiness > 0.3)
         {
+            Debug.Log(fishName + " is ok");
             return Manager.Instance.ok;
         }
         else
         {
-            return Manager.Instance.happy;
+            Debug.Log(fishName + " is sad");
+            return Manager.Instance.sad;
         }
     }
 
@@ -42,25 +46,31 @@ public class Fish: ScriptableObject
         float tempCompat = GetCompat(minTemp, maxTemp, Manager.Instance.tankTemp);
         float lightCompat = GetCompat(minLight, maxLight, Manager.Instance.tankLight);
 
-        //work out if stat is within risk range
-        //work out how far from average stat is
-        //if outside of range then its 0
+        Debug.Log("ph compat on " + fishName + " is " + pHCompat.ToString());
+        Debug.Log("temp compat on " + fishName + " is " + tempCompat.ToString());
+        Debug.Log("light compat on " + fishName + " is " + lightCompat.ToString());
+        Debug.Log("hardness compat on " + fishName + " is " + hardnessCompat.ToString());
 
-        //get average of all percentages as happiness
-
-        return 10* (pHCompat + hardnessCompat + tempCompat + lightCompat) / 4;
+        return (pHCompat + hardnessCompat + tempCompat + lightCompat) / 4;
     }
 
     float GetCompat(float min, float max, float stat)
     {
-        if (stat < max && stat > min)
-        {
-            float center = (min + max) / 2;
-            return Mathf.Abs(center - stat) / (min+center);
-        }
-        else //out of range
+        if (stat > max || stat < min) //out of range
         {
             return 0.0f;
+        }
+        else
+        {
+            if (min != max) //if within range
+            {
+                return 1f - Mathf.Abs(0.5f - (stat - min) / (max - min)) * 2;
+            }
+            else //if there's no range and the fish is very picky
+            {
+                return 1.0f;
+            }
+
         }
     }
 }

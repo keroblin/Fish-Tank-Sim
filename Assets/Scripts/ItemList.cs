@@ -14,6 +14,8 @@ public class ItemList : CategoryList
 
     public Purchasable currentPurchasable;
 
+    Purchasable lastPurchasable;
+
     public enum Categories { SUBSTRATE, ORNAMENTS, LIVEPLANTS, HIDES, HEATING };
 
     public List<Purchasable> purchasables = new List<Purchasable>();
@@ -35,9 +37,30 @@ public class ItemList : CategoryList
             purchasableUIs.Add(ui);
         }
 
-        currentPurchasable = purchasables[0];
-        SwapCategory((int)currentPurchasable.category);
-        Select(currentPurchasable);
+        UpdateSelection();
+    }
+
+    private void OnEnable()
+    {
+        UpdateSelection();
+    }
+
+    void UpdateSelection()
+    {
+        if (purchasables.Count != 0)
+        {
+            if(lastPurchasable == null)
+            {
+                currentPurchasable = purchasables[purchasables.Count - 1];
+            }
+            else
+            {
+                currentPurchasable = lastPurchasable;
+            }
+            SwapCategory((int)currentPurchasable.category);
+            Select(currentPurchasable);
+        }
+        //otherwise do a no items got thing here
     }
 
     public virtual void PurchaseableSetter(PurchasableUI purchasableUI)
@@ -46,6 +69,7 @@ public class ItemList : CategoryList
 
     public virtual void Select(Purchasable purchasable)
     {
+        lastPurchasable = currentPurchasable;
         currentPurchasable = purchasable;
         itemTitle.text = purchasable.displayName;
         itemPrice.text = purchasable.price.ToString();
