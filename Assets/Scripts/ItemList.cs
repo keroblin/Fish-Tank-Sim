@@ -63,6 +63,7 @@ public class ItemList : CategoryList
         //otherwise do a no items got thing here
     }
 
+    //interrupts the ready after an instance is created to set up any variables needed on the ui
     public virtual void PurchaseableSetter(PurchasableUI purchasableUI)
     {
     }
