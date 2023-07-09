@@ -31,6 +31,9 @@ public class Manager : MonoBehaviour
     public UnityEvent onBuy;
     public UnityEvent onSell;
 
+    public Pool purchasableUiPool;
+    public Pool placeablePool;
+
     bool useDefault = false;
 
     private void Awake()

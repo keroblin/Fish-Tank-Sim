@@ -17,21 +17,17 @@ public class Fish: ScriptableObject
     public Sprite GetHappinessIcon()
     {
         float happiness = CalculateHappiness();
-        Debug.Log(happiness + " is " + fishName + "'s happiness");
 
         if(happiness > 0.55)
         {
-            Debug.Log(fishName + " is happy ");
             return Manager.Instance.happy;
         }
         else if(happiness > 0.3)
         {
-            Debug.Log(fishName + " is ok");
             return Manager.Instance.ok;
         }
         else
         {
-            Debug.Log(fishName + " is sad");
             return Manager.Instance.sad;
         }
     }
@@ -45,11 +41,6 @@ public class Fish: ScriptableObject
         float hardnessCompat = GetCompat(minHardness, maxHardness, Manager.Instance.tankHardness);
         float tempCompat = GetCompat(minTemp, maxTemp, Manager.Instance.tankTemp);
         float lightCompat = GetCompat(minLight, maxLight, Manager.Instance.tankLight);
-
-        Debug.Log("ph compat on " + fishName + " is " + pHCompat.ToString());
-        Debug.Log("temp compat on " + fishName + " is " + tempCompat.ToString());
-        Debug.Log("light compat on " + fishName + " is " + lightCompat.ToString());
-        Debug.Log("hardness compat on " + fishName + " is " + hardnessCompat.ToString());
 
         return (pHCompat + hardnessCompat + tempCompat + lightCompat) / 4;
     }

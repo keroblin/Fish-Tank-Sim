@@ -14,25 +14,26 @@ public class ItemList : CategoryList
 
     public Purchasable currentPurchasable;
 
-    Purchasable lastPurchasable;
-
     public enum Categories { SUBSTRATE, ORNAMENTS, LIVEPLANTS, HIDES, HEATING };
 
     public List<Purchasable> purchasables = new List<Purchasable>();
     public GameObject purchasePrefab;
     public List<PurchasableUI> purchasableUIs = new List<PurchasableUI>();
+
+    public Pool pool;
     public override void OnReady()
     {
         //instantiate the uis
         //connect their buttons up
+        pool = Manager.Instance.purchasableUiPool;
         money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
         foreach (Purchasable purchasable in purchasables)
         {
-            GameObject instance = Instantiate(purchasePrefab);
+            GameObject instance = pool.Pull();
             PurchasableUI ui = instance.GetComponent<PurchasableUI>();
             ui.purchasable = purchasable;
             PurchaseableSetter(ui);
-            ui.Set();
+            ui.Set(purchasable);
             instance.transform.SetParent(categoryUIs[(int)purchasable.category].transform);
             purchasableUIs.Add(ui);
         }
@@ -45,18 +46,11 @@ public class ItemList : CategoryList
         UpdateSelection();
     }
 
-    void UpdateSelection()
+    public void UpdateSelection()
     {
         if (purchasables.Count != 0)
         {
-            if(lastPurchasable == null)
-            {
-                currentPurchasable = purchasables[purchasables.Count - 1];
-            }
-            else
-            {
-                currentPurchasable = lastPurchasable;
-            }
+            currentPurchasable = purchasables[purchasables.Count - 1];
             SwapCategory((int)currentPurchasable.category);
             Select(currentPurchasable);
         }
@@ -70,7 +64,6 @@ public class ItemList : CategoryList
 
     public virtual void Select(Purchasable purchasable)
     {
-        lastPurchasable = currentPurchasable;
         currentPurchasable = purchasable;
         itemTitle.text = purchasable.displayName;
         itemPrice.text = purchasable.price.ToString();

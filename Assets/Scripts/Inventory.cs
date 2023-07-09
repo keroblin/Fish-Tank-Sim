@@ -33,14 +33,52 @@ public class Inventory : ItemList
 
     void UpdateInv()
     {
-        purchasables = Manager.Instance.inventory;
-        //DELETE ME ASAP //////////////////////////////////
-        foreach (PurchasableUI ui in purchasableUIs) //VERY VERY TEMPORARY AND EXPENSIVE JUST TO TEST UNTIL I DO POOLING
+        List<Purchasable> updatedInventory = Manager.Instance.inventory;
+
+        if (purchasableUIs.Count > updatedInventory.Count) //if there are more than required, remove them
         {
-            Destroy(ui.gameObject);
+            List<PurchasableUI> excess;
+            if (updatedInventory.Count > 0) 
+            {
+                excess = purchasableUIs.GetRange(updatedInventory.Count - 1, purchasableUIs.Count - 1);
+                foreach (PurchasableUI ui in excess)
+                {
+                    Debug.Log("Returning " + ui.purchasable.displayName);
+                    pool.Return(ui.gameObject);
+                }
+                purchasableUIs.RemoveRange(updatedInventory.Count - 1, purchasableUIs.Count - 1); //remove any excess objects
+            }
+            else
+            {
+                pool.Return(purchasableUIs[0].gameObject);
+                purchasableUIs.RemoveAt(0);
+            }
+
+            
         }
-        purchasableUIs.Clear();
-        base.OnReady();
+        else //otherwise add or set them them
+        {
+            for (int i = 0; i < updatedInventory.Count; i++)
+            {
+                if (i < purchasableUIs.Count) //if there is an object already
+                {
+                    purchasableUIs[i].Set(updatedInventory[i]);
+                    continue;
+                }
+                else //if there isnt an object at this index, make a new one
+                {
+                    GameObject instance = pool.Pull();
+                    PurchasableUI ui = instance.GetComponent<PurchasableUI>();
+                    ui.Set(updatedInventory[i]);
+                    ui.button.onClick.AddListener(delegate { Select(ui.purchasable); });
+                    instance.transform.SetParent(categoryUIs[(int)updatedInventory[i].category].transform);
+                    purchasableUIs.Add(ui);
+                }
+            }
+        }
+
+        purchasables = updatedInventory;
+        UpdateSelection();
     }
 
     void Place()
