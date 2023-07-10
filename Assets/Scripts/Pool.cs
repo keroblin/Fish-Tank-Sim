@@ -32,6 +32,7 @@ public class Pool : MonoBehaviour
         if (pool.Count > 0)
         {
             GameObject objToReturn = pool[0];
+            objToReturn.SetActive(true);
             Debug.Log("Pool amount left: " + pool.Count);
             pool.RemoveAt(0);
             return objToReturn;

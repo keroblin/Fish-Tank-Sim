@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1864532266863590185
 MeshFilter:
@@ -118,7 +118,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d43efb2587b85654084b1904b3842dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshFilter: {fileID: 0}
+  meshFilter: {fileID: 1864532266863590185}
   purchasable: {fileID: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   menuOffset: {x: 0, y: 0, z: 0}
+  selected: 0
+  placeableClicked:
+    m_PersistentCalls:
+      m_Calls: []

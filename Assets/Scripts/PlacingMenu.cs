@@ -6,14 +6,26 @@ using UnityEngine.UI;
 
 public class PlacingMenu : MonoBehaviour
 {
+    //handles putting back and selling the selected placeable
+    public GameObject visuals;
     public Button move;
-    public Button rotate;
+    public Button close;
     public Button putBack;
     public Button sell;
+    public Placeable currentPlaceable;
 
-    Vector3 baseOffset = new Vector3(0, 2, -2);
+    Vector3 baseOffset = new Vector3(0, 1.3f, 4);
+
+    private void Start()
+    {
+        sell.onClick.AddListener(Unset);
+        putBack.onClick.AddListener(Unset);
+        close.onClick.AddListener(Unset);
+    }
+
     public void Set(Placeable placeable)
     {
+        currentPlaceable = placeable;
         Vector3 offset;
         if (placeable.menuOffset == Vector3.zero)
         {
@@ -26,19 +38,24 @@ public class PlacingMenu : MonoBehaviour
         //move to the placeable
         transform.SetParent(placeable.gameObject.transform, false);
         transform.localPosition = offset;
-        //connect up all events to the placeable
-        move.onClick.AddListener(placeable.StartMove);
-        rotate.onClick.AddListener(placeable.StartRotate);
-        putBack.onClick.AddListener(placeable.PutBack);
-        sell.onClick.AddListener(placeable.Sell);
+        visuals.SetActive(true);
     }
     public void Unset()
     {
-        move.onClick.RemoveAllListeners();
-        rotate.onClick.RemoveAllListeners();
-        putBack.onClick.RemoveAllListeners();
-        sell.onClick.RemoveAllListeners();
-        gameObject.SetActive(false);
+        currentPlaceable.selected = false;
         transform.SetParent(null);
+        visuals.SetActive(false);
+    }
+
+    public void Select(Placeable placeable)
+    {
+        if(currentPlaceable != placeable)
+        {
+            Set(placeable);
+        }
+        else
+        {
+            Unset();
+        }
     }
 }

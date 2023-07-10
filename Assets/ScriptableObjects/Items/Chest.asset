@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03683c64268e664091ab2b4a5dda7b4, type: 3}
   m_Name: Chest
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
+  model: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
   displayName: Chest
   description: Whats inside the box?
   price: 10
   category: 1
-  pHmod: 0
+  pHMod: 0
   dGHMod: 0
-  lightMod: 0
-  tempMod: 0
+  lightMod: 0.1
+  tempMod: 0.01

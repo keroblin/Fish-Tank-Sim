@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03683c64268e664091ab2b4a5dda7b4, type: 3}
   m_Name: Small Heater
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
+  model: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   displayName: Small Floating Heater
   description: Packs a punch!
   price: 100
   category: 4
-  pHmod: 0
+  pHMod: 0
   dGHMod: 0
   lightMod: 0
   tempMod: 0

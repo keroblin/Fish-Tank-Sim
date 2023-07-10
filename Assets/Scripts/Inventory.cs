@@ -7,10 +7,18 @@ using UnityEngine;
 public class Inventory : ItemList
 {
     public Button place;
+    //public Button putBack;
     public Button sell;
+    public PlacingMenu menu;
+    public List<Purchasable> purchasablesPlaced = new List<Purchasable>();
+    public Pool placeablePool;
 
     public override void OnReady()
     {
+        gameObject.SetActive(false);
+        menu = Manager.Instance.placingMenu;
+        menu.putBack.onClick.AddListener(PutBackPlaceable);
+        menu.sell.onClick.AddListener(SellPlaceable);
         Manager.Instance.onBuy.AddListener(UpdateInv);
         Manager.Instance.onSell.AddListener(UpdateInv);
         UpdateInv();
@@ -25,9 +33,17 @@ public class Inventory : ItemList
     public override void Select(Purchasable purchasable)
     {
         place.onClick.RemoveAllListeners();
-        place.onClick.AddListener(Place);
+        if (purchasablesPlaced.Contains(purchasable))
+        {
+            place.interactable = false;
+        }
+        else
+        {
+            place.interactable = true;
+            place.onClick.AddListener(PlaceButtonClicked);
+        }
         sell.onClick.RemoveAllListeners();
-        sell.onClick.AddListener(Sell);
+        sell.onClick.AddListener(delegate { Manager.Instance.Sell(currentPurchasable); });
         base.Select(purchasable);
     }
 
@@ -69,8 +85,16 @@ public class Inventory : ItemList
                 {
                     GameObject instance = pool.Pull();
                     PurchasableUI ui = instance.GetComponent<PurchasableUI>();
+                    if (purchasablesPlaced.Count > 0 && purchasablesPlaced.Contains(purchasables[i]))
+                    {
+                        ui.button.interactable = false;
+                    }
+                    else
+                    {
+                        ui.button.interactable = true;
+                        ui.button.onClick.AddListener(delegate { Select(ui.purchasable); });
+                    }
                     ui.Set(updatedInventory[i]);
-                    ui.button.onClick.AddListener(delegate { Select(ui.purchasable); });
                     instance.transform.SetParent(categoryUIs[(int)updatedInventory[i].category].transform);
                     purchasableUIs.Add(ui);
                 }
@@ -81,20 +105,34 @@ public class Inventory : ItemList
         UpdateSelection();
     }
 
-    void Place()
+    void PlaceButtonClicked()
     {
         //open placing menu
         //hide our menu
+        if (!purchasablesPlaced.Contains(currentPurchasable))
+        {
+            purchasableUIs[purchasables.IndexOf(currentPurchasable)].button.interactable = false;
+            GameObject obj = placeablePool.Pull();
+            Placeable placeable = obj.GetComponent<Placeable>();
+            placeable.Set(currentPurchasable);
+            placeable.placeableClicked.AddListener(delegate { menu.Select(placeable); });
+            Manager.Instance.AddModifiers(currentPurchasable);
+        }
     }
 
-    void Sell()
+    public void SellPlaceable()
     {
-        //remove from inventory here
-        Manager.Instance.Sell(currentPurchasable);
-        UpdateInv();
-        
-        //purchasableUIs.Remove(currentPurchasable);
-        //need some way to update it here
-        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
+        Placeable placeable = menu.currentPlaceable;
+        placeablePool.Return(placeable.gameObject);
+        Manager.Instance.RemoveModifiers(placeable.purchasable);
+        Manager.Instance.Sell(placeable.purchasable);
+    }
+    public void PutBackPlaceable()
+    {
+        Placeable placeable = menu.currentPlaceable;
+        placeablePool.Return(placeable.gameObject);
+        purchasablesPlaced.Remove(placeable.purchasable);
+        purchasableUIs[purchasables.IndexOf(placeable.purchasable)].button.interactable = true;
+        //enable the buttons again
     }
 }

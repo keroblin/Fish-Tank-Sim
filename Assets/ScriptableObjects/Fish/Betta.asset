@@ -20,6 +20,6 @@ MonoBehaviour:
   maxTemp: 79
   minLight: 0
   maxLight: 0.4
-  fishIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  fishIcon: {fileID: 21300000, guid: 56865bbab712e9a4b8bc54c19e482cdd, type: 3}
   fishMesh: {fileID: 0}
   fishName: Betta

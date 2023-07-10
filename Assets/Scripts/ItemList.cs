@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class ItemList : CategoryList
 {
-    public TextMeshProUGUI money;
     public TextMeshProUGUI itemTitle;
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemPrice;
@@ -26,7 +25,6 @@ public class ItemList : CategoryList
         //instantiate the uis
         //connect their buttons up
         pool = Manager.Instance.purchasableUiPool;
-        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
         foreach (Purchasable purchasable in purchasables)
         {
             GameObject instance = pool.Pull();

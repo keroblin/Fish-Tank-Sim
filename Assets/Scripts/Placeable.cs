@@ -1,64 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class Placeable : MonoBehaviour
 {
+    //handles own movement
     public MeshFilter meshFilter;
     public Purchasable purchasable;
     public Color color = Color.white;
     public Vector3 menuOffset;
+    public bool selected = false;
+    public UnityEvent placeableClicked;
+    //Camera cam;
 
-    void Start()
+    private void Start()
     {
-        //meshFilter.mesh = purchasable.model;
+        //cam = Camera.main;
     }
 
-    public void StartMove()
+    public void Set(Purchasable _purchasable)
     {
-        //idk yet! maybe i'll just do it w arrows in the placeable menu
-    }
-    public void StartRotate()
-    {
-        //idk yet! maybe i'll just do it w arrows in the placeable menu
-    }
-    public void Sell()
-    {
-        //do stat stuff here
-        //deal w this object
-        Manager.Instance.OnPlaceableRemoved(this);
-        Manager.Instance.Sell(purchasable);
-    }
-    public void PutBack()
-    {
-        Manager.Instance.OnPlaceableRemoved(this);
-        //Manager.Instance.inventory.Add(purchasable);
-    }
-
-    void SetMove()
-    {
-
-    }
-
-    void SetColor()
-    {
-
-    }
-
-    void OnPlace()
-    {
-        Manager.Instance.OnPlaceablePlaced(this);
-    }
-
-    void PickUp()
-    {
-        Manager.Instance.OnPlaceableRemoved(this);
-        Manager.Instance.placingMenu.Set(this);
+        purchasable = _purchasable;
+        meshFilter.mesh = purchasable.model;
+        transform.SetParent(Manager.Instance.placingRef.transform, false);
     }
 
     private void OnMouseDown()
     {
         //open menu
-        PickUp();
+        placeableClicked.Invoke();
     }
+    /*private void OnMouseDrag()
+    {
+        Vector3 target = cam.ScreenToWorldPoint(Input.mousePosition);
+        if (target < )
+            transform.position = cam.ScreenToWorldPoint(Input.mousePosition);
+    }*/
 }

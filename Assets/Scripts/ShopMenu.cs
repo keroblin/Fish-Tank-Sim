@@ -24,13 +24,7 @@ public class ShopMenu : ItemList
     public override void Select(Purchasable purchasable)
     {
         buy.onClick.RemoveAllListeners();
-        buy.onClick.AddListener(Buy);
+        buy.onClick.AddListener(delegate { Manager.Instance.Buy(currentPurchasable); });
         base.Select(purchasable);
-    }
-
-    void Buy()
-    {
-        Manager.Instance.Buy(currentPurchasable);
-        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
     }
 }

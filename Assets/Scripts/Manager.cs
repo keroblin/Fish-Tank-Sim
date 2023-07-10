@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class Manager : MonoBehaviour
 {
     //a class that is singleton to store essential variables for many different types of objects and situations
     public static Manager Instance;
     public PlacingMenu placingMenu;
+    public GameObject placingRef;
     const float basePh = 7f, baseLight = .5f, baseTemp = 68f, baseHardness = 7f;
     const float totalMoney = 200.00f;
     public float currentMoney = totalMoney;
-
+    public TextMeshProUGUI money;
 
     public float tankPh = basePh;
     [Range(0f, 1f)]
@@ -25,22 +28,29 @@ public class Manager : MonoBehaviour
 
     public List<Purchasable> allPurchasables;
     public List<Purchasable> inventory;
-    public List<Placeable> placedObjects;
 
     public UnityEvent onStatUpdate;
     public UnityEvent onBuy;
     public UnityEvent onSell;
 
     public Pool purchasableUiPool;
-    public Pool placeablePool;
+
+    //public Vector3 tankBounds;
 
     bool useDefault = false;
+
+    private void OnDrawGizmos()
+    {
+        //tank bounds testing
+        //Gizmos.color = new Color(255,0,255,.3f);
+        //Gizmos.DrawCube(new Vector3(0,tankBounds.y/2,0), tankBounds);
+    }
 
     private void Awake()
     {
         //replace these w saved values
         currentMoney = totalMoney;
-        if(useDefault)
+        if (useDefault)
         {
             tankPh = basePh;
             tankLight = baseLight;
@@ -53,23 +63,20 @@ public class Manager : MonoBehaviour
     {
         onStatUpdate.Invoke();
     }
-
-    public void OnPlaceablePlaced(Placeable placeable)
+    public void AddModifiers(Purchasable purchasable)
     {
-        placedObjects.Add(placeable);
-        tankPh += placeable.purchasable.pHMod;
-        tankTemp += placeable.purchasable.tempMod;
-        tankHardness += placeable.purchasable.dGHMod;
-        tankLight += placeable.purchasable.lightMod;
+        tankPh += purchasable.pHMod;
+        tankTemp += purchasable.tempMod;
+        tankHardness += purchasable.dGHMod;
+        tankLight += purchasable.lightMod;
         onStatUpdate.Invoke();
     }
-    public void OnPlaceableRemoved(Placeable placeable)
+    public void RemoveModifiers(Purchasable purchasable)
     {
-        placedObjects.Remove(placeable);
-        tankPh -= placeable.purchasable.pHMod;
-        tankTemp -= placeable.purchasable.tempMod;
-        tankHardness -= placeable.purchasable.dGHMod;
-        tankLight -= placeable.purchasable.lightMod;
+        tankPh -= purchasable.pHMod;
+        tankTemp -= purchasable.tempMod;
+        tankHardness -= purchasable.dGHMod;
+        tankLight -= purchasable.lightMod;
         onStatUpdate.Invoke();
     }
 
@@ -84,6 +91,7 @@ public class Manager : MonoBehaviour
         {
             print("Not enough money!");
         }
+        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
         onBuy.Invoke();
     }
 
@@ -94,6 +102,7 @@ public class Manager : MonoBehaviour
             inventory.Remove(purchasable);
             currentMoney += purchasable.price;
         }
+        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
         onSell.Invoke();
     }
 }
