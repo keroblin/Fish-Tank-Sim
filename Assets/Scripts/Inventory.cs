@@ -11,6 +11,7 @@ public class Inventory : ItemList
     public Button sell;
     public PlacingMenu menu;
     public List<Purchasable> purchasablesPlaced = new List<Purchasable>();
+    public Purchasable currentSubstrate;
     public Pool placeablePool;
 
     public override void OnReady()
@@ -43,7 +44,7 @@ public class Inventory : ItemList
             place.onClick.AddListener(PlaceButtonClicked);
         }
         sell.onClick.RemoveAllListeners();
-        sell.onClick.AddListener(delegate { Manager.Instance.Sell(currentPurchasable); });
+        sell.onClick.AddListener(Sell);
         base.Select(purchasable);
     }
 
@@ -117,6 +118,18 @@ public class Inventory : ItemList
             placeable.Set(currentPurchasable);
             placeable.placeableClicked.AddListener(delegate { menu.Select(placeable); });
             Manager.Instance.AddModifiers(currentPurchasable);
+        }
+    }
+
+    void Sell()
+    {
+        if (purchasablesPlaced.Contains(currentPurchasable))
+        {
+            SellPlaceable();
+        }
+        else
+        {
+            Manager.Instance.Sell(currentPurchasable);
         }
     }
 

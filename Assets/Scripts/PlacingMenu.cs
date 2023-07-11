@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class PlacingMenu : MonoBehaviour
@@ -14,7 +13,7 @@ public class PlacingMenu : MonoBehaviour
     public Button sell;
     public Placeable currentPlaceable;
 
-    Vector3 baseOffset = new Vector3(0, 1.3f, 4);
+    Vector3 baseOffset = new Vector3(0, 1.3f, 0f);
 
     private void Start()
     {
@@ -25,7 +24,12 @@ public class PlacingMenu : MonoBehaviour
 
     public void Set(Placeable placeable)
     {
+        if (currentPlaceable)
+        {
+            currentPlaceable.selected = false;
+        }
         currentPlaceable = placeable;
+        placeable.selected = true;
         Vector3 offset;
         if (placeable.menuOffset == Vector3.zero)
         {
@@ -43,13 +47,14 @@ public class PlacingMenu : MonoBehaviour
     public void Unset()
     {
         currentPlaceable.selected = false;
+        currentPlaceable = null;
         transform.SetParent(null);
         visuals.SetActive(false);
     }
 
     public void Select(Placeable placeable)
     {
-        if(currentPlaceable != placeable)
+        if(currentPlaceable != placeable || (placeable.selected == false && !visuals.activeSelf))
         {
             Set(placeable);
         }

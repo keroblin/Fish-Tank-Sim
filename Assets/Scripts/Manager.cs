@@ -35,15 +35,15 @@ public class Manager : MonoBehaviour
 
     public Pool purchasableUiPool;
 
-    //public Vector3 tankBounds;
+    public Bounds tankBounds;
 
     bool useDefault = false;
 
     private void OnDrawGizmos()
     {
         //tank bounds testing
-        //Gizmos.color = new Color(255,0,255,.3f);
-        //Gizmos.DrawCube(new Vector3(0,tankBounds.y/2,0), tankBounds);
+        Gizmos.color = new Color(255,0,255,.3f);
+        Gizmos.DrawCube(new Vector3(0,tankBounds.extents.y/2,0), tankBounds.size);
     }
 
     private void Awake()

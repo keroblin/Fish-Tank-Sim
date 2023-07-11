@@ -16,6 +16,7 @@ public class Pool : MonoBehaviour
             GameObject instance = Instantiate(objToPool);
             instance.transform.parent = this.transform;
             instance.name = objToPool.name;
+            instance.SetActive(false);
             Debug.Log("Made child " + (i + 1));
         }
     }
