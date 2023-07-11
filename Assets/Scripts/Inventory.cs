@@ -139,6 +139,7 @@ public class Inventory : ItemList
         placeablePool.Return(placeable.gameObject);
         Manager.Instance.RemoveModifiers(placeable.purchasable);
         Manager.Instance.Sell(placeable.purchasable);
+        menu.currentPlaceable = null;
     }
     public void PutBackPlaceable()
     {

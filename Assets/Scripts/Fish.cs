@@ -13,6 +13,7 @@ public class Fish: ScriptableObject
     public Sprite fishIcon;
     public Mesh fishMesh;
     public string fishName;
+    public string fishDescription;
 
     public Sprite GetHappinessIcon()
     {

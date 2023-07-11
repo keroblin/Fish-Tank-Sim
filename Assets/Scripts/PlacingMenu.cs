@@ -47,7 +47,6 @@ public class PlacingMenu : MonoBehaviour
     public void Unset()
     {
         currentPlaceable.selected = false;
-        currentPlaceable = null;
         transform.SetParent(null);
         visuals.SetActive(false);
     }
