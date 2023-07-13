@@ -33,7 +33,7 @@ public class Fish: ScriptableObject
         }
     }
 
-    float CalculateHappiness()
+    public float CalculateHappiness()
     {
         //do some averaging against current stats
         //check if the stats are in range and how close to range they are

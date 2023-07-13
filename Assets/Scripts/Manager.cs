@@ -25,7 +25,7 @@ public class Manager : MonoBehaviour
     public Sprite sad;
     public Sprite ok;
     public Sprite happy;
-
+    public List<Fish> allFish;
     public List<Purchasable> allPurchasables;
     public List<Purchasable> inventory;
 

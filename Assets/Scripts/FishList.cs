@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,8 +25,8 @@ public class FishList:MonoBehaviour
 
     void Start()
     {
-        //instantiate the uis
-        //connect their buttons up
+        Manager.Instance.onStatUpdate.AddListener(Sort);
+        fish = Manager.Instance.allFish;
         foreach (Fish fish in fish)
         {
             GameObject instance = fishPool.Pull();
@@ -35,6 +36,18 @@ public class FishList:MonoBehaviour
             ui.entered.AddListener(delegate { Set(ui); });
             ui.exit.AddListener(delegate { Unset(ui);});
             instance.transform.SetParent(transform);
+            fishUIs.Add(ui);
+        }
+        Sort();
+    }
+
+    void Sort() //better way to do this im sure
+    {
+        List<FishUI> sortedUIs = fishUIs;
+        fishUIs = sortedUIs.OrderBy(x => x.fish.CalculateHappiness()).ToList();
+        for(int i =0; i< fishUIs.Count; i++)
+        {
+            fishUIs[i].gameObject.transform.SetSiblingIndex(i);
         }
     }
 
@@ -43,10 +56,7 @@ public class FishList:MonoBehaviour
         fishView.SetActive(true);
         Fish fish = fishUI.fish;
         Vector3 targetPos = new Vector3(fishUI.transform.localPosition.x, fishView.transform.localPosition.y, fishView.transform.localPosition.z);
-        if(targetPos.x < 0)
-        {
-            targetPos.x = 0;
-        }
+        //todo: put a way to stop it going over the edge here
         fishView.transform.localPosition = targetPos;
         fishName.text = fish.name;
         fishDescription.text = fish.fishDescription;
