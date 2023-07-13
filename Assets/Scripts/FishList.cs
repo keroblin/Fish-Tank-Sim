@@ -12,14 +12,14 @@ public class FishList:MonoBehaviour
     public GameObject fishView;
     public TextMeshProUGUI fishName;
     public TextMeshProUGUI fishDescription;
-    public Slider fishPhMin;
-    public Slider fishPhMax;
-    public Slider fishHardnessMin;
-    public Slider fishHardnessMax;
-    public Slider fishTempMin;
-    public Slider fishTempMax;
-    public Slider fishLightMin;
-    public Slider fishLightMax;
+    public TextMeshProUGUI fishPhText;
+    public Image fishPhIcon;
+    public TextMeshProUGUI fishHardnessText;
+    public Image fishHardnessIcon;
+    public TextMeshProUGUI fishTempText;
+    public Image fishTempIcon;
+    public TextMeshProUGUI fishLightText;
+    public Image fishLightIcon;
     public List<FishUI> fishUIs;
     public List<Fish> fish;
 
@@ -60,9 +60,14 @@ public class FishList:MonoBehaviour
         fishView.transform.localPosition = targetPos;
         fishName.text = fish.name;
         fishDescription.text = fish.fishDescription;
-
-        //fishPhMin.maxValue = fish.maxPH / 2;
-        //fishPh
+        fishPhText.text = "pH: " + fish.minPH.ToString() + " - " + fish.maxPH.ToString();
+        fishPhIcon.sprite = fish.GetHappinessIcon(fish.pHCompat);
+        fishHardnessText.text = "Water Hardness: " + fish.minHardness.ToString() + "dGH - " + fish.maxHardness.ToString() + "dGH";
+        fishHardnessIcon.sprite = fish.GetHappinessIcon(fish.hardnessCompat);
+        fishTempText.text = "Temperature: " + fish.minTemp.ToString() + "f - " + fish.maxTemp.ToString() +"f";
+        fishTempIcon.sprite = fish.GetHappinessIcon(fish.tempCompat);
+        fishLightText.text = "Light: " + (fish.minLight * 100f).ToString() + "% - " + (fish.maxLight*100f).ToString() + "%";
+        fishLightIcon.sprite = fish.GetHappinessIcon(fish.lightCompat);
     }
     void Unset(FishUI fishUI)
     {
