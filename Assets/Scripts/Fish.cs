@@ -15,11 +15,6 @@ public class Fish: ScriptableObject
     public string fishName;
     public string fishDescription;
 
-    public float pHCompat;
-    public float hardnessCompat;
-    public float tempCompat;
-    public float lightCompat;
-
     public Sprite GetHappinessIcon(float statOverride = 0.0f)
     {
         float happiness;
@@ -51,15 +46,15 @@ public class Fish: ScriptableObject
         //do some averaging against current stats
         //check if the stats are in range and how close to range they are
         //use abs to get distance without knowing which is bigger
-        pHCompat = GetCompat(minPH, maxPH, Manager.Instance.tankPh);
-        hardnessCompat = GetCompat(minHardness, maxHardness, Manager.Instance.tankHardness);
-        tempCompat = GetCompat(minTemp, maxTemp, Manager.Instance.tankTemp);
-        lightCompat = GetCompat(minLight, maxLight, Manager.Instance.tankLight);
+        float pHCompat = GetCompat(minPH, maxPH, Manager.Instance.tankPh);
+        float hardnessCompat = GetCompat(minHardness, maxHardness, Manager.Instance.tankHardness);
+        float tempCompat = GetCompat(minTemp, maxTemp, Manager.Instance.tankTemp);
+        float lightCompat = GetCompat(minLight, maxLight, Manager.Instance.tankLight);
 
         return (pHCompat + hardnessCompat + tempCompat + lightCompat) / 4;
     }
 
-    float GetCompat(float min, float max, float stat)
+    public float GetCompat(float min, float max, float stat)
     {
         if (stat > max || stat < min) //out of range
         {

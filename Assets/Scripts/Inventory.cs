@@ -20,6 +20,7 @@ public class Inventory : ItemList
         menu = Manager.Instance.placingMenu;
         menu.putBack.onClick.AddListener(PutBackPlaceable);
         menu.sell.onClick.AddListener(SellPlaceable);
+        menu.onSelect.AddListener(OnSelect);
         Manager.Instance.onBuy.AddListener(UpdateInv);
         Manager.Instance.onSell.AddListener(UpdateInv);
         UpdateInv();
@@ -118,17 +119,26 @@ public class Inventory : ItemList
             placeable.Set(currentPurchasable);
             placeable.placeableClicked.AddListener(delegate { menu.Select(placeable); });
             Manager.Instance.AddModifiers(currentPurchasable);
+            purchasablesPlaced.Add(currentPurchasable);
         }
+    }
+
+    void OnSelect()
+    {
+        currentPurchasable = menu.currentPlaceable.purchasable;
     }
 
     void Sell()
     {
         if (purchasablesPlaced.Contains(currentPurchasable))
         {
+            Debug.Log("Selling placed purchasable: " +  currentPurchasable.name);
             SellPlaceable();
+            return;
         }
         else
         {
+            Debug.Log("Selling bought purchasable: " + currentPurchasable.name);
             Manager.Instance.Sell(currentPurchasable);
         }
     }
@@ -139,7 +149,9 @@ public class Inventory : ItemList
         placeablePool.Return(placeable.gameObject);
         Manager.Instance.RemoveModifiers(placeable.purchasable);
         Manager.Instance.Sell(placeable.purchasable);
+        menu.currentPlaceable.selected = false;
         menu.currentPlaceable = null;
+        purchasablesPlaced.Remove(placeable.purchasable);
     }
     public void PutBackPlaceable()
     {
@@ -147,6 +159,7 @@ public class Inventory : ItemList
         placeablePool.Return(placeable.gameObject);
         purchasablesPlaced.Remove(placeable.purchasable);
         purchasableUIs[purchasables.IndexOf(placeable.purchasable)].button.interactable = true;
+        menu.currentPlaceable.selected = false;
         //enable the buttons again
     }
 }

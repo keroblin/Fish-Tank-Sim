@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlacingMenu : MonoBehaviour
@@ -12,6 +13,7 @@ public class PlacingMenu : MonoBehaviour
     public Button putBack;
     public Button sell;
     public Placeable currentPlaceable;
+    public UnityEvent onSelect;
 
     Vector3 baseOffset = new Vector3(0, 1.3f, 0f);
 
@@ -43,10 +45,10 @@ public class PlacingMenu : MonoBehaviour
         transform.SetParent(placeable.gameObject.transform, false);
         transform.localPosition = offset;
         visuals.SetActive(true);
+        onSelect.Invoke();
     }
     public void Unset()
     {
-        currentPlaceable.selected = false;
         transform.SetParent(null);
         visuals.SetActive(false);
     }

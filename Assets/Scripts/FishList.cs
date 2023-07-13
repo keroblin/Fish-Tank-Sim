@@ -61,13 +61,13 @@ public class FishList:MonoBehaviour
         fishName.text = fish.name;
         fishDescription.text = fish.fishDescription;
         fishPhText.text = "pH: " + fish.minPH.ToString() + " - " + fish.maxPH.ToString();
-        fishPhIcon.sprite = fish.GetHappinessIcon(fish.pHCompat);
+        fishPhIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minPH, fish.maxPH, Manager.Instance.tankPh));
         fishHardnessText.text = "Water Hardness: " + fish.minHardness.ToString() + "dGH - " + fish.maxHardness.ToString() + "dGH";
-        fishHardnessIcon.sprite = fish.GetHappinessIcon(fish.hardnessCompat);
+        fishHardnessIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minHardness, fish.maxHardness, Manager.Instance.tankHardness));
         fishTempText.text = "Temperature: " + fish.minTemp.ToString() + "f - " + fish.maxTemp.ToString() +"f";
-        fishTempIcon.sprite = fish.GetHappinessIcon(fish.tempCompat);
+        fishTempIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minTemp,fish.maxTemp,Manager.Instance.tankTemp));
         fishLightText.text = "Light: " + (fish.minLight * 100f).ToString() + "% - " + (fish.maxLight*100f).ToString() + "%";
-        fishLightIcon.sprite = fish.GetHappinessIcon(fish.lightCompat);
+        fishLightIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minLight, fish.maxLight, Manager.Instance.tankLight));
     }
     void Unset(FishUI fishUI)
     {
