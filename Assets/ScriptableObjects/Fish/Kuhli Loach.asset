@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 586ec84cdced4ec4f81bad6af536362a, type: 3}
-  m_Name: Guppy
+  m_Name: Kuhli Loach
   m_EditorClassIdentifier: 
-  minPH: 6.5
-  maxPH: 8
-  minHardness: 6
-  maxHardness: 8
-  minTemp: 68
-  maxTemp: 78
+  minPH: 6
+  maxPH: 6.5
+  minHardness: 5
+  maxHardness: 10
+  minTemp: 75
+  maxTemp: 86
   minLight: 0.2
-  maxLight: 0.8
-  fishIcon: {fileID: 21300000, guid: 2481320888c3383418e084c1ea78716a, type: 3}
+  maxLight: 0.7
+  fishIcon: {fileID: 21300000, guid: 64bed313d14c14048824e476400bfaa8, type: 3}
   fishMesh: {fileID: 0}
-  fishName: Guppy
+  fishName: 
   fishDescription: 
