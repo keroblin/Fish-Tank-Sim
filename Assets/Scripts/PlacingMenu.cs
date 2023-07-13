@@ -53,7 +53,7 @@ public class PlacingMenu : MonoBehaviour
 
     public void Select(Placeable placeable)
     {
-        if(currentPlaceable != placeable || (placeable.selected == false && !visuals.activeSelf))
+        if(currentPlaceable != placeable || (placeable.selected == false))
         {
             Set(placeable);
         }

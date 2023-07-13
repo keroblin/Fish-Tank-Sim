@@ -91,7 +91,7 @@ public class Manager : MonoBehaviour
         {
             print("Not enough money!");
         }
-        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
+        money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onBuy.Invoke();
     }
 
@@ -102,7 +102,7 @@ public class Manager : MonoBehaviour
             inventory.Remove(purchasable);
             currentMoney += purchasable.price;
         }
-        money.text = "Your cash: £" + Manager.Instance.currentMoney.ToString("#.00");
+        money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onSell.Invoke();
     }
 }

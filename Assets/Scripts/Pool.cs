@@ -34,7 +34,7 @@ public class Pool : MonoBehaviour
         {
             GameObject objToReturn = pool[0];
             objToReturn.SetActive(true);
-            Debug.Log("Pool amount left: " + pool.Count);
+            //Debug.Log("Pool amount left: " + pool.Count);
             pool.RemoveAt(0);
             return objToReturn;
         }
@@ -47,8 +47,9 @@ public class Pool : MonoBehaviour
 
     public void Return(GameObject objToReturn)
     {
+        Debug.Log("returning " + objToReturn.name);
         objToReturn.SetActive(false);
-        objToReturn.transform.parent = this.transform;
+        objToReturn.transform.SetParent(this.transform);
         //reset its components basically here, but most of this should be done in the objects themselves that pull
         objToReturn.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
     }

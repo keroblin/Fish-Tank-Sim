@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4047439554048317051}
   - component: {fileID: 1174701885402554888}
   - component: {fileID: 2751847976549901249}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Placeable
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 7895004362006456486}
   - component: {fileID: 1813046457806618651}
   - component: {fileID: 6243584251439325281}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

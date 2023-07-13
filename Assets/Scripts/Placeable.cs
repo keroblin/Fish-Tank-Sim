@@ -41,10 +41,10 @@ public class Placeable : MonoBehaviour
     {
         purchasable = _purchasable;
         meshFilter.mesh = purchasable.model;
-        menuOffset = new Vector3(0, purchasable.model.bounds.extents.y + .5f, 0);
+        menuOffset = new Vector3(0f, purchasable.model.bounds.extents.y, -(purchasable.model.bounds.extents.z + .3f));
         col.size = purchasable.model.bounds.size;
         meshFilter.gameObject.transform.localPosition = new Vector3(0,purchasable.model.bounds.extents.y,0);
-        col.center = meshFilter.gameObject.transform.localPosition;
+        col.center = purchasable.model.bounds.center;
         transform.SetParent(Manager.Instance.placingRef.transform, false);
     }
 
@@ -54,7 +54,7 @@ public class Placeable : MonoBehaviour
         placeableClicked.Invoke();
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() //to be changed
     {
         if(selected)
         {
