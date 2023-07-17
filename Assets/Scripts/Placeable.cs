@@ -57,11 +57,10 @@ public class Placeable : MonoBehaviour
     private void OnMouseDown()
     {
         //open menu
-        placeableClicked.Invoke();
-        /*if (EventSystem.current.IsPointerOverGameObject())
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
             placeableClicked.Invoke();
-        }*/
+        }
     }
 
     private void FixedUpdate() //to be changed
