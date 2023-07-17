@@ -152,6 +152,7 @@ public class Inventory : ItemList
         menu.currentPlaceable.selected = false;
         menu.currentPlaceable = null;
         purchasablesPlaced.Remove(placeable.purchasable);
+        UpdateInv();
     }
     public void PutBackPlaceable()
     {
@@ -159,7 +160,9 @@ public class Inventory : ItemList
         placeablePool.Return(placeable.gameObject);
         purchasablesPlaced.Remove(placeable.purchasable);
         purchasableUIs[purchasables.IndexOf(placeable.purchasable)].button.interactable = true;
+        purchasableUIs[purchasables.IndexOf(placeable.purchasable)].Set(placeable.purchasable);
         menu.currentPlaceable.selected = false;
+        UpdateInv();
         //enable the buttons again
     }
 }

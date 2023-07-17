@@ -8,12 +8,22 @@ public class PlacingMenu : MonoBehaviour
 {
     //handles putting back and selling the selected placeable
     public GameObject visuals;
-    public Button move;
     public Button close;
     public Button putBack;
     public Button sell;
     public Placeable currentPlaceable;
     public UnityEvent onSelect;
+    public UnityEvent onDeselect;
+
+    public Button moveLeft;
+    public Button moveRight;
+    public Button moveUp;
+    public Button moveDown;
+    public Slider red;
+    public Slider green;
+    public Slider blue;
+
+    private bool sliderEnabled;
 
     Vector3 baseOffset = new Vector3(0, 1.3f, 0f);
 
@@ -26,6 +36,14 @@ public class PlacingMenu : MonoBehaviour
 
     public void Set(Placeable placeable)
     {
+        red.onValueChanged.RemoveAllListeners();
+        green.onValueChanged.RemoveAllListeners();
+        blue.onValueChanged.RemoveAllListeners();
+        moveLeft.onClick.RemoveAllListeners();
+        moveRight.onClick.RemoveAllListeners();
+        moveUp.onClick.RemoveAllListeners();
+        moveDown.onClick.RemoveAllListeners();
+
         if (currentPlaceable)
         {
             currentPlaceable.selected = false;
@@ -44,13 +62,33 @@ public class PlacingMenu : MonoBehaviour
         //move to the placeable
         transform.SetParent(placeable.gameObject.transform, false);
         transform.localPosition = offset;
+
+        red.value = currentPlaceable.color.r;
+        green.value = currentPlaceable.color.g;
+        blue.value = currentPlaceable.color.b;
+
+        red.onValueChanged.AddListener(delegate { currentPlaceable.SetColor(new Color(red.value, green.value, blue.value)); });
+        green.onValueChanged.AddListener(delegate { currentPlaceable.SetColor(new Color(red.value, green.value, blue.value)); });
+        blue.onValueChanged.AddListener(delegate { currentPlaceable.SetColor(new Color(red.value, green.value, blue.value)); });
+
+        moveLeft.onClick.AddListener(delegate { currentPlaceable.SetInput(Vector2.left); });
+        moveRight.onClick.AddListener(delegate { currentPlaceable.SetInput(Vector2.right); });
+        moveUp.onClick.AddListener(delegate { currentPlaceable.SetInput(Vector2.up); });
+        moveDown.onClick.AddListener(delegate { currentPlaceable.SetInput(Vector2.down); });
+
         visuals.SetActive(true);
         onSelect.Invoke();
     }
+
     public void Unset()
     {
-        transform.SetParent(null);
+        //transform.SetParent(null);
+        if(currentPlaceable)
+        {
+            currentPlaceable.selected = false;
+        }
         visuals.SetActive(false);
+        onDeselect.Invoke();
     }
 
     public void Select(Placeable placeable)

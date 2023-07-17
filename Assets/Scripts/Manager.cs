@@ -63,6 +63,7 @@ public class Manager : MonoBehaviour
     {
         onStatUpdate.Invoke();
     }
+
     public void AddModifiers(Purchasable purchasable)
     {
         tankPh += purchasable.pHMod;

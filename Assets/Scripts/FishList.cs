@@ -55,9 +55,9 @@ public class FishList:MonoBehaviour
     {
         fishView.SetActive(true);
         Fish fish = fishUI.fish;
-        Vector3 targetPos = new Vector3(fishUI.transform.localPosition.x, fishView.transform.localPosition.y, fishView.transform.localPosition.z);
+        Vector3 targetPos = new Vector3(fishUI.transform.position.x, fishView.transform.position.y, fishView.transform.position.z);
         //todo: put a way to stop it going over the edge here
-        fishView.transform.localPosition = targetPos;
+        fishView.transform.position = targetPos;
         fishName.text = fish.name;
         fishDescription.text = fish.fishDescription;
         fishPhText.text = "pH: " + fish.minPH.ToString() + " - " + fish.maxPH.ToString();
