@@ -45,12 +45,22 @@ public class Pool : MonoBehaviour
         }
     }
 
+    public IEnumerator ReturnRigidbody(GameObject objToReturn)
+    {
+        yield return new WaitForEndOfFrame();
+        Debug.Log("fixing collisions...");
+        objToReturn.transform.position = new Vector3(objToReturn.transform.position.x, -10000f, objToReturn.transform.position.z);
+        yield return new WaitForEndOfFrame();
+        Return(objToReturn);
+    }
+
     public void Return(GameObject objToReturn)
     {
         Debug.Log("returning " + objToReturn.name);
         objToReturn.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         objToReturn.transform.SetParent(this.transform);
         objToReturn.SetActive(false);
+        //yield return null;
         //reset its components basically here, but most of this should be done in the objects themselves that pull
 
     }

@@ -146,7 +146,7 @@ public class Inventory : ItemList
     public void SellPlaceable()
     {
         Placeable placeable = menu.currentPlaceable;
-        placeablePool.Return(placeable.gameObject);
+        placeablePool.StartCoroutine("ReturnRigidbody", placeable.gameObject);
         Manager.Instance.RemoveModifiers(placeable.purchasable);
         Manager.Instance.Sell(placeable.purchasable);
         menu.currentPlaceable.selected = false;
@@ -157,7 +157,7 @@ public class Inventory : ItemList
     public void PutBackPlaceable()
     {
         Placeable placeable = menu.currentPlaceable;
-        placeablePool.Return(placeable.gameObject);
+        placeablePool.StartCoroutine("ReturnRigidbody",placeable.gameObject);
         purchasablesPlaced.Remove(placeable.purchasable);
         purchasableUIs[purchasables.IndexOf(placeable.purchasable)].button.interactable = true;
         purchasableUIs[purchasables.IndexOf(placeable.purchasable)].Set(placeable.purchasable);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class Placeable : MonoBehaviour
 {
@@ -57,6 +58,10 @@ public class Placeable : MonoBehaviour
     {
         //open menu
         placeableClicked.Invoke();
+        /*if (EventSystem.current.IsPointerOverGameObject())
+        {
+            placeableClicked.Invoke();
+        }*/
     }
 
     private void FixedUpdate() //to be changed
@@ -94,21 +99,21 @@ public class Placeable : MonoBehaviour
     {
         input = _input.normalized;
     }
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.CompareTag("Item"))
+        if (other.CompareTag("Item"))
         {
             Debug.Log("hit");
             this.mat.color = Color.red;
         }
     }
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision.collider.CompareTag("Item"))
+        if (other.CompareTag("Item"))
         {
             this.mat.color = color;
         }
+
     }
 
     /*private void OnMouseDrag()
