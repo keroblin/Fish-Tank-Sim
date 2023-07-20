@@ -21,6 +21,8 @@ public class Manager : MonoBehaviour
     public float tankTemp = baseTemp;
     public float tankHardness = baseHardness;
 
+    public Animator menuAnim;
+
     public Sprite sad;
     public Sprite ok;
     public Sprite happy;

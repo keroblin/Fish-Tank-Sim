@@ -11,6 +11,7 @@ public class Inventory : ShopCategory
     public Button sell;
     public PlacingMenu menu;
     public List<Purchasable> purchasablesPlaced = new List<Purchasable>();
+    List<Placeable> placeablesPlaced = new List<Placeable>();
     public Pool placeablePool;
 
     public override void ToggleOn(Category category = null)
@@ -19,6 +20,7 @@ public class Inventory : ShopCategory
         itemList.onSelect.RemoveAllListeners();
         itemList.onSelect.AddListener(Select);
         UpdateInv();
+        itemList.UpdateSelection();
     }
     public override void ToggleOff(Category category = null)
     {
@@ -26,7 +28,6 @@ public class Inventory : ShopCategory
     }
     void Start()
     {
-        gameObject.SetActive(false);
         onSelect.AddListener(Select);
         menu = Manager.Instance.placingMenu;
         menu.putBack.onClick.AddListener(PutBackPlaceable);
@@ -45,10 +46,12 @@ public class Inventory : ShopCategory
             if (purchasablesPlaced.Contains(itemList.currentPurchasable))
             {
                 place.interactable = false;
+                itemList.meshRenderer.material = placeablesPlaced.Find(x => x.purchasable == itemList.currentPurchasable).mat;
             }
             else
             {
                 place.interactable = true;
+                itemList.meshRenderer.material = itemList.currentPurchasable.material;
                 if (itemList.currentPurchasable.category != ItemList.Categories.SUBSTRATE)
                 {
                     place.onClick.AddListener(PlaceButtonClicked);
@@ -81,6 +84,7 @@ public class Inventory : ShopCategory
             placeable.placeableClicked.AddListener(delegate { menu.Select(placeable); });
             Manager.Instance.AddModifiers(itemList.currentPurchasable);
             purchasablesPlaced.Add(itemList.currentPurchasable);
+            placeablesPlaced.Add(placeable);
         }
     }
 
@@ -120,6 +124,7 @@ public class Inventory : ShopCategory
         Manager.Instance.Sell(placeable.purchasable);
         menu.currentPlaceable.selected = false;
         menu.currentPlaceable = null;
+        placeablesPlaced.Remove(menu.currentPlaceable);
         itemList.UpdateSelection();
     }
     public void PutBackPlaceable()
@@ -129,6 +134,7 @@ public class Inventory : ShopCategory
         purchasablesPlaced.Remove(placeable.purchasable);
         itemList.purchasableUIs[itemList.purchasables.IndexOf(placeable.purchasable)].Set(placeable.purchasable);
         menu.currentPlaceable.selected = false;
+        placeablesPlaced.Remove(menu.currentPlaceable);
         UpdateInv();
         //enable the buttons again
     }

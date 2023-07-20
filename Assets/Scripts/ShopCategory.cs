@@ -7,13 +7,19 @@ public class ShopCategory : Category
     public ItemList itemList;
     public override void ToggleOn(Category category = null)
     {
-        gameObject.SetActive(true);
+        if(!Manager.Instance.menuAnim.GetCurrentAnimatorStateInfo(0).IsName("ShopIn"))
+        {
+            Manager.Instance.menuAnim.Play("ShopIn");
+        }
     }
     public override void ToggleOff(Category category = null)
     {
         if (!(category is ShopCategory))
         {
-            gameObject.SetActive(false);
+            if(!Manager.Instance.menuAnim.GetCurrentAnimatorStateInfo(0).IsName("ShopOut"))
+            {
+                Manager.Instance.menuAnim.Play("ShopOut");
+            }
         }
     }
 }

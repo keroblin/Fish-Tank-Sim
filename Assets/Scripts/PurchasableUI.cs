@@ -14,8 +14,7 @@ public class PurchasableUI : MonoBehaviour
     {
         purchasable = _purchasable;
         displayName.text = purchasable.name;
-        //Refresh();
-        //meshFilter.mesh = purchasable.model;
+        meshFilter.mesh = purchasable.model;
         //shop menu links itself to the onclick to update the description
     }
 }

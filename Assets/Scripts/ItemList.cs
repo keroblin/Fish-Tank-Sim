@@ -14,6 +14,7 @@ public class ItemList : CategoryList
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemPrice;
     public MeshFilter mesh;
+    public MeshRenderer meshRenderer;
 
     public Purchasable currentPurchasable;
     public GameObject noneSelectedMask;
@@ -29,23 +30,27 @@ public class ItemList : CategoryList
     {
         Manager.Instance.onBuy.AddListener(delegate { UpdateList(purchasables); });
         Manager.Instance.onSell.AddListener(delegate { UpdateList(purchasables); });
+        Manager.Instance.menuAnim.Play("Reset");
     }
 
     public void UpdateSelection()
     {
-        if (purchasables.Count != 0)
+        if(currentPurchasable == null && purchasables.Count == 0)
+        {
+            currentPurchasable = null;
+            mesh.mesh = null;
+            noneSelectedMask.SetActive(true);
+        }
+        else if(purchasables.Count > 0)
         {
             noneSelectedMask.SetActive(false);
-            currentPurchasable = purchasables[purchasables.Count - 1];
+            if (currentPurchasable == null || !purchasables.Contains(currentPurchasable))
+            {
+                currentPurchasable = purchasables[0];
+            }
             SwapCategory((int)currentPurchasable.category);
             Select(currentPurchasable);
         }
-        else
-        {
-            currentPurchasable = null;
-            noneSelectedMask.SetActive(true);
-        }
-        //otherwise do a no items got thing here
     }
 
     public void UpdateList(List<Purchasable> _purchasables)
@@ -103,25 +108,16 @@ public class ItemList : CategoryList
         }
 
         purchasables = _purchasables;
-        //UpdateSelection();
     }
-
-    /*void SetUI(PurchasableUI _ui, Purchasable _purchasable, int index) //passing in to hopefully ensure security in delegates
-    {
-        _ui.Set(_purchasable);
-        _ui.button.onClick.RemoveAllListeners();
-        _ui.button.onClick.AddListener(delegate { Select(_purchasable); });
-        Category workingCategory = categories[(int)_purchasable.category];
-        _ui.transform.SetParent(workingCategory.transform);
-    }*/
 
     void Select(Purchasable purchasable)
     {
         currentPurchasable = purchasable;
         itemTitle.text = purchasable.name;
-        itemPrice.text = "£" + purchasable.price.ToString("#.00");
+        itemPrice.text = "Price: £" + purchasable.price.ToString("#.00");
         itemDescription.text = purchasable.description;
+        mesh.mesh = purchasable.model;
+        meshRenderer.material = purchasable.material;
         onSelect.Invoke();
-        //mesh.mesh = purchasable.model;
     }
 }
