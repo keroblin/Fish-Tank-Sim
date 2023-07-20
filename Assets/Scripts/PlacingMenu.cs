@@ -60,8 +60,8 @@ public class PlacingMenu : MonoBehaviour
             offset = placeable.menuOffset;
         }
         //move to the placeable
-        transform.SetParent(placeable.gameObject.transform, false);
-        transform.localPosition = offset;
+        //transform.SetParent(placeable.gameObject.transform, false);
+        //transform.localPosition = offset;
 
         red.value = currentPlaceable.color.r;
         green.value = currentPlaceable.color.g;

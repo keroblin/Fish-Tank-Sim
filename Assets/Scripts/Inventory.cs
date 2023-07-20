@@ -111,8 +111,9 @@ public class Inventory : ShopCategory
                 Manager.Instance.SwapSubstrate(Manager.Instance.nullSubstrate);
             }
             Manager.Instance.Sell(itemList.currentPurchasable);
+            UpdateInv();
+            itemList.UpdateSelection();
         }
-        itemList.UpdateSelection();
     }
 
     public void SellPlaceable()
@@ -125,6 +126,7 @@ public class Inventory : ShopCategory
         menu.currentPlaceable.selected = false;
         menu.currentPlaceable = null;
         placeablesPlaced.Remove(menu.currentPlaceable);
+        UpdateInv();
         itemList.UpdateSelection();
     }
     public void PutBackPlaceable()
@@ -135,7 +137,7 @@ public class Inventory : ShopCategory
         itemList.purchasableUIs[itemList.purchasables.IndexOf(placeable.purchasable)].Set(placeable.purchasable);
         menu.currentPlaceable.selected = false;
         placeablesPlaced.Remove(menu.currentPlaceable);
-        UpdateInv();
+        itemList.UpdateSelection();
         //enable the buttons again
     }
 }

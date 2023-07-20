@@ -35,7 +35,7 @@ public class ItemList : CategoryList
 
     public void UpdateSelection()
     {
-        if(currentPurchasable == null && purchasables.Count == 0)
+        if(currentPurchasable == null || purchasables.Count == 0)
         {
             currentPurchasable = null;
             mesh.mesh = null;
@@ -112,6 +112,7 @@ public class ItemList : CategoryList
 
     void Select(Purchasable purchasable)
     {
+        noneSelectedMask.SetActive(false);
         currentPurchasable = purchasable;
         itemTitle.text = purchasable.name;
         itemPrice.text = "Price: £" + purchasable.price.ToString("#.00");

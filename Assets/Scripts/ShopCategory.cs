@@ -5,6 +5,7 @@ using UnityEngine;
 public class ShopCategory : Category
 {
     public ItemList itemList;
+
     public override void ToggleOn(Category category = null)
     {
         if(!Manager.Instance.menuAnim.GetCurrentAnimatorStateInfo(0).IsName("ShopIn"))
