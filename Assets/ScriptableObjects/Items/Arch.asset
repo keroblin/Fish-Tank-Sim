@@ -15,7 +15,7 @@ MonoBehaviour:
   model: {fileID: 1960654409700015248, guid: b77997e8e1fcb524d866cc9a2babfd45, type: 3}
   material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
   description: 
-  price: 10
+  price: 6.3
   category: 1
   pHMod: 0
   dGHMod: 0

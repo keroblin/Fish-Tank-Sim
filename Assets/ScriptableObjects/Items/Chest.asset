@@ -17,7 +17,7 @@ MonoBehaviour:
   description: Whats in the box?
   price: 10
   category: 1
-  pHMod: 3
-  dGHMod: 10
+  pHMod: 0
+  dGHMod: 0
   lightMod: 0.3
-  tempMod: 20
+  tempMod: 0

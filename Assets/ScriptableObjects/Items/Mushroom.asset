@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 7682724294687611154, guid: 1433077eba10200438e926705e5f2a55, type: 3}
   material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
-  description: 
-  price: 10
+  description: Can fish have cottagecore?
+  price: 3
   category: 1
   pHMod: 0
   dGHMod: 0

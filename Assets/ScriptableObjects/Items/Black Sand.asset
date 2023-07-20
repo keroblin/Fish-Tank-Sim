@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 3523059709116458499, guid: 79ed50524491c4f4d993f5db0822d80d, type: 3}
   material: {fileID: 2100000, guid: 83b7f6242af3be54ca8cc9a17d977813, type: 2}
-  description: 
+  description: Dark sand for shy creatures
   price: 10
   category: 0
   pHMod: 0

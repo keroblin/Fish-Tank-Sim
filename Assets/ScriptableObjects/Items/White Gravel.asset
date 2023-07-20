@@ -19,5 +19,5 @@ MonoBehaviour:
   category: 0
   pHMod: 0
   dGHMod: 0
-  lightMod: 0
+  lightMod: 0.03
   tempMod: 0

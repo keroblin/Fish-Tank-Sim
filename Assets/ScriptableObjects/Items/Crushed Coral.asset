@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 3523059709116458499, guid: 79ed50524491c4f4d993f5db0822d80d, type: 3}
   material: {fileID: 2100000, guid: 3f38fd3c9dc3a8e4189d0f0a32ff0065, type: 2}
-  description: 
+  description: Pretty, but don't eat!
   price: 10
   category: 0
-  pHMod: 0
-  dGHMod: 0
+  pHMod: -0.3
+  dGHMod: -3
   lightMod: 0
   tempMod: 0

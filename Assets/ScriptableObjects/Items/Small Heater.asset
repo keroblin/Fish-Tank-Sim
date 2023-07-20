@@ -15,7 +15,7 @@ MonoBehaviour:
   model: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
   description: Packs a punch!
-  price: 10
+  price: 80
   category: 3
   pHMod: 0
   dGHMod: 0

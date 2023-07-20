@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 4887216478360415443, guid: 8bba600e64968604f9d8eac0d0b28e9e, type: 3}
   material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
-  description: 
+  description: Unnatural hide
   price: 10
   category: 1
   pHMod: 0
