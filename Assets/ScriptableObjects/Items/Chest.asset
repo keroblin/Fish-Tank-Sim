@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03683c64268e664091ab2b4a5dda7b4, type: 3}
   m_Name: Chest
   m_EditorClassIdentifier: 
-  model: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  model: {fileID: -69760931014144829, guid: 9a2b2544608df9843a89412e48adbeb6, type: 3}
   material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
   description: Whats in the box?
   price: 10

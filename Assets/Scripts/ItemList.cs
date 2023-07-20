@@ -13,6 +13,10 @@ public class ItemList : CategoryList
     public TextMeshProUGUI itemTitle;
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemPrice;
+    public TextMeshProUGUI itemPh;
+    public TextMeshProUGUI itemLight;
+    public TextMeshProUGUI itemTemp;
+    public TextMeshProUGUI itemHardness;
     public MeshFilter mesh;
     public MeshRenderer meshRenderer;
 
@@ -117,8 +121,28 @@ public class ItemList : CategoryList
         itemTitle.text = purchasable.name;
         itemPrice.text = "Price: £" + purchasable.price.ToString("#.00");
         itemDescription.text = purchasable.description;
+
+        itemPh.text = "pH: " + CheckSetPosNegative(purchasable.pHMod,itemPh) + purchasable.pHMod.ToString();
+        itemHardness.text = "Water Hardness: " + CheckSetPosNegative(purchasable.pHMod,itemHardness) + purchasable.pHMod.ToString() + "dGH";
+        itemTemp.text = "Temperature: " + CheckSetPosNegative(purchasable.pHMod,itemTemp) + purchasable.pHMod.ToString() + "f";
+        itemLight.text = "Light: " + CheckSetPosNegative(purchasable.pHMod,itemLight) + (purchasable.lightMod * 100f).ToString() + "%";
+
         mesh.mesh = purchasable.model;
         meshRenderer.material = purchasable.material;
         onSelect.Invoke();
+    }
+
+    string CheckSetPosNegative(float val,TextMeshProUGUI ui)
+    {
+        if (val < 0)
+        {
+            ui.color = Color.red;
+            return "-";
+        }
+        else
+        {
+            ui.color = Color.green;
+            return "+";
+        }
     }
 }

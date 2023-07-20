@@ -10,7 +10,7 @@ public class Manager : MonoBehaviour
     public static Manager Instance;
     public PlacingMenu placingMenu;
     public GameObject placingRef;
-    const float basePh = 7f, baseLight = .5f, baseTemp = 68f, baseHardness = 7f;
+    const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f;
     const float totalMoney = 200.00f;
     public float currentMoney = totalMoney;
     public TextMeshProUGUI money;
@@ -42,7 +42,7 @@ public class Manager : MonoBehaviour
 
     public Bounds tankBounds;
 
-    bool useDefault = false;
+    bool useDefault = true;
 
     private void OnDrawGizmos()
     {
