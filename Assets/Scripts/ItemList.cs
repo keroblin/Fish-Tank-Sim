@@ -138,10 +138,15 @@ public class ItemList : CategoryList
             ui.color = Color.red;
             return "-";
         }
-        else
+        else if(val > 0)
         {
             ui.color = Color.green;
             return "+";
+        }
+        else
+        {
+            ui.color = Color.white;
+            return "";
         }
     }
 }
