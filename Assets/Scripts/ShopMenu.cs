@@ -13,6 +13,7 @@ public class ShopMenu:ShopCategory
         itemList.onSelect.RemoveAllListeners();
         itemList.onSelect.AddListener(Select);
         itemList.UpdateList(Manager.Instance.allPurchasables);
+        itemList.UpdateSelection();
     }
     public override void ToggleOff(Category category = null)
     {
@@ -23,5 +24,6 @@ public class ShopMenu:ShopCategory
     {
         buy.onClick.RemoveAllListeners();
         buy.onClick.AddListener(delegate { Manager.Instance.Buy(itemList.currentPurchasable); });
+        buy.interactable = !Manager.Instance.inventory.Contains(itemList.currentPurchasable);
     }
 }

@@ -50,6 +50,7 @@ MonoBehaviour:
   mat: {fileID: 0}
   rb: {fileID: 1174701885402554888}
   meshFilter: {fileID: 1813046457806618651}
+  meshRenderer: {fileID: 6243584251439325281}
   purchasable: {fileID: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   menuOffset: {x: 0, y: 0, z: 0}

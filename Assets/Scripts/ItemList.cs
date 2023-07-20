@@ -16,6 +16,7 @@ public class ItemList : CategoryList
     public MeshFilter mesh;
 
     public Purchasable currentPurchasable;
+    public GameObject noneSelectedMask;
 
     public enum Categories { SUBSTRATE = 0, ORNAMENTS = 1, LIVEPLANTS = 2, HEATING = 3 };
 
@@ -30,13 +31,19 @@ public class ItemList : CategoryList
         Manager.Instance.onSell.AddListener(delegate { UpdateList(purchasables); });
     }
 
-    void UpdateSelection()
+    public void UpdateSelection()
     {
         if (purchasables.Count != 0)
         {
+            noneSelectedMask.SetActive(false);
             currentPurchasable = purchasables[purchasables.Count - 1];
             SwapCategory((int)currentPurchasable.category);
             Select(currentPurchasable);
+        }
+        else
+        {
+            currentPurchasable = null;
+            noneSelectedMask.SetActive(true);
         }
         //otherwise do a no items got thing here
     }
@@ -92,10 +99,6 @@ public class ItemList : CategoryList
                 workingUI.button.onClick.RemoveAllListeners();
                 workingUI.button.onClick.AddListener(delegate { Select(workingPurchasable); });
                 workingUI.transform.SetParent(workingCategory.transform);
-            }
-            else //bad check, probably use events in future to minimise cycles
-            {
-                purchasableUIs[i].UpdateButton();
             }
         }
 

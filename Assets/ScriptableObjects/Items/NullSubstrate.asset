@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a03683c64268e664091ab2b4a5dda7b4, type: 3}
-  m_Name: Small Heater
+  m_Name: NullSubstrate
   m_EditorClassIdentifier: 
-  model: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  model: {fileID: 0}
   material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
-  description: Packs a punch!
-  price: 10
-  category: 3
+  description: 
+  price: 0
+  category: 0
   pHMod: 0
   dGHMod: 0
   lightMod: 0

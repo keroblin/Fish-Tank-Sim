@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03683c64268e664091ab2b4a5dda7b4, type: 3}
   m_Name: Cave
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
+  model: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
   description: 
   price: 10
   category: 1

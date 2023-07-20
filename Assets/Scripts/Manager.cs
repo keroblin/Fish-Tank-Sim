@@ -27,6 +27,10 @@ public class Manager : MonoBehaviour
     public List<Fish> allFish;
     public List<Purchasable> allPurchasables;
     public List<Purchasable> inventory;
+    public Purchasable currentSubstrate;
+    public Purchasable nullSubstrate;
+    public MeshFilter substrateMesh;
+    public MeshRenderer substrateRenderer;
 
     public UnityEvent onStatUpdate;
     public UnityEvent onBuy;
@@ -112,5 +116,17 @@ public class Manager : MonoBehaviour
         }
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onSell.Invoke();
+    }
+
+    public void SwapSubstrate(Purchasable purchasable)
+    {
+        currentSubstrate = purchasable;
+        if (purchasable == nullSubstrate)
+        {
+            currentSubstrate.model = null;
+        }
+        AddModifiers(currentSubstrate);
+        substrateRenderer.material = currentSubstrate.material;
+        substrateMesh.mesh = currentSubstrate.model;
     }
 }

@@ -11,6 +11,7 @@ public class Placeable : MonoBehaviour
     public Material mat;
     public Rigidbody rb;
     public MeshFilter meshFilter;
+    public MeshRenderer meshRenderer;
     public Purchasable purchasable;
     public Color color = Color.white;
     public Vector3 menuOffset;
@@ -33,7 +34,6 @@ public class Placeable : MonoBehaviour
     private void Start()
     {
         cam = Camera.main;
-        mat = meshFilter.gameObject.GetComponent<MeshRenderer>().material; //gets unique version of mat
         bounds = Manager.Instance.tankBounds;
     }
 
@@ -41,6 +41,9 @@ public class Placeable : MonoBehaviour
     {
         purchasable = _purchasable;
         meshFilter.mesh = purchasable.model;
+        meshRenderer.material = _purchasable.material;
+        mat = meshRenderer.material; //gets unique version of mat
+        SetColor(color);
         menuOffset = new Vector3(0f, purchasable.model.bounds.extents.y, -(purchasable.model.bounds.extents.z + .3f));
         col.size = purchasable.model.bounds.size;
         meshFilter.gameObject.transform.localPosition = new Vector3(0, purchasable.model.bounds.extents.y, 0);
