@@ -122,6 +122,10 @@ public class Manager : MonoBehaviour
 
     public void SwapSubstrate(Purchasable purchasable)
     {
+        if (currentSubstrate)
+        {
+            RemoveModifiers(currentSubstrate);
+        }
         currentSubstrate = purchasable;
         if (purchasable == nullSubstrate)
         {
