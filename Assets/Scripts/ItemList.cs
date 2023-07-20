@@ -34,7 +34,6 @@ public class ItemList : CategoryList
     {
         Manager.Instance.onBuy.AddListener(delegate { UpdateList(purchasables); });
         Manager.Instance.onSell.AddListener(delegate { UpdateList(purchasables); });
-        Manager.Instance.menuAnim.Play("Reset");
     }
 
     public void UpdateSelection()
