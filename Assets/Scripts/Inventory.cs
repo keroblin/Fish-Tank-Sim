@@ -120,6 +120,7 @@ public class Inventory : ShopCategory
         Manager.Instance.Sell(placeable.purchasable);
         menu.currentPlaceable.selected = false;
         menu.currentPlaceable = null;
+        itemList.UpdateSelection();
     }
     public void PutBackPlaceable()
     {
