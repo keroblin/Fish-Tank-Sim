@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Small Heater
   m_EditorClassIdentifier: 
   model: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  displayName: Small Floating Heater
   description: Packs a punch!
-  price: 100
-  category: 4
+  price: 10
+  category: 3
   pHMod: 0
   dGHMod: 0
   lightMod: 0

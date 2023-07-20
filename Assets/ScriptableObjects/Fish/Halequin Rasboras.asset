@@ -22,5 +22,5 @@ MonoBehaviour:
   maxLight: 1
   fishIcon: {fileID: 21300000, guid: 988745c28283af14884f0db898bb5b3a, type: 3}
   fishMesh: {fileID: 0}
-  fishName: 
+  fishName: Harlquin Rasbora
   fishDescription: 

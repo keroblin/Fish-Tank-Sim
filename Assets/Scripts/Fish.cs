@@ -12,7 +12,7 @@ public class Fish: ScriptableObject
 
     public Sprite fishIcon;
     public Mesh fishMesh;
-    public string fishName;
+    [Multiline]
     public string fishDescription;
 
     public Sprite GetHappinessIcon(float statOverride = 0.0f)

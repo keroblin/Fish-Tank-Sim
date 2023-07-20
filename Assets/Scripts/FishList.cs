@@ -9,6 +9,8 @@ public class FishList:MonoBehaviour
 {
     public Pool fishPool;
     public GameObject fishUiPrefab;
+    //public GameObject fishGrid;
+    public RectTransform fishViewTransform;
     public GameObject fishView;
     public TextMeshProUGUI fishName;
     public TextMeshProUGUI fishDescription;
@@ -55,9 +57,15 @@ public class FishList:MonoBehaviour
     {
         fishView.SetActive(true);
         Fish fish = fishUI.fish;
-        Vector3 targetPos = new Vector3(fishUI.transform.position.x, fishView.transform.position.y, fishView.transform.position.z);
+        Vector3 targetPos = new Vector3(fishUI.transform.position.x, fishView.transform.position.y, 0f);
         //todo: put a way to stop it going over the edge here
+        //maybe add the increment plus the index of the array? that feels bad though :/
         fishView.transform.position = targetPos;
+        /*Debug.Log(fishViewTransform.anchoredPosition);
+        if ((fishViewTransform.anchoredPosition + fishViewTransform.sizeDelta).x < 0)
+        {
+            fishViewTransform.anchoredPosition = new Vector2(0+ (fishViewTransform.sizeDelta.x*2), fishViewTransform.anchoredPosition.y);
+        }*/
         fishName.text = fish.name;
         fishDescription.text = fish.fishDescription;
         fishPhText.text = "pH: " + fish.minPH.ToString() + " - " + fish.maxPH.ToString();

@@ -56,11 +56,11 @@ public class Pool : MonoBehaviour
 
     public void Return(GameObject objToReturn)
     {
-        Debug.Log("returning " + objToReturn.name);
+        //Debug.Log("returning " + objToReturn.name);
         objToReturn.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         objToReturn.transform.SetParent(this.transform);
         objToReturn.SetActive(false);
-        //yield return null;
+        pool.Add(objToReturn);
         //reset its components basically here, but most of this should be done in the objects themselves that pull
 
     }

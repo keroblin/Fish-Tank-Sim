@@ -2,29 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
-public class ShopMenu : ItemList
+public class ShopMenu:ShopCategory
 {
     public Button buy;
-
-    public override void OnReady()
+    public override void ToggleOn(Category category = null)
     {
-        purchasables = Manager.Instance.allPurchasables;
-        base.OnReady();
+        base.ToggleOn(category);
+        itemList.onSelect.RemoveAllListeners();
+        itemList.onSelect.AddListener(Select);
+        itemList.UpdateList(Manager.Instance.allPurchasables);
+    }
+    public override void ToggleOff(Category category = null)
+    {
+        base.ToggleOff(category);
     }
 
-    public override void PurchaseableSetter(PurchasableUI purchasableUI)
-    {
-        Debug.Log("Instantiating on shopmenu " + purchasableUI.displayName);
-        purchasableUI.button.onClick.AddListener(delegate { Select(purchasableUI.purchasable); });
-    }
-
-    public override void Select(Purchasable purchasable)
+    public void Select()
     {
         buy.onClick.RemoveAllListeners();
-        buy.onClick.AddListener(delegate { Manager.Instance.Buy(currentPurchasable); });
-        base.Select(purchasable);
+        buy.onClick.AddListener(delegate { Manager.Instance.Buy(itemList.currentPurchasable); });
     }
 }

@@ -5,46 +5,37 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CategoryList : MonoBehaviour
 {
-    public List<GameObject> categoryUIs = new List<GameObject>();
-    public List<Button> categoryButtons = new List<Button>();
-
-    private void Start()
-    {
-        OnReady();
-    }
-
-    public virtual void OnReady()
-    {
-    }
+    public List<Category> categories = new List<Category>();
+    Category currentCategory;
 
     //to implement! was buggy
     //auto connect category buttons to their objects to toggle
-
-    /*void Start()
+    void OnEnable()
     {
-        for (int i = 0; i < categoryUIs.Count-1; i++)
+        for (int i = 0; i < categories.Count; i++)
         {
-            //Debug.Log(categoryUIs[i].name + " is number " + i.ToString());
-            //categoryButtons[i].onClick.AddListener(delegate { SwapCategory(i); });
-            //Debug.Log("connecting " + categoryButtons[i].name + " to " + i.ToString());
+            int index = i;
+            Category workingCategory = categories[index];
+            workingCategory.button.onClick.AddListener(delegate { SwapCategory(index, workingCategory); });
         }
-    }*/
+    }
 
-    public void SwapCategory(int index)
+    public void SwapCategory(int index = 0, Category category = null) //workaround for weird corruption, categories were out of range in event connections only on start
     {
         //Debug.Log("Swapping to number " + index.ToString());
-        for (int i = 0; i < categoryUIs.Count; i++)
+        //currentCategory = categories[index];
+        if(category == null)
         {
-            if (i == index)
-            {
-                categoryUIs[i].SetActive(true);
-                categoryButtons[i].interactable = false;
-            }
-            else
-            {
-                categoryButtons[i].interactable = true;
-                categoryUIs[i].SetActive(false);
-            }
+            Debug.Log("Category was null, using index");
+            currentCategory = categories[index];
+        }
+        else
+        {
+            currentCategory = category;
+        }
+        foreach (Category c in categories)
+        {
+            c.Toggle(currentCategory);
         }
     }
 }

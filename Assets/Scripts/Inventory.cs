@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class Inventory : ItemList
+public class Inventory : ShopCategory
 {
     public Button place;
     //public Button putBack;
@@ -14,28 +14,33 @@ public class Inventory : ItemList
     public Purchasable currentSubstrate;
     public Pool placeablePool;
 
-    public override void OnReady()
+    public override void ToggleOn(Category category = null)
+    {
+        base.ToggleOn(category);
+        itemList.onSelect.RemoveAllListeners();
+        itemList.onSelect.AddListener(Select);
+        UpdateInv();
+    }
+    public override void ToggleOff(Category category = null)
+    {
+        base.ToggleOff(category);
+    }
+    void Start()
     {
         gameObject.SetActive(false);
+        onSelect.AddListener(Select);
         menu = Manager.Instance.placingMenu;
         menu.putBack.onClick.AddListener(PutBackPlaceable);
         menu.sell.onClick.AddListener(SellPlaceable);
         menu.onSelect.AddListener(OnSelect);
-        Manager.Instance.onBuy.AddListener(UpdateInv);
         Manager.Instance.onSell.AddListener(UpdateInv);
         UpdateInv();
-        base.OnReady();
     }
 
-    public override void PurchaseableSetter(PurchasableUI purchasableUI)
-    {
-        purchasableUI.button.onClick.AddListener(delegate { Select(purchasableUI.purchasable); });
-    }
-
-    public override void Select(Purchasable purchasable)
+    void Select()
     {
         place.onClick.RemoveAllListeners();
-        if (purchasablesPlaced.Contains(purchasable))
+        if (purchasablesPlaced.Contains(itemList.currentPurchasable))
         {
             place.interactable = false;
         }
@@ -46,100 +51,57 @@ public class Inventory : ItemList
         }
         sell.onClick.RemoveAllListeners();
         sell.onClick.AddListener(Sell);
-        base.Select(purchasable);
     }
 
     void UpdateInv()
     {
-        List<Purchasable> updatedInventory = Manager.Instance.inventory;
-
-        if (purchasableUIs.Count > updatedInventory.Count) //if there are more than required, remove them
+        itemList.UpdateList(Manager.Instance.inventory);
+        foreach(PurchasableUI ui in itemList.purchasableUIs)
         {
-            List<PurchasableUI> excess;
-            if (updatedInventory.Count > 0) 
+            if (purchasablesPlaced.Count > 0 && purchasablesPlaced.Contains(ui.purchasable))
             {
-                excess = purchasableUIs.GetRange(updatedInventory.Count - 1, purchasableUIs.Count - 1);
-                foreach (PurchasableUI ui in excess)
-                {
-                    Debug.Log("Returning " + ui.purchasable.displayName);
-                    pool.Return(ui.gameObject);
-                }
-                purchasableUIs.RemoveRange(updatedInventory.Count - 1, purchasableUIs.Count - 1); //remove any excess objects
+                ui.button.interactable = false;
             }
             else
             {
-                pool.Return(purchasableUIs[0].gameObject);
-                purchasableUIs.RemoveAt(0);
-            }
-
-            
-        }
-        else //otherwise add or set them them
-        {
-            for (int i = 0; i < updatedInventory.Count; i++)
-            {
-                if (i < purchasableUIs.Count) //if there is an object already
-                {
-                    purchasableUIs[i].Set(updatedInventory[i]);
-                    continue;
-                }
-                else //if there isnt an object at this index, make a new one
-                {
-                    GameObject instance = pool.Pull();
-                    PurchasableUI ui = instance.GetComponent<PurchasableUI>();
-                    if (purchasablesPlaced.Count > 0 && purchasablesPlaced.Contains(purchasables[i]))
-                    {
-                        ui.button.interactable = false;
-                    }
-                    else
-                    {
-                        ui.button.interactable = true;
-                        ui.button.onClick.AddListener(delegate { Select(ui.purchasable); });
-                    }
-                    ui.Set(updatedInventory[i]);
-                    instance.transform.SetParent(categoryUIs[(int)updatedInventory[i].category].transform);
-                    purchasableUIs.Add(ui);
-                }
+                ui.button.interactable = true;
             }
         }
-
-        purchasables = updatedInventory;
-        UpdateSelection();
     }
 
     void PlaceButtonClicked()
     {
         //open placing menu
         //hide our menu
-        if (!purchasablesPlaced.Contains(currentPurchasable))
+        if (!purchasablesPlaced.Contains(itemList.currentPurchasable))
         {
-            purchasableUIs[purchasables.IndexOf(currentPurchasable)].button.interactable = false;
+            itemList.purchasableUIs[itemList.purchasables.IndexOf(itemList.currentPurchasable)].button.interactable = false;
             GameObject obj = placeablePool.Pull();
             Placeable placeable = obj.GetComponent<Placeable>();
-            placeable.Set(currentPurchasable);
+            placeable.Set(itemList.currentPurchasable);
             placeable.placeableClicked.AddListener(delegate { menu.Select(placeable); });
-            Manager.Instance.AddModifiers(currentPurchasable);
-            purchasablesPlaced.Add(currentPurchasable);
+            Manager.Instance.AddModifiers(itemList.currentPurchasable);
+            purchasablesPlaced.Add(itemList.currentPurchasable);
         }
     }
 
-    void OnSelect()
+    void OnSelect() //when the placebale menu selects an item
     {
-        currentPurchasable = menu.currentPlaceable.purchasable;
+        itemList.currentPurchasable = menu.currentPlaceable.purchasable;
     }
 
     void Sell()
     {
-        if (purchasablesPlaced.Contains(currentPurchasable))
+        if (purchasablesPlaced.Contains(itemList.currentPurchasable))
         {
-            Debug.Log("Selling placed purchasable: " +  currentPurchasable.name);
+            Debug.Log("Selling placed purchasable: " +  itemList.currentPurchasable.name);
             SellPlaceable();
             return;
         }
         else
         {
-            Debug.Log("Selling bought purchasable: " + currentPurchasable.name);
-            Manager.Instance.Sell(currentPurchasable);
+            Debug.Log("Selling bought purchasable: " + itemList.currentPurchasable.name);
+            Manager.Instance.Sell(itemList.currentPurchasable);
         }
     }
 
@@ -159,8 +121,8 @@ public class Inventory : ItemList
         Placeable placeable = menu.currentPlaceable;
         placeablePool.StartCoroutine("ReturnRigidbody",placeable.gameObject);
         purchasablesPlaced.Remove(placeable.purchasable);
-        purchasableUIs[purchasables.IndexOf(placeable.purchasable)].button.interactable = true;
-        purchasableUIs[purchasables.IndexOf(placeable.purchasable)].Set(placeable.purchasable);
+        itemList.purchasableUIs[itemList.purchasables.IndexOf(placeable.purchasable)].button.interactable = true;
+        itemList.purchasableUIs[itemList.purchasables.IndexOf(placeable.purchasable)].Set(placeable.purchasable);
         menu.currentPlaceable.selected = false;
         UpdateInv();
         //enable the buttons again

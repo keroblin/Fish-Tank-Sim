@@ -22,5 +22,5 @@ MonoBehaviour:
   maxLight: 0.6
   fishIcon: {fileID: 21300000, guid: 8b0251df3f5fbbe4b8a1ff23917d62a6, type: 3}
   fishMesh: {fileID: 0}
-  fishName: 
+  fishName: Zebra Danio
   fishDescription: 

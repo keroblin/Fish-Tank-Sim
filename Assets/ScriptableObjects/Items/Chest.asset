@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Chest
   m_EditorClassIdentifier: 
   model: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
-  displayName: Chest
   description: Whats in the box?
   price: 10
   category: 1

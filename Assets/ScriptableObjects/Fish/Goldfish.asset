@@ -23,4 +23,4 @@ MonoBehaviour:
   fishIcon: {fileID: 21300000, guid: 9cd88046ac0728f4784f7df077238d0c, type: 3}
   fishMesh: {fileID: 0}
   fishName: Goldfish
-  fishDescription: 
+  fishDescription: A lot less valuable, but maybe stronger than gold!

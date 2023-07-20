@@ -13,13 +13,15 @@ public class PurchasableUI : MonoBehaviour
     public void Set(Purchasable _purchasable)
     {
         purchasable = _purchasable;
-        displayName.text = purchasable.displayName;
+        UpdateButton();
+        displayName.text = purchasable.name;
         //Refresh();
         //meshFilter.mesh = purchasable.model;
         //shop menu links itself to the onclick to update the description
     }
-    /*public void Refresh()
+
+    public void UpdateButton()
     {
-        displayName.text = purchasable.displayName;
-    }*/
+        button.interactable = !Manager.Instance.inventory.Contains(purchasable);
+    }
 }

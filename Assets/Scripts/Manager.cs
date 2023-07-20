@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 
 public class Manager : MonoBehaviour
 {
@@ -62,6 +61,7 @@ public class Manager : MonoBehaviour
     private void Start()
     {
         onStatUpdate.Invoke();
+        money.text = "Your cash: £" + currentMoney.ToString("#.00");
     }
 
     public void AddModifiers(Purchasable purchasable)
@@ -90,7 +90,14 @@ public class Manager : MonoBehaviour
         }
         else
         {
-            print("Not enough money!");
+            if (inventory.Contains(purchasable))
+            {
+                print("Already bought");
+            }
+            else
+            {
+                print("Not enough money!");
+            }
         }
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onBuy.Invoke();

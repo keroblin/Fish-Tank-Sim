@@ -6,7 +6,6 @@ using UnityEngine;
 public class Purchasable : ScriptableObject
 {
     public Mesh model;
-    public string displayName;
     public string description;
     public float price;
     public ItemList.Categories category;
