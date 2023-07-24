@@ -107,7 +107,7 @@ public class Inventory : ShopCategory
             Debug.Log("Selling bought purchasable: " + itemList.currentPurchasable.name);
             if(itemList.currentPurchasable.category == ItemList.Categories.SUBSTRATE)
             {
-                Manager.Instance.RemoveModifiers(itemList.currentPurchasable);
+                Manager.Instance.RemoveModifiers(itemList.currentPurchasable); //check that this is working!!
                 Manager.Instance.SwapSubstrate(Manager.Instance.nullSubstrate);
             }
             Manager.Instance.Sell(itemList.currentPurchasable);
