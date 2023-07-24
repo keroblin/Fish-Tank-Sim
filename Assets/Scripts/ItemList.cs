@@ -122,9 +122,9 @@ public class ItemList : CategoryList
         itemDescription.text = purchasable.description;
 
         itemPh.text = "pH: " + CheckSetPosNegative(purchasable.pHMod,itemPh) + purchasable.pHMod.ToString();
-        itemHardness.text = "Water Hardness: " + CheckSetPosNegative(purchasable.pHMod,itemHardness) + purchasable.pHMod.ToString() + "dGH";
-        itemTemp.text = "Temperature: " + CheckSetPosNegative(purchasable.pHMod,itemTemp) + purchasable.pHMod.ToString() + "f";
-        itemLight.text = "Light: " + CheckSetPosNegative(purchasable.pHMod,itemLight) + (purchasable.lightMod * 100f).ToString() + "%";
+        itemHardness.text = "Water Hardness: " + CheckSetPosNegative(purchasable.dGHMod,itemHardness) + purchasable.dGHMod.ToString() + "dGH";
+        itemTemp.text = "Temperature: " + CheckSetPosNegative(purchasable.tempMod,itemTemp) + purchasable.tempMod.ToString() + "f";
+        itemLight.text = "Light: " + CheckSetPosNegative(purchasable.lightMod,itemLight) + (purchasable.lightMod * 100f).ToString() + "%";
 
         mesh.mesh = purchasable.model;
         meshRenderer.material = purchasable.material;
