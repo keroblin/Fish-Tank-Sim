@@ -27066,7 +27066,6 @@ GameObject:
   m_Component:
   - component: {fileID: 946019864}
   - component: {fileID: 946019867}
-  - component: {fileID: 946019866}
   - component: {fileID: 946019865}
   m_Layer: 0
   m_Name: ViewCam
@@ -27112,14 +27111,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!81 &946019866
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 946019863}
-  m_Enabled: 1
 --- !u!20 &946019867
 Camera:
   m_ObjectHideFlags: 0
@@ -48358,7 +48349,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 405146250}
   m_HandleRect: {fileID: 405146249}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -66,48 +66,53 @@ public class Placeable : MonoBehaviour
         }
     }
 
-    private void FixedUpdate() //to be changed
+    private void Update()
     {
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-        {
-            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Plus) && dir == 0){ dir = 1; }
-        if (Input.GetKeyDown(KeyCode.Minus) && dir == 0) { dir = -1; }
-        if (!Input.GetKeyDown(KeyCode.Plus) && !Input.GetKeyDown(KeyCode.Minus)){ dir = 0;}
-
         if (selected)
         {
-            //rotate
+            if (Input.GetKeyDown(KeyCode.Q) && dir == 0) { dir = -1; }
+            if (Input.GetKeyDown(KeyCode.E) && dir == 0) { dir = 1; }
+
             if (dir != 0)
             {
                 transform.Rotate(0, 45 * dir, 0);
             }
-            //move the object
-            if (input.magnitude > 0 && !isDown)
-            {
-                Vector3 target = transform.position + new Vector3(input.x * increment, 0f, input.y * increment);
 
-                Vector2 xSides = new Vector2(target.x - col.size.x/2, target.x + col.size.x/2);
-                Vector2 zSides = new Vector2(target.z - col.size.z/2, target.z + col.size.z/2);
-                Vector2 boundsXSides = new Vector2(-bounds.extents.x, bounds.extents.x);
-                Vector2 boundsYSides = new Vector2(-bounds.extents.z, bounds.extents.z);
+            if (!Input.GetKeyDown(KeyCode.Q) && dir == -1) { dir = 0; }
+            if (!Input.GetKeyDown(KeyCode.E) && dir == 1) { dir = 0; }
 
-                if (xSides.x > boundsXSides.x && xSides.y < boundsXSides.y && zSides.x > boundsYSides.x && zSides.y < boundsYSides.y)//if within the bounds
-                {
-                    transform.position = target;
-                }
-                isDown = true;
-                return;
-            }
-            else if (isDown && input.magnitude <= 0)
+            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
             {
-                isDown = false;
-                return;
+                input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
             }
+            Move();
+            input = Vector2.zero;
         }
-        input = Vector2.zero;
+    }
+
+    void Move()
+    {
+        if (input.magnitude > 0 && !isDown)
+        {
+            Vector3 target = transform.position + new Vector3(input.x * increment, 0f, input.y * increment);
+
+            Vector2 xSides = new Vector2(target.x - col.size.x / 2, target.x + col.size.x / 2);
+            Vector2 zSides = new Vector2(target.z - col.size.z / 2, target.z + col.size.z / 2);
+            Vector2 boundsXSides = new Vector2(-bounds.extents.x, bounds.extents.x);
+            Vector2 boundsYSides = new Vector2(-bounds.extents.z, bounds.extents.z);
+
+            if (xSides.x > boundsXSides.x && xSides.y < boundsXSides.y && zSides.x > boundsYSides.x && zSides.y < boundsYSides.y)//if within the bounds
+            {
+                transform.position = target;
+            }
+            isDown = true;
+            return;
+        }
+        else if (isDown && input.magnitude <= 0)
+        {
+            isDown = false;
+            return;
+        }
     }
 
     public void SetInput(Vector2 _input)
