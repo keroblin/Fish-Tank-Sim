@@ -24459,7 +24459,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 233.07101}
+  m_AnchoredPosition: {x: 0, y: 233.28497}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &815162169
@@ -27487,6 +27487,7 @@ GameObject:
   - component: {fileID: 965529223}
   - component: {fileID: 965529226}
   - component: {fileID: 965529225}
+  - component: {fileID: 965529227}
   m_Layer: 0
   m_Name: Substrate
   m_TagString: Untagged
@@ -27559,6 +27560,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 965529222}
   m_Mesh: {fileID: 3523059709116458499, guid: 79ed50524491c4f4d993f5db0822d80d, type: 3}
+--- !u!65 &965529227
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965529222}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2059764, y: 0.12539992, z: 0.55378556}
+  m_Center: {x: 0, y: 0.06269996, z: 0}
 --- !u!1 &965727139
 GameObject:
   m_ObjectHideFlags: 0
@@ -48349,8 +48371,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 405146250}
   m_HandleRect: {fileID: 405146249}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9949935
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

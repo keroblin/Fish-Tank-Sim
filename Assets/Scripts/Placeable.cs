@@ -70,6 +70,9 @@ public class Placeable : MonoBehaviour
     {
         if (selected)
         {
+            if (!Input.GetKeyDown(KeyCode.Q) && dir == -1) { dir = 0; }
+            if (!Input.GetKeyDown(KeyCode.E) && dir == 1) { dir = 0; }
+
             if (Input.GetKeyDown(KeyCode.Q) && dir == 0) { dir = -1; }
             if (Input.GetKeyDown(KeyCode.E) && dir == 0) { dir = 1; }
 
@@ -77,9 +80,6 @@ public class Placeable : MonoBehaviour
             {
                 transform.Rotate(0, 45 * dir, 0);
             }
-
-            if (!Input.GetKeyDown(KeyCode.Q) && dir == -1) { dir = 0; }
-            if (!Input.GetKeyDown(KeyCode.E) && dir == 1) { dir = 0; }
 
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
             {
@@ -96,8 +96,11 @@ public class Placeable : MonoBehaviour
         {
             Vector3 target = transform.position + new Vector3(input.x * increment, 0f, input.y * increment);
 
-            Vector2 xSides = new Vector2(target.x - col.size.x / 2, target.x + col.size.x / 2);
-            Vector2 zSides = new Vector2(target.z - col.size.z / 2, target.z + col.size.z / 2);
+            Vector3 colSize = col.size;
+            //colSize = Vector3.RotateTowards(colSize,target,360f,1000f);
+
+            Vector2 xSides = new Vector2(target.x - colSize.x / 2, target.x + colSize.x / 2);
+            Vector2 zSides = new Vector2(target.z - colSize.z / 2, target.z + colSize.z / 2);
             Vector2 boundsXSides = new Vector2(-bounds.extents.x, bounds.extents.x);
             Vector2 boundsYSides = new Vector2(-bounds.extents.z, bounds.extents.z);
 
@@ -136,25 +139,36 @@ public class Placeable : MonoBehaviour
 
     }
 
-    /*private void OnMouseDrag()
+    private void OnMouseDrag()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        int layerMask = 1 << 6;
+        if (selected)
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            int layerMask = ~(1 << 6);
 
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity,layerMask))
-        {
-            Debug.Log("Did Hit");
-        }
-        else
-        {
-            Debug.Log("Did not Hit");
-        }
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+            {
+                Debug.Log("Did Hit");
+            }
+            else
+            {
+                Debug.Log("Did not Hit");
+            }
 
-        Vector3 size = Vector3.Scale(col.size * 2, hit.point);
-        if (bounds.Contains(size))
-        {
-            transform.position = hit.point;
+            Vector3 size = Vector3.Scale(col.size * 2, hit.point);
+            if (bounds.Contains(hit.point))
+            {
+                transform.position = hit.point;
+                if(this.mat.color != color)
+                {
+                    this.mat.color = color;
+                }
+            }
+            else
+            {
+                this.mat.color = Color.red;
+            }
         }
-    } */
+    }
 }
