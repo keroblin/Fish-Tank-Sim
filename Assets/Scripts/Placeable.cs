@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -19,6 +18,7 @@ public class Placeable : MonoBehaviour
     public UnityEvent placeableClicked;
     public BoxCollider col;
     Vector2 input;
+    int dir = 0;
     Bounds bounds;
     Camera cam;
     bool isDown = false;
@@ -73,15 +73,28 @@ public class Placeable : MonoBehaviour
             input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
         }
 
+        if (Input.GetKeyDown(KeyCode.Plus) && dir == 0){ dir = 1; }
+        if (Input.GetKeyDown(KeyCode.Minus) && dir == 0) { dir = -1; }
+        if (!Input.GetKeyDown(KeyCode.Plus) && !Input.GetKeyDown(KeyCode.Minus)){ dir = 0;}
+
         if (selected)
         {
+            //rotate
+            if (dir != 0)
+            {
+                transform.Rotate(0, 45 * dir, 0);
+            }
             //move the object
             if (input.magnitude > 0 && !isDown)
             {
                 Vector3 target = transform.position + new Vector3(input.x * increment, 0f, input.y * increment);
 
-                Vector3 size = Vector3.Scale(col.size * 2, target);
-                if (bounds.Contains(size))
+                Vector2 xSides = new Vector2(target.x - col.size.x/2, target.x + col.size.x/2);
+                Vector2 zSides = new Vector2(target.z - col.size.z/2, target.z + col.size.z/2);
+                Vector2 boundsXSides = new Vector2(-bounds.extents.x, bounds.extents.x);
+                Vector2 boundsYSides = new Vector2(-bounds.extents.z, bounds.extents.z);
+
+                if (xSides.x > boundsXSides.x && xSides.y < boundsXSides.y && zSides.x > boundsYSides.x && zSides.y < boundsYSides.y)//if within the bounds
                 {
                     transform.position = target;
                 }
