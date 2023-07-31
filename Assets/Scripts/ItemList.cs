@@ -19,6 +19,7 @@ public class ItemList : CategoryList
     public TextMeshProUGUI itemHardness;
     public MeshFilter mesh;
     public MeshRenderer meshRenderer;
+    float meshViewDefaultDistance;
 
     public Purchasable currentPurchasable;
     public GameObject noneSelectedMask;
@@ -34,6 +35,7 @@ public class ItemList : CategoryList
     {
         Manager.Instance.onBuy.AddListener(delegate { UpdateList(purchasables); });
         Manager.Instance.onSell.AddListener(delegate { UpdateList(purchasables); });
+        meshViewDefaultDistance = mesh.transform.position.z;
     }
 
     public void UpdateSelection()
@@ -128,6 +130,10 @@ public class ItemList : CategoryList
 
         mesh.mesh = purchasable.model;
         meshRenderer.material = purchasable.material;
+
+        Vector3 meshSize = mesh.mesh.bounds.size;
+        meshSize.Scale(mesh.transform.localScale);
+        mesh.transform.position = new Vector3(mesh.transform.position.x, mesh.transform.position.y, meshViewDefaultDistance + meshSize.magnitude);
         onSelect.Invoke();
     }
 
