@@ -95,20 +95,13 @@ public class Placeable : MonoBehaviour
         if (input.magnitude > 0 && !isDown)
         {
             Vector3 target = transform.position + new Vector3(input.x * increment, 0f, input.y * increment);
+            isDown = true;
 
-            Vector3 colSize = col.size;
-            //colSize = Vector3.RotateTowards(colSize,target,360f,1000f);
-
-            Vector2 xSides = new Vector2(target.x - colSize.x / 2, target.x + colSize.x / 2);
-            Vector2 zSides = new Vector2(target.z - colSize.z / 2, target.z + colSize.z / 2);
-            Vector2 boundsXSides = new Vector2(-bounds.extents.x, bounds.extents.x);
-            Vector2 boundsYSides = new Vector2(-bounds.extents.z, bounds.extents.z);
-
-            if (xSides.x > boundsXSides.x && xSides.y < boundsXSides.y && zSides.x > boundsYSides.x && zSides.y < boundsYSides.y)//if within the bounds
+            if(bounds.Contains(target))
             {
                 transform.position = target;
             }
-            isDown = true;
+
             return;
         }
         else if (isDown && input.magnitude <= 0)
@@ -124,7 +117,7 @@ public class Placeable : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Item"))
+        if (other.CompareTag("Item") || other.CompareTag("TankWall"))
         {
             Debug.Log("hit");
             this.mat.color = Color.red;
@@ -132,7 +125,7 @@ public class Placeable : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Item"))
+        if (other.CompareTag("Item") || other.CompareTag("TankWall"))
         {
             this.mat.color = color;
         }
@@ -144,7 +137,7 @@ public class Placeable : MonoBehaviour
         if (selected)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            int layerMask = ~(1 << 6);
+            int layerMask = ~(1 << 6) & ~(1 << 2);
 
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
@@ -156,7 +149,6 @@ public class Placeable : MonoBehaviour
                 Debug.Log("Did not Hit");
             }
 
-            Vector3 size = Vector3.Scale(col.size * 2, hit.point);
             if (bounds.Contains(hit.point))
             {
                 transform.position = hit.point;
