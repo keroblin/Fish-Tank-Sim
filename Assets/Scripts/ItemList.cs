@@ -82,7 +82,7 @@ public class ItemList : CategoryList
                 {
                     pool.Return(ui.gameObject);
                 }
-                purchasableUIs = new List<PurchasableUI>();
+                purchasableUIs.Clear();
                 return;
             }
         }

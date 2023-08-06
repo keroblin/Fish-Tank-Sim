@@ -118,16 +118,27 @@ public class Inventory : ShopCategory
 
     public void SellPlaceable()
     {
-        Placeable placeable = menu.currentPlaceable;
-        purchasablesPlaced.Remove(placeable.purchasable);
-        placeablePool.StartCoroutine("ReturnRigidbody", placeable.gameObject);
+        Placeable placeable;
+        if (menu.currentPlaceable != null && itemList.currentPurchasable != menu.currentPlaceable.purchasable)
+        {
+            placeable = menu.currentPlaceable;
+        }
+        else
+        {
+            placeable = placeablesPlaced.Find(x => x.purchasable == itemList.currentPurchasable);
+        }
         Manager.Instance.RemoveModifiers(placeable.purchasable);
         Manager.Instance.Sell(placeable.purchasable);
-        menu.currentPlaceable.selected = false;
-        menu.currentPlaceable = null;
-        placeablesPlaced.Remove(menu.currentPlaceable);
+        if (menu.currentPlaceable)
+        {
+            menu.currentPlaceable.selected = false;
+            menu.currentPlaceable = null;
+        }
+        purchasablesPlaced.Remove(placeable.purchasable);
+        placeablesPlaced.Remove(placeable);
         UpdateInv();
         itemList.UpdateSelection();
+        placeablePool.StartCoroutine("ReturnRigidbody", placeable.gameObject);
     }
     public void PutBackPlaceable()
     {
