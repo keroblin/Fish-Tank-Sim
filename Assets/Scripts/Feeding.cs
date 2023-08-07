@@ -58,24 +58,25 @@ public class Feeding : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
             Debug.Log("Did Hit");
-            if (bounds.Contains(hit.point))
-            {
-                Debug.Log("In bounds");
-                GameObject newFood = foodPool.Pull();
-                newFood.transform.SetParent(null, false);
-                newFood.transform.position = hit.point;
-                newFood.SetActive(true);
-                //OnFoodPlaced.Invoke(newFood);
-            }
-            else
-            {
-                Debug.Log("Out of bounds at " + hit.point + ", bounds are " + bounds.extents);
-            }
         }
         else
         {
             Debug.Log("Did not Hit");
         }
-        
+
+        if (bounds.Contains(hit.point))
+        {
+            Debug.Log("In bounds");
+            GameObject newFood = foodPool.Pull();
+            newFood.transform.SetParent(null, false);
+            newFood.transform.position = hit.point;
+            newFood.SetActive(true);
+            //OnFoodPlaced.Invoke(newFood);
+        }
+        else
+        {
+            Debug.Log("Out of bounds at " + hit.point + ", bounds are " + bounds.extents);
+        }
+
     }
 }

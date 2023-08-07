@@ -17,19 +17,30 @@ public class FishBehaviour : MonoBehaviour
     - we could maybe have all this work off coroutines acting like states in update
      
      */
-
-
-
     public Rigidbody rb;
 
     float length = .5f;
-    //Quaternion dir;
-    float dir;
+    float dirX;
+    float dirY;
     RaycastHit hit;
-    GameObject target;
+    GameObject targetObj;
+    Vector3 targetPosition;
+    bool targetReached;
+    bool waiting;
+    bool avoiding;
+    Bounds bounds;
+    float breakAmount;
 
     public enum States { IDLE, HIDE, FEED, FIGHT, SMELL };
     public States state;
+
+    /*List<HitDir> hits = new List<HitDir>();
+    class HitDir
+    {
+        public RaycastHit hit;
+        public bool hitting;
+        public Vector3 dir;
+    }*/
 
     private void OnDrawGizmos()
     {
@@ -37,45 +48,120 @@ public class FishBehaviour : MonoBehaviour
     }
     void Start()
     {
+        bounds = Manager.Instance.tankBounds;
         Feeding.OnFoodPlaced += FoodPlaced;
+
+        /*hits.Add(new HitDir());
+        hits.Add(new HitDir());
+        hits.Add(new HitDir());
+        hits.Add(new HitDir());*/
     }
 
     private void FixedUpdate()
     {
-        if (rb.SweepTest(transform.forward, out hit, length))
+        //int layerMask = (1 << 11) & (1<<0) & (1<<10); //ignore fish layer
+        int layerMask = ~(1 << 11);
+        if (state == States.IDLE) //if we dont have a target, potter around
         {
-            Debug.Log("Did Hit, in range");
-            Vector3 reflection = Vector3.Reflect(transform.position, -hit.point);
-            Debug.DrawRay(hit.point, Vector3.Reflect(transform.position, -hit.point) - hit.point, Color.yellow);
-
-            dir = Mathf.Sign(-hit.point.magnitude);
-            rb.AddForce(-hit.point - transform.forward * Time.deltaTime * 1f);
-            rb.AddTorque(dir * transform.up * (1f * Time.deltaTime));
-            rb.AddTorque(dir * transform.right * (1f * Time.deltaTime));
+            if(targetObj != null)
+            {
+                targetObj = null;
+            }
+            if(targetPosition == null) //if we dont have a position, choose a random one
+            {
+                targetPosition = new Vector3(
+                    UnityEngine.Random.Range(-bounds.extents.x, bounds.extents.x), 
+                    UnityEngine.Random.Range(-bounds.extents.y, bounds.extents.y), 
+                    UnityEngine.Random.Range(-bounds.extents.z, bounds.extents.z)
+                    );
+            }
+            MoveTowardTarget();
         }
-        else
+
+        RaycastHit hit;
+        Debug.DrawRay(transform.position, transform.forward);
+        if (Physics.Raycast(transform.position, transform.forward, out hit, length,layerMask))
         {
-            dir = 0;
-            Debug.Log("Did not Hit");
+            if(hit.collider.gameObject != gameObject)
+            {
+                Debug.Log("Did Hit, in range");
+                Avoid(hit);
+            }
+        }
+
+        //hits[0].dir = transform.TransformDirection(transform.forward);
+
+        //these are like directional checks for the sides, forward should be treated a bit differently though
+        /*hits[0].dir = transform.TransformDirection(transform.up);
+        hits[1].dir = transform.TransformDirection(-transform.up);
+        hits[2].dir = transform.TransformDirection(-transform.right);
+        hits[3].dir = transform.TransformDirection(transform.right);
+
+        for (int i= 0; i< 5; i++)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, hits[i].dir, out hit, length, layerMask))
+            {
+                hits[i].hit = hit;
+                Debug.Log("Did Hit, in range");
+                hits[i].hitting = true;
+                Avoid(hit);
+            }
+        }*/
+    }
+
+    public void Avoid(RaycastHit hit)
+    {
+        breakAmount = 0;
+        dirX = Mathf.Sign(-hit.point.x);
+        dirY = Mathf.Sign(-hit.point.y);
+        Debug.Log(dirY + ": y");
+        Debug.Log(dirX + ": x");
+        rb.AddForce(-transform.forward * Time.deltaTime * .5f);
+        rb.AddTorque(dirY * transform.up * (1f * Time.deltaTime));
+        rb.AddTorque(dirX * transform.right * (1f * Time.deltaTime));
+    }
+
+    IEnumerator WaitAtTarget()
+    {
+        yield return new WaitForSeconds(2f);
+        targetReached = true;
+        yield return null;
+    }
+    public void MoveTowardTarget()
+    {
+        if (!avoiding)
+        {
+            if (targetObj != null)
+            {
+                targetPosition = targetObj.transform.position;
+            }
             rb.AddForce(transform.forward * Time.deltaTime * 6f);
-            rb.AddTorque(transform.up * (-3f * Time.deltaTime) * dir);
-            rb.AddTorque(transform.right * (-3f * Time.deltaTime) * dir);
+            breakAmount += .1f * Time.deltaTime;
+            rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, breakAmount); //break the turn
+            if (Vector3.Distance(transform.position, targetPosition) < .5f)
+            {
+                if (state == States.IDLE && !waiting)
+                {
+                    StartCoroutine("WaitAtTarget");
+                }
+            }
         }
     }
 
     public void FoodPlaced(GameObject food)
     {
-        if(Vector3.Distance(transform.position, target.transform.position) > Vector3.Distance(transform.position, food.transform.position))
+        if(Vector3.Distance(transform.position, targetObj.transform.position) > Vector3.Distance(transform.position, food.transform.position))
         {
-            target = food;
+            targetObj = food;
         }
     }
 
     public void FoodEaten(GameObject food)
     {
-        if(target == food)
+        if(targetObj == food)
         {
-            target = null;
+            targetObj = null;
             state = States.SMELL; //smell state lasts for a while, if it sees other fish that are targeting then it targets their food, otherwise if the timer runs out it goes idle
             //go out of target mode and swim about, if we enter the radius of a food, then target it
         }
@@ -85,7 +171,7 @@ public class FishBehaviour : MonoBehaviour
     {
         if (other.CompareTag("Food"))
         {
-            target = other.gameObject;
+            targetObj = other.gameObject;
             state = States.FEED;
         }
     }
