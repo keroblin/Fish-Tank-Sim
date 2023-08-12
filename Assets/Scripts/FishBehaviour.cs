@@ -93,7 +93,7 @@ public class FishBehaviour : MonoBehaviour
             for (int i = 0; i < hits.Length; i++)
             {
                 RaycastHit hit = hits[i];
-                if (hit.collider.gameObject != gameObject)
+                if (hit.collider.gameObject != gameObject && Vector3.Distance(transform.position, primaryTarget.position) > length)
                 {
                     state = States.AVOID;
                     currentTargetPosition = -hit.point;
@@ -134,15 +134,16 @@ public class FishBehaviour : MonoBehaviour
         {
             //steer toward target
             Debug.Log("Steering");
-            rb.AddTorque(cross);
-            /* if (cross.magnitude > .05f) //if we arent facing the target, turn to face it
-             {
-                 rb.AddTorque(cross);
-             }
-             else //otherwise brake the turn
-             {
-                 brakeAmount = 0f;
-             }*/
+            
+            if (cross.magnitude > 0.01) //if we arent facing the target, turn to face it
+            {
+                rb.AddTorque(cross);
+                rb.angularVelocity = Vector3.Lerp(Vector3.zero, rb.angularVelocity, cross.magnitude);
+            }
+            else //otherwise brake the turn
+            {
+                brakeAmount = 0f;
+            }
         }
 
         if (Vector3.Distance(transform.position, currentTargetPosition) < .15f) //if we're within distance
