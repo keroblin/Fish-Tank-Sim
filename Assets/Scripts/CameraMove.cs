@@ -8,6 +8,13 @@ public class CameraMove : MonoBehaviour
     //I want to make it slerp nicely into position using a public curve to control the movement
     //i also want to use quaternions instead of eulerangles
 
+    public Collider front;
+    public Collider back;
+    public Collider left;
+    public Collider right;
+    public Collider top;
+    public Collider bottom;
+
     Vector3 initRot;
     Vector3 currentTarget;
     bool isUp = false;

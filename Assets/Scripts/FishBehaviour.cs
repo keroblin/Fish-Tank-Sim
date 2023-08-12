@@ -24,7 +24,7 @@ public class FishBehaviour : MonoBehaviour
     float dirY;
     RaycastHit hit;
     
-    bool waiting;
+    bool waiting = false;
     Bounds bounds;
     float brakeAmount = 1;
 
@@ -54,11 +54,10 @@ public class FishBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //int layerMask = ~(1<<5);
         switch (state)
         {
             case States.IDLE:
-                if (primaryTarget.position == Vector3.zero || primaryTarget == null) //if we dont have a position, choose a random one
+                if (primaryTarget.position == Vector3.zero || primaryTarget == null || targetReached) //if we dont have a position, choose a random one
                 {
                     Debug.Log("Setting idle pos");
                     Vector3 idleTarget = new Vector3(
@@ -68,6 +67,7 @@ public class FishBehaviour : MonoBehaviour
                        );
                     idleTarget += bounds.center;
                     SetPrimaryTarget(idleTarget, States.IDLE);
+                    targetReached = false;
                 }
                 break;
             case States.AVOID:
@@ -88,7 +88,7 @@ public class FishBehaviour : MonoBehaviour
         Debug.DrawRay(transform.position, transform.forward);
         RaycastHit[] hits;
         hits = Physics.RaycastAll(transform.position, transform.forward, length);
-        if(hits.Length > 0)
+        if(hits.Length > 0 && !waiting)
         {
             for (int i = 0; i < hits.Length; i++)
             {
@@ -96,7 +96,6 @@ public class FishBehaviour : MonoBehaviour
                 if (hit.collider.gameObject != gameObject)
                 {
                     state = States.AVOID;
-                    brakeAmount = 0f;
                     currentTargetPosition = -hit.point;
                 }
             }
@@ -106,7 +105,11 @@ public class FishBehaviour : MonoBehaviour
             state = primaryTarget.type;
             currentTargetPosition = primaryTarget.position;
         }
-        MoveTowardTarget();
+
+        if (!waiting)
+        {
+            MoveTowardTarget();
+        }
     }
     public void SetPrimaryTarget(Vector3 target, States _state)
     {
@@ -120,7 +123,7 @@ public class FishBehaviour : MonoBehaviour
         Debug.Log("running");
         rb.AddForce(transform.forward * Time.deltaTime * 6f); //move forward
 
-        Vector3 cross = Vector3.Cross(transform.forward, (transform.position - currentTargetPosition).normalized); //how much to rotate by
+        Vector3 cross = Vector3.Cross(transform.forward, (currentTargetPosition - transform.position).normalized); //how much to rotate by
         if (brakeAmount < 1f) //stop turning
         {
             Debug.Log("Braking");
@@ -131,14 +134,15 @@ public class FishBehaviour : MonoBehaviour
         {
             //steer toward target
             Debug.Log("Steering");
-            if (cross.magnitude > .15f) //if we arent facing the target, turn to face it
-            {
-                rb.AddTorque(cross);
-            }
-            else //otherwise brake the turn
-            {
-                brakeAmount = 0f;
-            }
+            rb.AddTorque(cross);
+            /* if (cross.magnitude > .05f) //if we arent facing the target, turn to face it
+             {
+                 rb.AddTorque(cross);
+             }
+             else //otherwise brake the turn
+             {
+                 brakeAmount = 0f;
+             }*/
         }
 
         if (Vector3.Distance(transform.position, currentTargetPosition) < .15f) //if we're within distance
@@ -163,10 +167,21 @@ public class FishBehaviour : MonoBehaviour
         }
     }
 
+    IEnumerator Brake()
+    {
+        while (rb.velocity.magnitude > 0f)
+        {
+            rb.AddForce(-rb.velocity * Time.deltaTime * 6f);
+            yield return new WaitForFixedUpdate();
+        }
+        yield return null;
+    }
+
     IEnumerator WaitAtTarget()
     {
         Debug.Log("Waiting at target...");
         waiting = true;
+        StartCoroutine("Brake");
         yield return new WaitForSeconds(2f);
         targetReached = true;
         if(primaryTarget != null)
@@ -175,7 +190,8 @@ public class FishBehaviour : MonoBehaviour
         }
         else
         {
-            
+            primaryTarget = null;
+            state = States.IDLE;
         }
         Debug.Log("Finished wait. Removed target.");
         waiting = false;
@@ -184,10 +200,11 @@ public class FishBehaviour : MonoBehaviour
 
     public void FoodPlaced(GameObject food) //go toward the noise of the placement basically
     {
-        if(Vector3.Distance(transform.position, currentTargetPosition) > Vector3.Distance(transform.position, food.transform.position))
+        SetPrimaryTarget(food.transform.position, States.SMELL);
+        /*if(Vector3.Distance(transform.position, currentTargetPosition) > Vector3.Distance(transform.position, food.transform.position))
         {
             SetPrimaryTarget(food.transform.position, States.SMELL);
-        }
+        }*/
     }
 
     private void OnTriggerEnter(Collider other) //if we reach the food

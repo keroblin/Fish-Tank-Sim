@@ -51,8 +51,15 @@ public class Feeding : MonoBehaviour
 
     private void SpawnFood()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        int layerMask = ~(1 << 6) & ~(1 << 2);
+        //TEMP!!!!!!!!!!!
+        GameObject newFood = foodPool.Pull();
+        newFood.transform.SetParent(null, false);
+        newFood.transform.position = new Vector3(1.72f, .92f, 0f);
+        newFood.SetActive(true);
+        OnFoodPlaced.Invoke(newFood);
+
+        /*Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        int layerMask = ~(1 << 11); //fish
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
@@ -70,6 +77,7 @@ public class Feeding : MonoBehaviour
             GameObject newFood = foodPool.Pull();
             newFood.transform.SetParent(null, false);
             newFood.transform.position = hit.point;
+
             newFood.SetActive(true);
             //OnFoodPlaced.Invoke(newFood);
         }
@@ -77,6 +85,6 @@ public class Feeding : MonoBehaviour
         {
             Debug.Log("Out of bounds at " + hit.point + ", bounds are " + bounds.extents);
         }
-
+        */
     }
 }
