@@ -48,7 +48,7 @@ public class Manager : MonoBehaviour
     {
         //tank bounds testing
         Gizmos.color = new Color(255,0,255,.3f);
-        Gizmos.DrawCube(new Vector3(0,tankBounds.extents.y/2,0), tankBounds.size);
+        Gizmos.DrawCube(tankBounds.center, tankBounds.size);
     }
 
     private void Awake()

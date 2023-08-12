@@ -2,177 +2,200 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static FishBehaviour;
+using static UnityEngine.GraphicsBuffer;
 
 public class FishBehaviour : MonoBehaviour
 {
     /*
      The plan is:
-    - fish have a raycast for each direction from their head, or a spherecast
-    - when the main forward raycast is hit, that tells it to turn
-    - when the front one is free but side ones are hitting, if it is facing the raycast hit too hard then it should turn
-    - we should turn in the opposite direction to whichever ones are hit progressively, and move forward
-    - fish are all connected to feeding events and should have a target set for the food
-    - the main target is the target when the fish are not hitting on their forward cast and are not leaning too far in to the side hits
-    - we should store a variable for the avoidance target which is where the fish is aiming to turn to get free until it is free maybe
-    - we could maybe have all this work off coroutines acting like states in update
-     
+    - movetarget moves the fish to the target 
+    - there is a queue of targets
+    - avoidances should go on top of these and respond and switch back if the fish is free to move again and not worried about hitting an object
+    - feeding should override literally everything else
      */
     public Rigidbody rb;
+    public Target primaryTarget = new Target();
+    public Vector3 currentTargetPosition;
+    public bool targetReached;
 
     float length = .5f;
     float dirX;
     float dirY;
     RaycastHit hit;
-    GameObject targetObj;
-    Vector3 targetPosition;
-    bool targetReached;
+    
     bool waiting;
-    bool avoiding;
     Bounds bounds;
-    float breakAmount;
+    float brakeAmount = 1;
 
-    public enum States { IDLE, HIDE, FEED, FIGHT, SMELL };
+    GameObject currentFood;
+
+    public enum States { IDLE, AVOID, HIDE, FEED, SMELL };
     public States state;
-
-    /*List<HitDir> hits = new List<HitDir>();
-    class HitDir
+    [System.Serializable]
+    public class Target //might use, will see
     {
-        public RaycastHit hit;
-        public bool hitting;
-        public Vector3 dir;
-    }*/
+        public Vector3 position;
+        public States type;
+    }
+
+    public List<Target> targets = new List<Target>();
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(hit.point, .05f);
+        Gizmos.color = Color.white;
+        Gizmos.DrawSphere(currentTargetPosition, .05f);
     }
     void Start()
     {
         bounds = Manager.Instance.tankBounds;
         Feeding.OnFoodPlaced += FoodPlaced;
-
-        /*hits.Add(new HitDir());
-        hits.Add(new HitDir());
-        hits.Add(new HitDir());
-        hits.Add(new HitDir());*/
     }
 
     private void FixedUpdate()
     {
-        //int layerMask = (1 << 11) & (1<<0) & (1<<10); //ignore fish layer
-        int layerMask = ~(1 << 11);
-        if (state == States.IDLE) //if we dont have a target, potter around
+        //int layerMask = ~(1<<5);
+        switch (state)
         {
-            if(targetObj != null)
-            {
-                targetObj = null;
-            }
-            if(targetPosition == null) //if we dont have a position, choose a random one
-            {
-                targetPosition = new Vector3(
-                    UnityEngine.Random.Range(-bounds.extents.x, bounds.extents.x), 
-                    UnityEngine.Random.Range(-bounds.extents.y, bounds.extents.y), 
-                    UnityEngine.Random.Range(-bounds.extents.z, bounds.extents.z)
-                    );
-            }
-            MoveTowardTarget();
+            case States.IDLE:
+                if (primaryTarget.position == Vector3.zero || primaryTarget == null) //if we dont have a position, choose a random one
+                {
+                    Debug.Log("Setting idle pos");
+                    Vector3 idleTarget = new Vector3(
+                       UnityEngine.Random.Range(-bounds.extents.x, bounds.extents.x),
+                       UnityEngine.Random.Range(-bounds.extents.y, bounds.extents.y),
+                       UnityEngine.Random.Range(-bounds.extents.z, bounds.extents.z)
+                       );
+                    idleTarget += bounds.center;
+                    SetPrimaryTarget(idleTarget, States.IDLE);
+                }
+                break;
+            case States.AVOID:
+                rb.AddForce(-transform.forward * Time.deltaTime * .5f);
+                break;
+            case States.SMELL:
+                break;
+            case States.FEED:
+                MoveTowardTarget();
+                break;
+            case States.HIDE:
+                break;
+            default:
+                state = States.IDLE; 
+                break;
         }
 
-        RaycastHit hit;
         Debug.DrawRay(transform.position, transform.forward);
-        if (Physics.Raycast(transform.position, transform.forward, out hit, length,layerMask))
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(transform.position, transform.forward, length);
+        if(hits.Length > 0)
         {
-            if(hit.collider.gameObject != gameObject)
+            for (int i = 0; i < hits.Length; i++)
             {
-                Debug.Log("Did Hit, in range");
-                Avoid(hit);
+                RaycastHit hit = hits[i];
+                if (hit.collider.gameObject != gameObject)
+                {
+                    state = States.AVOID;
+                    brakeAmount = 0f;
+                    currentTargetPosition = -hit.point;
+                }
             }
         }
-
-        //hits[0].dir = transform.TransformDirection(transform.forward);
-
-        //these are like directional checks for the sides, forward should be treated a bit differently though
-        /*hits[0].dir = transform.TransformDirection(transform.up);
-        hits[1].dir = transform.TransformDirection(-transform.up);
-        hits[2].dir = transform.TransformDirection(-transform.right);
-        hits[3].dir = transform.TransformDirection(transform.right);
-
-        for (int i= 0; i< 5; i++)
+        else if(state == States.AVOID)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, hits[i].dir, out hit, length, layerMask))
-            {
-                hits[i].hit = hit;
-                Debug.Log("Did Hit, in range");
-                hits[i].hitting = true;
-                Avoid(hit);
-            }
-        }*/
+            state = primaryTarget.type;
+            currentTargetPosition = primaryTarget.position;
+        }
+        MoveTowardTarget();
+    }
+    public void SetPrimaryTarget(Vector3 target, States _state)
+    {
+        primaryTarget.type = _state;
+        primaryTarget.position = target;
+        currentTargetPosition = target;
     }
 
-    public void Avoid(RaycastHit hit)
+    public void MoveTowardTarget()
     {
-        breakAmount = 0;
-        dirX = Mathf.Sign(-hit.point.x);
-        dirY = Mathf.Sign(-hit.point.y);
-        Debug.Log(dirY + ": y");
-        Debug.Log(dirX + ": x");
-        rb.AddForce(-transform.forward * Time.deltaTime * .5f);
-        rb.AddTorque(dirY * transform.up * (1f * Time.deltaTime));
-        rb.AddTorque(dirX * transform.right * (1f * Time.deltaTime));
+        Debug.Log("running");
+        rb.AddForce(transform.forward * Time.deltaTime * 6f); //move forward
+
+        Vector3 cross = Vector3.Cross(transform.forward, (transform.position - currentTargetPosition).normalized); //how much to rotate by
+        if (brakeAmount < 1f) //stop turning
+        {
+            Debug.Log("Braking");
+            brakeAmount += .1f * Time.deltaTime;
+            rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, brakeAmount); //break the turn
+        }
+        else
+        {
+            //steer toward target
+            Debug.Log("Steering");
+            if (cross.magnitude > .15f) //if we arent facing the target, turn to face it
+            {
+                rb.AddTorque(cross);
+            }
+            else //otherwise brake the turn
+            {
+                brakeAmount = 0f;
+            }
+        }
+
+        if (Vector3.Distance(transform.position, currentTargetPosition) < .15f) //if we're within distance
+        {
+            TargetReached();
+            //return true;
+        }
+        else
+        {
+            //return false;
+        }
+    }
+
+    public void TargetReached()
+    {
+        Debug.Log("target reached");
+        switch (state)
+        {
+            case States.IDLE:
+                StartCoroutine("WaitAtTarget");
+                break;
+        }
     }
 
     IEnumerator WaitAtTarget()
     {
+        Debug.Log("Waiting at target...");
+        waiting = true;
         yield return new WaitForSeconds(2f);
         targetReached = true;
+        if(primaryTarget != null)
+        {
+            currentTargetPosition = primaryTarget.position;
+        }
+        else
+        {
+            
+        }
+        Debug.Log("Finished wait. Removed target.");
+        waiting = false;
         yield return null;
     }
-    public void MoveTowardTarget()
+
+    public void FoodPlaced(GameObject food) //go toward the noise of the placement basically
     {
-        if (!avoiding)
+        if(Vector3.Distance(transform.position, currentTargetPosition) > Vector3.Distance(transform.position, food.transform.position))
         {
-            if (targetObj != null)
-            {
-                targetPosition = targetObj.transform.position;
-            }
-            rb.AddForce(transform.forward * Time.deltaTime * 6f);
-            breakAmount += .1f * Time.deltaTime;
-            rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, breakAmount); //break the turn
-            if (Vector3.Distance(transform.position, targetPosition) < .5f)
-            {
-                if (state == States.IDLE && !waiting)
-                {
-                    StartCoroutine("WaitAtTarget");
-                }
-            }
+            SetPrimaryTarget(food.transform.position, States.SMELL);
         }
     }
 
-    public void FoodPlaced(GameObject food)
-    {
-        if(Vector3.Distance(transform.position, targetObj.transform.position) > Vector3.Distance(transform.position, food.transform.position))
-        {
-            targetObj = food;
-        }
-    }
-
-    public void FoodEaten(GameObject food)
-    {
-        if(targetObj == food)
-        {
-            targetObj = null;
-            state = States.SMELL; //smell state lasts for a while, if it sees other fish that are targeting then it targets their food, otherwise if the timer runs out it goes idle
-            //go out of target mode and swim about, if we enter the radius of a food, then target it
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other) //if we reach the food
     {
         if (other.CompareTag("Food"))
         {
-            targetObj = other.gameObject;
-            state = States.FEED;
+            currentFood = other.gameObject;
+            SetPrimaryTarget(currentFood.transform.position, States.FEED);
         }
     }
 }
