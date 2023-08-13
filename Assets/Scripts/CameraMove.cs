@@ -34,6 +34,7 @@ public class CameraMove : MonoBehaviour
         sides.Add(bottom);
 
         face = front;
+        SetClickthrough();
     }
 
     public void Rot(int dir)
@@ -55,7 +56,6 @@ public class CameraMove : MonoBehaviour
                 if (!isUp)
                 {
                     transform.Rotate(90, 0, 0);
-                    SetClickthrough();
                     isUp = true;
                 }
                 break;
@@ -84,13 +84,12 @@ public class CameraMove : MonoBehaviour
     void SetClickthrough()
     {
         face.layer = 9;
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         int layerMask = (1 << 9); //tank only
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+        if (Physics.Raycast(cam.transform.position,cam.transform.forward, out hit, Mathf.Infinity, layerMask))
         {
             face = hit.collider.gameObject;
-            Debug.Log("Did Hit");
+            Debug.Log("Ignoring face: " + hit.collider.gameObject.name);
         }
         else
         {
