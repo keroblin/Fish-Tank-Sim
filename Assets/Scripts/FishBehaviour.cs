@@ -26,9 +26,8 @@ public class FishBehaviour : MonoBehaviour
     
     bool waiting = false;
     Bounds bounds;
-    float brakeAmount = 1;
 
-    GameObject currentFood;
+    public GameObject currentFood;
 
     public enum States { IDLE, AVOID, HIDE, FEED, SMELL };
     public States state;
@@ -71,12 +70,13 @@ public class FishBehaviour : MonoBehaviour
                 }
                 break;
             case States.AVOID:
-                rb.AddForce(-transform.forward * Time.deltaTime * .5f);
+                rb.AddForce(-rb.velocity * Time.deltaTime * 8f);
                 break;
             case States.SMELL:
                 break;
             case States.FEED:
-                MoveTowardTarget();
+                SetPrimaryTarget(currentFood.transform.position, States.FEED);
+                Debug.Log("Food position is " +  currentFood.transform.position);
                 break;
             case States.HIDE:
                 break;
@@ -93,10 +93,10 @@ public class FishBehaviour : MonoBehaviour
             for (int i = 0; i < hits.Length; i++)
             {
                 RaycastHit hit = hits[i];
-                if (hit.collider.gameObject != gameObject && Vector3.Distance(transform.position, primaryTarget.position) > length)
+                if (hit.collider.gameObject != gameObject && Vector3.Distance(transform.position, primaryTarget.position) > Vector3.Distance(transform.position,hit.point))
                 {
                     state = States.AVOID;
-                    currentTargetPosition = -hit.point;
+                    currentTargetPosition = hit.normal;
                 }
             }
         }
@@ -113,6 +113,7 @@ public class FishBehaviour : MonoBehaviour
     }
     public void SetPrimaryTarget(Vector3 target, States _state)
     {
+        //Debug.Log("Set target to " + target);
         primaryTarget.type = _state;
         primaryTarget.position = target;
         currentTargetPosition = target;
@@ -124,36 +125,18 @@ public class FishBehaviour : MonoBehaviour
         rb.AddForce(transform.forward * Time.deltaTime * 6f); //move forward
 
         Vector3 cross = Vector3.Cross(transform.forward, (currentTargetPosition - transform.position).normalized); //how much to rotate by
-        if (brakeAmount < 1f) //stop turning
+        //steer toward target
+        Debug.Log("Steering");
+
+        if (cross.magnitude > 0.01) //if we arent facing the target, turn to face it
         {
-            Debug.Log("Braking");
-            brakeAmount += .1f * Time.deltaTime;
-            rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, brakeAmount); //break the turn
-        }
-        else
-        {
-            //steer toward target
-            Debug.Log("Steering");
-            
-            if (cross.magnitude > 0.01) //if we arent facing the target, turn to face it
-            {
-                rb.AddTorque(cross);
-                rb.angularVelocity = Vector3.Lerp(Vector3.zero, rb.angularVelocity, cross.magnitude);
-            }
-            else //otherwise brake the turn
-            {
-                brakeAmount = 0f;
-            }
+            rb.AddTorque(cross);
+            rb.angularVelocity = Vector3.Lerp(Vector3.zero, rb.angularVelocity, cross.magnitude);
         }
 
-        if (Vector3.Distance(transform.position, currentTargetPosition) < .15f) //if we're within distance
+        if (Vector3.Distance(transform.position, currentTargetPosition) < .2f) //if we're within distance
         {
             TargetReached();
-            //return true;
-        }
-        else
-        {
-            //return false;
         }
     }
 
@@ -164,6 +147,13 @@ public class FishBehaviour : MonoBehaviour
         {
             case States.IDLE:
                 StartCoroutine("WaitAtTarget");
+                break;
+            case States.FEED:
+                StartCoroutine("WaitAtTarget");
+                currentFood = null;
+                state = States.IDLE;
+                //send signal to a fish manager to tell all the other fish that the food has been eaten
+                //send to feeding to say that the current food has been eaten and should be returned to pool and reset
                 break;
         }
     }
@@ -201,7 +191,9 @@ public class FishBehaviour : MonoBehaviour
 
     public void FoodPlaced(GameObject food) //go toward the noise of the placement basically
     {
-        SetPrimaryTarget(food.transform.position, States.SMELL);
+        currentFood = food;
+        SetPrimaryTarget(currentFood.transform.position, States.FEED);
+        //SetPrimaryTarget(food.transform.position, States.SMELL);
         /*if(Vector3.Distance(transform.position, currentTargetPosition) > Vector3.Distance(transform.position, food.transform.position))
         {
             SetPrimaryTarget(food.transform.position, States.SMELL);
@@ -213,7 +205,6 @@ public class FishBehaviour : MonoBehaviour
         if (other.CompareTag("Food"))
         {
             currentFood = other.gameObject;
-            SetPrimaryTarget(currentFood.transform.position, States.FEED);
         }
     }
 }

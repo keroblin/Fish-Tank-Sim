@@ -15,10 +15,21 @@ public class Feeding : MonoBehaviour
     public static event FoodPlaced OnFoodPlaced;
     public Pool foodPool;
     public GameObject foodRef;
+
+    bool inBounds;
+    Vector3 debugHitPoint;
     void Start()
     {
         cam = Camera.main;
         bounds = Manager.Instance.tankBounds;
+        bounds.size *= 1.3f;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!inBounds) { Gizmos.color = Color.red; }
+        else { Gizmos.color = Color.green; }
+        Gizmos.DrawSphere(debugHitPoint, .2f);
     }
 
     // Update is called once per frame
@@ -51,15 +62,8 @@ public class Feeding : MonoBehaviour
 
     private void SpawnFood()
     {
-        //TEMP!!!!!!!!!!!
-        GameObject newFood = foodPool.Pull();
-        newFood.transform.SetParent(null, false);
-        newFood.transform.position = new Vector3(1.72f, .92f, 0f);
-        newFood.SetActive(true);
-        OnFoodPlaced.Invoke(newFood);
-
-        /*Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        int layerMask = ~(1 << 11); //fish
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        int layerMask = ~(1 << 11) & ~(1 << 2); //fish
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
@@ -73,18 +77,19 @@ public class Feeding : MonoBehaviour
 
         if (bounds.Contains(hit.point))
         {
-            Debug.Log("In bounds");
+            inBounds = true;
             GameObject newFood = foodPool.Pull();
             newFood.transform.SetParent(null, false);
             newFood.transform.position = hit.point;
 
             newFood.SetActive(true);
-            //OnFoodPlaced.Invoke(newFood);
+            OnFoodPlaced.Invoke(newFood);
         }
         else
         {
-            Debug.Log("Out of bounds at " + hit.point + ", bounds are " + bounds.extents);
+            inBounds = false;
         }
-        */
+
+        debugHitPoint = hit.point;
     }
 }
