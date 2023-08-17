@@ -15,6 +15,7 @@ public class Feeding : MonoBehaviour
     public static event FoodPlaced OnFoodPlaced;
     public Pool foodPool;
     public GameObject foodRef;
+    public Food currentFood;
 
     bool inBounds;
     Vector3 debugHitPoint;
@@ -81,7 +82,8 @@ public class Feeding : MonoBehaviour
             GameObject newFood = foodPool.Pull();
             newFood.transform.SetParent(null, false);
             newFood.transform.position = hit.point;
-
+            FoodBehaviour behaviour = newFood.GetComponent<FoodBehaviour>();
+            behaviour.food = currentFood;
             newFood.SetActive(true);
             OnFoodPlaced.Invoke(newFood);
         }

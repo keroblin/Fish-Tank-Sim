@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a03683c64268e664091ab2b4a5dda7b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
   m_Name: Chest
   m_EditorClassIdentifier: 
-  model: {fileID: -69760931014144829, guid: 9a2b2544608df9843a89412e48adbeb6, type: 3}
-  material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
-  description: Whats in the box?
-  price: 10
+  model: {fileID: 0}
+  material: {fileID: 0}
+  description: 
+  price: 0
   category: 1
   pHMod: 0
   dGHMod: 0
-  lightMod: 0.3
+  lightMod: 0
   tempMod: 0

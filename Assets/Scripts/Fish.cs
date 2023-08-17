@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 [CreateAssetMenu(fileName = "Fish", menuName = "ScriptableObjects/Fish")]
-public class Fish: ScriptableObject
+public class Fish: Purchasable
 {
+    [Header("COLDWATER, TROPICAL, BRACKISH")]
     public float minPH = 6.0f,maxPH = 8.5f;
     public float minHardness = 5f,maxHardness = 30f;
     public float minTemp = 33f,maxTemp = 90f;
@@ -73,4 +73,5 @@ public class Fish: ScriptableObject
 
         }
     }
+
 }

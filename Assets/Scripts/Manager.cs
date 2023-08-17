@@ -21,6 +21,10 @@ public class Manager : MonoBehaviour
     public float tankTemp = baseTemp;
     public float tankHardness = baseHardness;
 
+    public enum ItemCategories { SUBSTRATE, ORNAMENTS, LIVEPLANTS, HEATING };
+    public enum FoodCategories { FLAKES, PELLETS, FROZEN, LIVE };
+    public enum FishCategories { COLDWATER, TROPICAL, BRACKISH };
+
     public Animator menuAnim;
 
     public Sprite sad;
@@ -29,8 +33,8 @@ public class Manager : MonoBehaviour
     public List<Fish> allFish;
     public List<Purchasable> allPurchasables;
     public List<Purchasable> inventory;
-    public Purchasable currentSubstrate;
-    public Purchasable nullSubstrate;
+    public Item currentSubstrate;
+    public Item nullSubstrate;
     public MeshFilter substrateMesh;
     public MeshRenderer substrateRenderer;
 
@@ -70,15 +74,15 @@ public class Manager : MonoBehaviour
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
     }
 
-    public void AddModifiers(Purchasable purchasable)
+    public void AddModifiers(Item item)
     {
-        tankPh += purchasable.pHMod;
-        tankTemp += purchasable.tempMod;
-        tankHardness += purchasable.dGHMod;
-        tankLight += purchasable.lightMod;
+        tankPh += item.pHMod;
+        tankTemp += item.tempMod;
+        tankHardness += item.dGHMod;
+        tankLight += item.lightMod;
         onStatUpdate.Invoke();
     }
-    public void RemoveModifiers(Purchasable purchasable)
+    public void RemoveModifiers(Item purchasable)
     {
         tankPh -= purchasable.pHMod;
         tankTemp -= purchasable.tempMod;
@@ -120,14 +124,14 @@ public class Manager : MonoBehaviour
         onSell.Invoke();
     }
 
-    public void SwapSubstrate(Purchasable purchasable)
+    public void SwapSubstrate(Item item)
     {
         if (currentSubstrate)
         {
             RemoveModifiers(currentSubstrate);
         }
-        currentSubstrate = purchasable;
-        if (purchasable == nullSubstrate)
+        currentSubstrate = item;
+        if (item == nullSubstrate)
         {
             currentSubstrate.model = null;
         }

@@ -13465,27 +13465,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ba057f975bca7074f92083050788d0f9, type: 2}
   - {fileID: 11400000, guid: f34ce8a033e23cd46b42ee5123d2d9a9, type: 2}
   allPurchasables:
-  - {fileID: 11400000, guid: 16f43433a9e32ea41a11aea0ebd221d8, type: 2}
-  - {fileID: 11400000, guid: 64cf0b65167ed404eb41190a14ca2176, type: 2}
-  - {fileID: 11400000, guid: 60668290a7306324a993bb7fd1adb625, type: 2}
-  - {fileID: 11400000, guid: 25618f2a3a23781459b256dab895f29d, type: 2}
-  - {fileID: 11400000, guid: 94d42ad1f51eb7d4b80e1fdeb958b3c0, type: 2}
-  - {fileID: 11400000, guid: b68862c74b8019946bfddd3ae14c1501, type: 2}
+  - {fileID: 11400000, guid: 0c1aa7b930c751a4ea8dd672ddee7b6b, type: 2}
+  - {fileID: 11400000, guid: 62392c12fea191a4cb90a59e9abb5864, type: 2}
   - {fileID: 11400000, guid: 5bf29288a5d790c4ead474c6a37e1f3f, type: 2}
-  - {fileID: 11400000, guid: f4851f15704b33341a65dcf442a185ff, type: 2}
-  - {fileID: 11400000, guid: a9ad8389c6f33dc4da0c135e93607bbe, type: 2}
-  - {fileID: 11400000, guid: 4f0029e3541296342b96f4e67124173b, type: 2}
-  - {fileID: 11400000, guid: 42986368a556e39488ac477ed87078dc, type: 2}
-  - {fileID: 11400000, guid: 405153adc47ed87479167e896b421557, type: 2}
-  - {fileID: 11400000, guid: 7dae4a9c9ca91b54dba4ae519e067992, type: 2}
-  - {fileID: 11400000, guid: 7d4b4cab926bdbb49ac7770fa983ab70, type: 2}
-  - {fileID: 11400000, guid: ab582478abd20e0429df80f6d4c521b3, type: 2}
-  - {fileID: 11400000, guid: 4791051448acded4abab83e8ed87569c, type: 2}
-  - {fileID: 11400000, guid: 7a87b134b7d6cb74a91f4c90f7e8ae90, type: 2}
-  - {fileID: 11400000, guid: f302722c479badd4b9ccf2a04a8586c8, type: 2}
+  - {fileID: 11400000, guid: b68862c74b8019946bfddd3ae14c1501, type: 2}
+  - {fileID: 11400000, guid: 25618f2a3a23781459b256dab895f29d, type: 2}
+  - {fileID: 11400000, guid: 97c5151e30840c242932157a1437a39e, type: 2}
   inventory: []
-  currentSubstrate: {fileID: 11400000, guid: 24f45ce950595db4c99a0404bca20093, type: 2}
-  nullSubstrate: {fileID: 11400000, guid: 24f45ce950595db4c99a0404bca20093, type: 2}
+  currentSubstrate: {fileID: 0}
+  nullSubstrate: {fileID: 0}
   substrateMesh: {fileID: 965529226}
   substrateRenderer: {fileID: 965529225}
   onStatUpdate:
@@ -28418,7 +28406,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 233.65205}
+  m_AnchoredPosition: {x: 0, y: 233.65237}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &815162169
@@ -37163,6 +37151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   foodPool: {fileID: 1552232958}
   foodRef: {fileID: 16048363}
+  currentFood: {fileID: 0}
 --- !u!1 &1222106442
 GameObject:
   m_ObjectHideFlags: 0
@@ -57385,7 +57374,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 405146249}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99999416
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

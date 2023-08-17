@@ -5,13 +5,9 @@ using UnityEngine;
 
 public class Purchasable : ScriptableObject
 {
+    public int category;
     public Mesh model;
     public Material material;
     public string description;
     public float price;
-    public ItemList.Categories category;
-    public float pHMod;
-    public float dGHMod;
-    public float lightMod;
-    public float tempMod;
 }

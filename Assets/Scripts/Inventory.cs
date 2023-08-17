@@ -52,13 +52,13 @@ public class Inventory : ShopCategory
             {
                 place.interactable = true;
                 itemList.meshRenderer.material = itemList.currentPurchasable.material;
-                if (itemList.currentPurchasable.category != ItemList.Categories.SUBSTRATE)
+                if (itemList.currentPurchasable.category != (int)Manager.ItemCategories.SUBSTRATE)
                 {
                     place.onClick.AddListener(PlaceButtonClicked);
                 }
                 else
                 {
-                    place.onClick.AddListener(delegate { Manager.Instance.SwapSubstrate(itemList.currentPurchasable); });
+                    place.onClick.AddListener(delegate { Manager.Instance.SwapSubstrate(itemList.currentPurchasable as Item); });
                 }
 
             }
@@ -82,7 +82,7 @@ public class Inventory : ShopCategory
             Placeable placeable = obj.GetComponent<Placeable>();
             placeable.Set(itemList.currentPurchasable);
             placeable.placeableClicked.AddListener(delegate { menu.Select(placeable); });
-            Manager.Instance.AddModifiers(itemList.currentPurchasable);
+            Manager.Instance.AddModifiers(itemList.currentPurchasable as Item);
             purchasablesPlaced.Add(itemList.currentPurchasable);
             placeablesPlaced.Add(placeable);
         }
@@ -105,9 +105,9 @@ public class Inventory : ShopCategory
         else
         {
             Debug.Log("Selling bought purchasable: " + itemList.currentPurchasable.name);
-            if(itemList.currentPurchasable.category == ItemList.Categories.SUBSTRATE)
+            if(itemList.currentPurchasable.category == (int)Manager.ItemCategories.SUBSTRATE)
             {
-                Manager.Instance.RemoveModifiers(itemList.currentPurchasable); //check that this is working!!
+                Manager.Instance.RemoveModifiers(itemList.currentPurchasable as Item); //check that this is working!!
                 Manager.Instance.SwapSubstrate(Manager.Instance.nullSubstrate);
             }
             Manager.Instance.Sell(itemList.currentPurchasable);
@@ -127,7 +127,7 @@ public class Inventory : ShopCategory
         {
             placeable = placeablesPlaced.Find(x => x.purchasable == itemList.currentPurchasable);
         }
-        Manager.Instance.RemoveModifiers(placeable.purchasable);
+        Manager.Instance.RemoveModifiers(placeable.purchasable as Item);
         Manager.Instance.Sell(placeable.purchasable);
         if (menu.currentPlaceable)
         {

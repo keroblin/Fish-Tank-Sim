@@ -24,8 +24,6 @@ public class ItemList : CategoryList
     public Purchasable currentPurchasable;
     public GameObject noneSelectedMask;
 
-    public enum Categories { SUBSTRATE = 0, ORNAMENTS = 1, LIVEPLANTS = 2, HEATING = 3 };
-
     public List<Purchasable> purchasables = new List<Purchasable>();
     public List<PurchasableUI> purchasableUIs = new List<PurchasableUI>();
 
@@ -101,8 +99,9 @@ public class ItemList : CategoryList
             {
                 int index = i;
                 PurchasableUI workingUI = purchasableUIs[index];
-                Purchasable workingPurchasable = _purchasables[index];
-                int workingCategoryIndex = (int)workingPurchasable.category;
+                var workingPurchasable = _purchasables[index];
+                int workingCategoryIndex = workingPurchasable.category;
+                Debug.Log(workingPurchasable.GetType().ToString());
                 Category workingCategory = categories[workingCategoryIndex];
 
                 workingUI.Set(workingPurchasable);
@@ -123,11 +122,6 @@ public class ItemList : CategoryList
         itemPrice.text = "Price: £" + purchasable.price.ToString("#.00");
         itemDescription.text = purchasable.description;
 
-        itemPh.text = "pH: " + CheckSetPosNegative(purchasable.pHMod,itemPh) + purchasable.pHMod.ToString();
-        itemHardness.text = "Water Hardness: " + CheckSetPosNegative(purchasable.dGHMod,itemHardness) + purchasable.dGHMod.ToString() + "dGH";
-        itemTemp.text = "Temperature: " + CheckSetPosNegative(purchasable.tempMod,itemTemp) + purchasable.tempMod.ToString() + "f";
-        itemLight.text = "Light: " + CheckSetPosNegative(purchasable.lightMod,itemLight) + (purchasable.lightMod * 100f).ToString() + "%";
-
         mesh.mesh = purchasable.model;
         meshRenderer.material = purchasable.material;
 
@@ -135,6 +129,21 @@ public class ItemList : CategoryList
         meshSize.Scale(mesh.transform.localScale);
         mesh.transform.position = new Vector3(mesh.transform.position.x, mesh.transform.position.y, meshViewDefaultDistance + meshSize.magnitude);
         onSelect.Invoke();
+
+        switch (purchasable.GetType().ToString())
+        {
+            case "Item":
+                Item item = purchasable as Item;
+                itemPh.text = "pH: " + CheckSetPosNegative(item.pHMod, itemPh) + item.pHMod.ToString();
+                itemHardness.text = "Water Hardness: " + CheckSetPosNegative(item.dGHMod, itemHardness) + item.dGHMod.ToString() + "dGH";
+                itemTemp.text = "Temperature: " + CheckSetPosNegative(item.tempMod, itemTemp) + item.tempMod.ToString() + "f";
+                itemLight.text = "Light: " + CheckSetPosNegative(item.lightMod, itemLight) + (item.lightMod * 100f).ToString() + "%";
+                break;
+            case "Fish":
+                break;
+            case "Food":
+                break;
+        }
     }
 
     string CheckSetPosNegative(float val,TextMeshProUGUI ui)

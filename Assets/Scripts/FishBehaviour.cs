@@ -7,13 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class FishBehaviour : MonoBehaviour
 {
-    /*
-     The plan is:
-    - movetarget moves the fish to the target 
-    - there is a queue of targets
-    - avoidances should go on top of these and respond and switch back if the fish is free to move again and not worried about hitting an object
-    - feeding should override literally everything else
-     */
+    public Fish fish;
     public Rigidbody rb;
     public Target primaryTarget = new Target();
     public Vector3 currentTargetPosition;
@@ -27,7 +21,11 @@ public class FishBehaviour : MonoBehaviour
     bool waiting = false;
     Bounds bounds;
 
-    public GameObject currentFood;
+    public FoodData currentFood;
+    public float maxHunger;
+    public float hunger;
+    public float maxHappiness;
+    public float happiness;
 
     public enum States { IDLE, AVOID, HIDE, FEED, SMELL };
     public States state;
@@ -36,6 +34,22 @@ public class FishBehaviour : MonoBehaviour
     {
         public Vector3 position;
         public States type;
+    }
+    public class FoodData
+    {
+        public GameObject go;
+        public FoodBehaviour foodBehaviour;
+        public Food food;
+        public bool isFavourite;
+        public bool isLiked;
+        public void Set(GameObject foodObj,Fish fish)
+        {
+            this.go = foodObj;
+            this.foodBehaviour = foodObj.GetComponent<FoodBehaviour>();
+            this.food = foodBehaviour.food;
+            this.isFavourite = food.favourites.Contains(fish);
+            this.isLiked = food.likes.Contains(fish);
+        }
     }
 
     public List<Target> targets = new List<Target>();
@@ -75,8 +89,8 @@ public class FishBehaviour : MonoBehaviour
             case States.SMELL:
                 break;
             case States.FEED:
-                SetPrimaryTarget(currentFood.transform.position, States.FEED);
-                Debug.Log("Food position is " +  currentFood.transform.position);
+                SetPrimaryTarget(currentFood.go.transform.position, States.FEED);
+                Debug.Log("Food position is " +  currentFood.go.transform.position);
                 break;
             case States.HIDE:
                 break;
@@ -113,7 +127,7 @@ public class FishBehaviour : MonoBehaviour
     }
     public void SetPrimaryTarget(Vector3 target, States _state)
     {
-        //Debug.Log("Set target to " + target);
+        //Debug.Log("Set target to " + target)
         primaryTarget.type = _state;
         primaryTarget.position = target;
         currentTargetPosition = target;
@@ -191,8 +205,23 @@ public class FishBehaviour : MonoBehaviour
 
     public void FoodPlaced(GameObject food) //go toward the noise of the placement basically
     {
-        currentFood = food;
-        SetPrimaryTarget(currentFood.transform.position, States.FEED);
+        FoodData temp = new FoodData();
+        temp.Set(food, fish);
+        if (temp.isFavourite)
+        {
+            //go extra fast
+        }
+        else if (temp.isLiked)
+        {
+            //go toward it
+        }
+        else
+        {
+            //ignore it
+            return;
+        }
+        currentFood = temp;
+        SetPrimaryTarget(currentFood.go.transform.position, States.FEED);
         //SetPrimaryTarget(food.transform.position, States.SMELL);
         /*if(Vector3.Distance(transform.position, currentTargetPosition) > Vector3.Distance(transform.position, food.transform.position))
         {
@@ -200,11 +229,36 @@ public class FishBehaviour : MonoBehaviour
         }*/
     }
 
-    private void OnTriggerEnter(Collider other) //if we reach the food
+    void Eat()
     {
-        if (other.CompareTag("Food"))
+        currentFood.foodBehaviour.onUsed.Invoke();
+        if(hunger > 0)
         {
-            currentFood = other.gameObject;
+            if (currentFood.isFavourite)
+            {
+                if(happiness < 4)
+                {
+                    happiness += 1;
+                }
+            }
+           
+            if(hunger - currentFood.food.portionSize > 0)
+            {
+                hunger -= currentFood.food.portionSize;
+            }
+            else
+            {
+                hunger = 0;
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Food"))
+        {
+            currentFood = new FoodData();
+            currentFood.Set(collision.gameObject,fish);
         }
     }
 }

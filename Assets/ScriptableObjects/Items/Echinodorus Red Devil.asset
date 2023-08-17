@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a03683c64268e664091ab2b4a5dda7b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
   m_Name: Echinodorus Red Devil
   m_EditorClassIdentifier: 
   model: {fileID: -7349132195360716778, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
-  material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
-  description: The only plant in the game right now c;
+  material: {fileID: -5296931037203074916, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
+  description: Planty
   price: 10
   category: 2
   pHMod: 0
