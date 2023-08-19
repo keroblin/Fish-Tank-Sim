@@ -14,9 +14,6 @@ public class FishBehaviour : MonoBehaviour
     public bool targetReached;
 
     float length = .5f;
-    float dirX;
-    float dirY;
-    RaycastHit hit;
     
     bool waiting = false;
     Bounds bounds;
@@ -90,7 +87,6 @@ public class FishBehaviour : MonoBehaviour
                 break;
             case States.FEED:
                 SetPrimaryTarget(currentFood.go.transform.position, States.FEED);
-                Debug.Log("Food position is " +  currentFood.go.transform.position);
                 break;
             case States.HIDE:
                 break;
@@ -229,12 +225,13 @@ public class FishBehaviour : MonoBehaviour
         }*/
     }
 
-    void Eat()
+    void Eat(FoodData food)
     {
-        currentFood.foodBehaviour.onUsed.Invoke();
+        Debug.Log(fish.name + " is eating " + food.food.name);
+        food.foodBehaviour.Use(currentFood.foodBehaviour);
         if(hunger > 0)
         {
-            if (currentFood.isFavourite)
+            if (food.isFavourite)
             {
                 if(happiness < 4)
                 {
@@ -242,23 +239,34 @@ public class FishBehaviour : MonoBehaviour
                 }
             }
            
-            if(hunger - currentFood.food.portionSize > 0)
+            if(hunger - food.food.portionSize > 0)
             {
-                hunger -= currentFood.food.portionSize;
+                hunger -= food.food.portionSize;
             }
             else
             {
                 hunger = 0;
             }
         }
+        Debug.Log(fish.name + "'s hunger is " + hunger);
     }
 
+    private void OnTriggerEnter(Collider other) //when in range of food
+    {
+        if (other.gameObject.CompareTag("Food"))
+        {
+            currentFood = new FoodData();
+            currentFood.Set(other.gameObject, fish);
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Food"))
         {
-            currentFood = new FoodData();
-            currentFood.Set(collision.gameObject,fish);
+            if(currentFood.go == collision.gameObject) //maybe change and query the food to check if its liked, maybe do this in foodbehaviour
+            {
+                Eat(currentFood);
+            }
         }
     }
 }

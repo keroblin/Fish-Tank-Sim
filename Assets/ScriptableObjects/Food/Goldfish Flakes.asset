@@ -9,16 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
-  m_Name: Black Sand
+  m_Script: {fileID: 11500000, guid: 502b159f767812d4ca3173ba57bd78d2, type: 3}
+  m_Name: Goldfish Flakes
   m_EditorClassIdentifier: 
   category: 0
   icon: {fileID: 0}
-  model: {fileID: 3523059709116458499, guid: 79ed50524491c4f4d993f5db0822d80d, type: 3}
-  material: {fileID: 2100000, guid: 83b7f6242af3be54ca8cc9a17d977813, type: 2}
+  model: {fileID: 0}
+  material: {fileID: 0}
   description: 
   price: 0
-  pHMod: 0
-  dGHMod: 0
-  lightMod: 0
-  tempMod: 0
+  portionSize: 0
+  favourites: []
+  likes: []

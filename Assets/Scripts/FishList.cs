@@ -67,7 +67,7 @@ public class FishList:MonoBehaviour
             fishViewTransform.anchoredPosition = new Vector2(0+ (fishViewTransform.sizeDelta.x*2), fishViewTransform.anchoredPosition.y);
         }*/
         fishName.text = fish.name;
-        fishDescription.text = fish.fishDescription;
+        fishDescription.text = fish.description;
         fishPhText.text = "pH: " + fish.minPH.ToString() + " - " + fish.maxPH.ToString();
         fishPhIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minPH, fish.maxPH, Manager.Instance.tankPh));
         fishHardnessText.text = "Water Hardness: " + fish.minHardness.ToString() + "dGH - " + fish.maxHardness.ToString() + "dGH";

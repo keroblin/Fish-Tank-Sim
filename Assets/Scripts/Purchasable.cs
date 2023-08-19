@@ -6,8 +6,12 @@ using UnityEngine;
 public class Purchasable : ScriptableObject
 {
     public int category;
+    public Sprite icon;
     public Mesh model;
     public Material material;
+    [Multiline]
     public string description;
     public float price;
+
+
 }

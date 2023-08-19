@@ -9,20 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 586ec84cdced4ec4f81bad6af536362a, type: 3}
-  m_Name: Betta
+  m_Script: {fileID: 11500000, guid: 502b159f767812d4ca3173ba57bd78d2, type: 3}
+  m_Name: Blood Worms
   m_EditorClassIdentifier: 
   category: 0
   icon: {fileID: 0}
   model: {fileID: 0}
   material: {fileID: 0}
-  description: 
-  price: 0
-  minPH: 7
-  maxPH: 7
-  minHardness: 0
-  maxHardness: 10
-  minTemp: 68
-  maxTemp: 79
-  minLight: 0
-  maxLight: 0.4
+  description: Give your fish a taste for blood >:D
+  price: 3
+  portionSize: 1.39
+  favourites:
+  - {fileID: 11400000, guid: ba057f975bca7074f92083050788d0f9, type: 2}
+  likes: []

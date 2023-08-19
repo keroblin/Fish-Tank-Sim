@@ -65,7 +65,6 @@ public class ItemList : CategoryList
             {
                 Debug.Log("Purchasable count: " + _purchasables.Count + "\n UI count: " + purchasableUIs.Count);
                 excess = purchasableUIs.GetRange(_purchasables.Count, purchasableUIs.Count - _purchasables.Count);
-                Debug.Log("Removing excess from " + excess[0].purchasable.name + " to " + excess[excess.Count-1].purchasable.name);
                 foreach (PurchasableUI ui in excess)
                 {
                     //Debug.Log("Returning " + ui.purchasable.name);

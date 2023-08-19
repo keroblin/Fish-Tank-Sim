@@ -4,16 +4,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Fish", menuName = "ScriptableObjects/Fish")]
 public class Fish: Purchasable
 {
+    [Space]
     [Header("COLDWATER, TROPICAL, BRACKISH")]
+    [Space]
+
+    public float speed;
+    public Manager.FishPersonalities personality;
+
     public float minPH = 6.0f,maxPH = 8.5f;
     public float minHardness = 5f,maxHardness = 30f;
     public float minTemp = 33f,maxTemp = 90f;
     public float minLight = 0f,maxLight = 1f;
-
-    public Sprite fishIcon;
-    public Mesh fishMesh;
-    [Multiline]
-    public string fishDescription;
 
     public Sprite GetHappinessIcon(float statOverride = 0.0f)
     {

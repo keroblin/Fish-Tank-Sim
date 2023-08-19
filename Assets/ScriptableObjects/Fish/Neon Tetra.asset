@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 586ec84cdced4ec4f81bad6af536362a, type: 3}
   m_Name: Neon Tetra
   m_EditorClassIdentifier: 
+  category: 0
+  icon: {fileID: 0}
+  model: {fileID: 0}
+  material: {fileID: 0}
+  description: Stripes make you go faster!
+  price: 0
   minPH: 7
   maxPH: 7
   minHardness: 5
@@ -20,9 +26,3 @@ MonoBehaviour:
   maxTemp: 79
   minLight: 0
   maxLight: 0.4
-  fishIcon: {fileID: 21300000, guid: ff1f9417bf2e4b748852d54076ac56c5, type: 3}
-  fishMesh: {fileID: 0}
-  fishName: Neon Tetra
-  fishDescription: 'Stripes make you go faster!
-
-    Loves the dark.'

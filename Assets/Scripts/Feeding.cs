@@ -84,6 +84,7 @@ public class Feeding : MonoBehaviour
             newFood.transform.position = hit.point;
             FoodBehaviour behaviour = newFood.GetComponent<FoodBehaviour>();
             behaviour.food = currentFood;
+            behaviour.Use += RemoveFood;
             newFood.SetActive(true);
             OnFoodPlaced.Invoke(newFood);
         }
@@ -93,5 +94,13 @@ public class Feeding : MonoBehaviour
         }
 
         debugHitPoint = hit.point;
+    }
+
+    void RemoveFood(FoodBehaviour food)
+    {
+        foodPool.ReturnRigidbody(food.gameObject);
+        food.Use -= RemoveFood;
+        food.gameObject.SetActive(false);
+        food.food = null;
     }
 }

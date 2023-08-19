@@ -17,6 +17,8 @@ public class Placeable : MonoBehaviour
     public bool selected = false;
     public UnityEvent placeableClicked;
     public BoxCollider col;
+
+    float zMod;
     Vector2 input;
     int dir = 0;
     Bounds bounds;
@@ -85,6 +87,16 @@ public class Placeable : MonoBehaviour
             {
                 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
             }
+
+            if(Mathf.Abs(Input.GetAxisRaw("Mouse ScrollWheel")) > 0)
+            {
+                if(Mathf.Abs(zMod + Input.GetAxisRaw("Mouse ScrollWheel")) < 4f)
+                {
+                    zMod += Input.GetAxisRaw("Mouse ScrollWheel");
+                    Debug.Log("zMod: " + zMod);
+                }
+            }
+
             Move();
             input = Vector2.zero;
         }
@@ -137,11 +149,14 @@ public class Placeable : MonoBehaviour
         if (selected)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            int layerMask = ~(1 << 6) & ~(1 << 2);
+            int layerMask = ~((1 << LayerMask.NameToLayer("Fish")) | (1 << LayerMask.NameToLayer("Ignore Raycast")) | (1 << LayerMask.NameToLayer("Item")));
+            Debug.Log("Layermask: " + layerMask);
 
             RaycastHit hit;
+            Vector3 target = transform.position;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
+                target = new Vector3(hit.point.x, hit.point.y, zMod);
                 Debug.Log("Did Hit");
             }
             else
@@ -149,9 +164,10 @@ public class Placeable : MonoBehaviour
                 Debug.Log("Did not Hit");
             }
 
-            if (bounds.Contains(hit.point))
+            if (bounds.Contains(target))
             {
-                transform.position = hit.point;
+                Debug.Log("Hit layer: " + LayerMask.LayerToName(hit.collider.gameObject.layer));
+                transform.position = target;
                 if(this.mat.color != color)
                 {
                     this.mat.color = color;

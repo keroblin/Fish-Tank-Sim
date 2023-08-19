@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
-  m_Name: Anchor
+  m_Script: {fileID: 11500000, guid: 502b159f767812d4ca3173ba57bd78d2, type: 3}
+  m_Name: Daphnia
   m_EditorClassIdentifier: 
+  category: 0
+  icon: {fileID: 0}
   model: {fileID: 0}
   material: {fileID: 0}
-  description: 
+  description: Little magical insects
   price: 0
-  category: 1
-  pHMod: 0
-  dGHMod: 0
-  lightMod: 0
-  tempMod: 0
+  portionSize: 0
+  favourites: []
+  likes: []

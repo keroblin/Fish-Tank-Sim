@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
   m_Name: Chest
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
-  material: {fileID: 0}
+  category: 1
+  icon: {fileID: 0}
+  model: {fileID: -69760931014144829, guid: 9a2b2544608df9843a89412e48adbeb6, type: 3}
+  material: {fileID: -5296931037203074916, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
   description: 
   price: 0
-  category: 1
   pHMod: 0
   dGHMod: 0
   lightMod: 0

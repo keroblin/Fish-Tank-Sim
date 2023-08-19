@@ -10,11 +10,12 @@ public class Manager : MonoBehaviour
     public static Manager Instance;
     public PlacingMenu placingMenu;
     public GameObject placingRef;
-    const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f;
+    const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f, baseHygeine = 100f;
     const float totalMoney = 200.00f;
     public float currentMoney = totalMoney;
     public TextMeshProUGUI money;
 
+    public float tankHygeine = baseHygeine;
     public float tankPh = basePh;
     [Range(0f, 1f)]
     public float tankLight = baseLight;
@@ -22,8 +23,9 @@ public class Manager : MonoBehaviour
     public float tankHardness = baseHardness;
 
     public enum ItemCategories { SUBSTRATE, ORNAMENTS, LIVEPLANTS, HEATING };
-    public enum FoodCategories { FLAKES, PELLETS, FROZEN, LIVE };
+    public enum FoodCategories { FLAKES, PELLETS, FROZEN, LIVE, VEG};
     public enum FishCategories { COLDWATER, TROPICAL, BRACKISH };
+    public enum FishPersonalities { BOTTOMFEEDER, HUNTER, CASUAL, TERRITORIAL };
 
     public Animator menuAnim;
 
