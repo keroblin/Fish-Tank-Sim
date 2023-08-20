@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Neon Tetra
   m_EditorClassIdentifier: 
   category: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ff1f9417bf2e4b748852d54076ac56c5, type: 3}
   model: {fileID: 0}
   material: {fileID: 0}
   description: Stripes make you go faster!
   price: 0
+  speed: 0
+  personality: 0
   minPH: 7
   maxPH: 7
   minHardness: 5
