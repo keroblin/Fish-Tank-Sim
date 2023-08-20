@@ -27,6 +27,9 @@ public class Placeable : MonoBehaviour
 
     float increment = 0.05f;
 
+    private Vector3 screenPoint;
+    private Vector3 offset;
+
     private void OnDrawGizmos()
     {
         Gizmos.color = new Color(255, 255, 0, 0.3f);
@@ -65,11 +68,20 @@ public class Placeable : MonoBehaviour
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             placeableClicked.Invoke();
+            Debug.Log("Clicked on");
+
+            screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
         }
+    }
+    private void OnMouseEnter()
+    {
+        Debug.Log("Mouse over");
     }
 
     private void Update()
     {
+        Debug.Log(CameraMove.isUp + " cam state");
         if (selected)
         {
             if (!Input.GetKeyDown(KeyCode.Q) && dir == -1) { dir = 0; }
@@ -127,21 +139,22 @@ public class Placeable : MonoBehaviour
     {
         input = _input.normalized;
     }
-    private void OnTriggerEnter(Collider other)
+
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Item") || other.CompareTag("TankWall"))
+        if (collision.gameObject.CompareTag("Item") || collision.gameObject.CompareTag("TankWall"))
         {
             Debug.Log("hit");
             this.mat.color = Color.red;
         }
     }
-    private void OnTriggerExit(Collider other)
+
+    private void OnCollisionExit(Collision collision)
     {
-        if (other.CompareTag("Item") || other.CompareTag("TankWall"))
+        if (collision.gameObject.CompareTag("Item") || collision.gameObject.CompareTag("TankWall"))
         {
             this.mat.color = color;
         }
-
     }
 
     private void OnMouseDrag()
@@ -150,23 +163,17 @@ public class Placeable : MonoBehaviour
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             int layerMask = ~((1 << LayerMask.NameToLayer("Fish")) | (1 << LayerMask.NameToLayer("Ignore Raycast")) | (1 << LayerMask.NameToLayer("Item")));
-            Debug.Log("Layermask: " + layerMask);
-
             RaycastHit hit;
             Vector3 target = transform.position;
+            float distance_to_screen = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
-                target = new Vector3(hit.point.x, hit.point.y, zMod);
-                Debug.Log("Did Hit");
-            }
-            else
-            {
-                Debug.Log("Did not Hit");
+                target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distance_to_screen + (zMod / 10)));
+                target.y = transform.position.y;
             }
 
             if (bounds.Contains(target))
             {
-                Debug.Log("Hit layer: " + LayerMask.LayerToName(hit.collider.gameObject.layer));
                 transform.position = target;
                 if(this.mat.color != color)
                 {

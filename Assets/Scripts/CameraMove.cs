@@ -18,14 +18,11 @@ public class CameraMove : MonoBehaviour
     List<GameObject> sides = new List<GameObject>();
 
     Camera cam;
-    Vector3 initRot;
-    Vector3 currentTarget;
     GameObject face;
-    bool isUp = false;
+    public static bool isUp = false;
     void Start()
     {
         cam = Camera.main;
-        initRot = transform.eulerAngles;
         sides.Add(front);
         sides.Add(back);
         sides.Add (left);
@@ -57,6 +54,7 @@ public class CameraMove : MonoBehaviour
                 {
                     transform.Rotate(90, 0, 0);
                     isUp = true;
+                    Debug.Log("local cam state " + isUp);
                 }
                 break;
             case 4:
@@ -64,6 +62,7 @@ public class CameraMove : MonoBehaviour
                 {
                     transform.Rotate(-90, 0, 0);
                     isUp = false;
+                    Debug.Log("local cam state " + isUp);
                 }
                 break;
         }
