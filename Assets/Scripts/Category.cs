@@ -12,33 +12,41 @@ public class Category : MonoBehaviour
 
     public void Toggle(Category category = null)
     {
-        if (this != category)
+        if(category != null)
         {
-            if (button.interactable)
+            if (this != category)
             {
-                return;
+                if (!button.interactable)
+                {
+                    onDeselect.Invoke();
+                    button.interactable = true;
+                    this.ToggleOff();
+                }
             }
             else
             {
-                onDeselect.Invoke();
-                button.interactable = true;
-                ToggleOff(category);
+                onSelect.Invoke();
+                button.interactable = false;
+                this.ToggleOn();
             }
         }
         else
         {
-            onSelect.Invoke();
-            button.interactable = false;
-            ToggleOn(category);
+            onDeselect.Invoke();
+            button.interactable = true;
+            this.ToggleOff();
         }
+        
     }
 
-    public virtual void ToggleOn(Category category = null) 
+    public virtual void ToggleOn() 
     {
+        //Debug.Log("Toggled on " + name);
         gameObject.SetActive(true);
     }
-    public virtual void ToggleOff(Category category = null)
+    public virtual void ToggleOff()
     {
+        //Debug.Log("Toggled off " + name);
         gameObject.SetActive(false);
     }
 }

@@ -84,12 +84,12 @@ public class Manager : MonoBehaviour
         tankLight += item.lightMod;
         onStatUpdate.Invoke();
     }
-    public void RemoveModifiers(Item purchasable)
+    public void RemoveModifiers(Item item)
     {
-        tankPh -= purchasable.pHMod;
-        tankTemp -= purchasable.tempMod;
-        tankHardness -= purchasable.dGHMod;
-        tankLight -= purchasable.lightMod;
+        tankPh -= item.pHMod;
+        tankTemp -= item.tempMod;
+        tankHardness -= item.dGHMod;
+        tankLight -= item.lightMod;
         onStatUpdate.Invoke();
     }
 
@@ -99,17 +99,6 @@ public class Manager : MonoBehaviour
         {
             currentMoney -= purchasable.price;
             inventory.Add(purchasable);
-        }
-        else
-        {
-            if (inventory.Contains(purchasable))
-            {
-                print("Already bought");
-            }
-            else
-            {
-                print("Not enough money!");
-            }
         }
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onBuy.Invoke();

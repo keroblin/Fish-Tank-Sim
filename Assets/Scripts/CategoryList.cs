@@ -24,10 +24,17 @@ public class CategoryList : MonoBehaviour
     {
         //Debug.Log("Swapping to number " + index.ToString());
         //currentCategory = categories[index];
-        if(category == null)
+        if(category == null && index >= 0)
         {
-            Debug.Log("Category was null, using index");
-            currentCategory = categories[index];
+            if(index == -1) //intentional null
+            {
+                currentCategory = null;
+            }
+            else
+            {
+                //Debug.Log("Category was null, using index");
+                currentCategory = categories[index];
+            }
         }
         else
         {
@@ -35,6 +42,7 @@ public class CategoryList : MonoBehaviour
         }
         foreach (Category c in categories)
         {
+            //Debug.Log("Toggling " + c.name + " " + (c == currentCategory).ToString());
             c.Toggle(currentCategory);
         }
     }

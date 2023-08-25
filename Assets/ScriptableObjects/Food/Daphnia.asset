@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: Daphnia
   m_EditorClassIdentifier: 
   category: 0
+  stackable: 0
+  placeable: 1
+  prefab: {fileID: 0}
   icon: {fileID: 0}
   model: {fileID: 0}
   material: {fileID: 0}
   description: Little magical insects
-  price: 0
+  price: 10
   portionSize: 0
+  rotTime: 0
   favourites: []
   likes: []

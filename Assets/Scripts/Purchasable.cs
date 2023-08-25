@@ -6,6 +6,9 @@ using UnityEngine;
 public class Purchasable : ScriptableObject
 {
     public int category;
+    public bool stackable = false;
+    public bool placeable = true;
+    public GameObject prefab;
     public Sprite icon;
     public Mesh model;
     public Material material;
@@ -13,5 +16,16 @@ public class Purchasable : ScriptableObject
     public string description;
     public float price;
 
+    public virtual void Buy()
+    {
+        Manager.Instance.Buy(this);
+    }
+    public virtual void Sell()
+    {
+        Manager.Instance.Sell(this);
+    }
+    public virtual void Place()//doesn't have to be used if its not placeable
+    {
 
+    }
 }

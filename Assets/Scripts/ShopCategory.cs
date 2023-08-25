@@ -2,25 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopCategory : Category
+public class ShopCategory : MonoBehaviour
 {
-    public ItemList itemList;
-
-    public override void ToggleOn(Category category = null)
+    // Start is called before the first frame update
+    void Start()
     {
-        if(!Manager.Instance.menuAnim.GetCurrentAnimatorStateInfo(0).IsName("ShopIn"))
-        {
-            Manager.Instance.menuAnim.Play("ShopIn");
-        }
+        
     }
-    public override void ToggleOff(Category category = null)
+
+    // Update is called once per frame
+    void Update()
     {
-        if (!(category is ShopCategory))
-        {
-            if(!Manager.Instance.menuAnim.GetCurrentAnimatorStateInfo(0).IsName("ShopOut"))
-            {
-                Manager.Instance.menuAnim.Play("ShopOut");
-            }
-        }
+        
     }
 }

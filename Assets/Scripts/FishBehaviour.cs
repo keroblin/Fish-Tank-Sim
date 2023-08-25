@@ -120,6 +120,8 @@ public class FishBehaviour : MonoBehaviour
         {
             MoveTowardTarget();
         }
+
+
     }
     public void SetPrimaryTarget(Vector3 target, States _state)
     {

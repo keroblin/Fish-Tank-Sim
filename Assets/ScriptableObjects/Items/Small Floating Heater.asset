@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Small Floating Heater
   m_EditorClassIdentifier: 
   category: 3
+  stackable: 0
+  placeable: 1
+  prefab: {fileID: 0}
   icon: {fileID: 0}
   model: {fileID: -1612087763565758309, guid: 7bb7ef9c583867045b2541fe14133e27, type: 3}
   material: {fileID: -5296931037203074916, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
   description: 
-  price: 0
+  price: 2.5
   pHMod: 0
   dGHMod: 0
   lightMod: 0
