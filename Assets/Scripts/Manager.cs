@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
@@ -47,6 +48,13 @@ public class Manager : MonoBehaviour
 
     bool useDefault = true;
 
+    public Camera editCam;
+    public Camera viewCam;
+    public GameObject editObjs;
+    public GameObject viewObjs;
+    public GameObject editButton;
+    public GameObject viewButton;
+
     private void OnDrawGizmos()
     {
         //tank bounds testing
@@ -73,13 +81,25 @@ public class Manager : MonoBehaviour
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
     }
 
-    public void EditMode()
+    public void SwapMode(bool isEditMode)
     {
+        viewButton.gameObject.SetActive(isEditMode);
+        viewCam.gameObject.SetActive(!isEditMode);
+        viewObjs.SetActive(!isEditMode);
+        editButton.gameObject.SetActive(!isEditMode);
+        editCam.gameObject.SetActive(isEditMode);
+        editObjs.SetActive(isEditMode);
 
-    }
-    public void ViewMode()
-    {
-
+        if (isEditMode)
+        {
+            viewCam.tag = "Untagged";
+            editCam.tag = "MainCamera";
+        }
+        else
+        {
+            editCam.tag = "Untagged";
+            viewCam.tag = "MainCamera";
+        }
     }
 
     public void AddModifiers(Item item)
