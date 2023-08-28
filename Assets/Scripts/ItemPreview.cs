@@ -9,6 +9,12 @@ public class ItemPreview : MonoBehaviour
     public MeshFilter mesh;
     public MeshRenderer meshRenderer;
     float meshViewDefaultDistance;
+
+    private void Start()
+    {
+        meshViewDefaultDistance = mesh.transform.position.z;
+    }
+
     public void RotLeft()
     {
         mesh.gameObject.transform.Rotate(0, -45, 0);
@@ -42,6 +48,8 @@ public class ItemPreview : MonoBehaviour
         {
             
         }*/
+
+
         if(purchasable != null)
         {
             mesh.mesh = purchasable.model;

@@ -2,85 +2,72 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.Playables;
 
-public class PlacementManager : MonoBehaviour
+public class PlacementManager:MonoBehaviour
 {
-    public Button putBack;
-    public PlacingMenu menu;
+    public GameObject placementParent;
     public List<Purchasable> purchasablesPlaced = new List<Purchasable>();
     List<Placeable> placeablesPlaced = new List<Placeable>();
     public Pool placeablePool;
+
+    public delegate void OnSelect(Placeable placeable);
+    public delegate void OnPlace(Placeable placeable);
+    public delegate void OnPutBack(Placeable placeable);
+    public event OnSelect PlaceableSelected;
+    public event OnPlace PlaceablePlaced;
+    public event OnPutBack PlaceableReturned;
+
+    public static PlacementManager Instance;
     void Start()
     {
-        menu = Manager.Instance.placingMenu;
-        menu.putBack.onClick.AddListener(PutBackPlaceable);
-        //menu.sell.onClick.AddListener(SellPlaceable); ////////////todo
-        menu.onSelect.AddListener(OnSelect);
+        Instance = this;
     }
 
-    public void Place(Shop.ShopItem item)
+    public Placeable Place(Purchasable purchasable)
     {
         Placeable placeable;
-        if(item.purchasable.prefab != null)
+        if(purchasable.prefab != null)
         {
             //instantiate
-            placeable = Instantiate(item.purchasable.prefab).GetComponent<Placeable>();
+            placeable = Instantiate(purchasable.prefab).GetComponent<Placeable>();
         }
         else
         {
             GameObject obj = placeablePool.Pull();
+            Debug.Log("Placeable spawned as " +  obj.name);
             placeable = obj.GetComponent<Placeable>();
         }
-        placeable.Set(item.purchasable);
-        placeable.placeableClicked.AddListener(delegate { menu.Select(placeable); });
-        //placeable.Placed();
-        //replace this with the above
-        //Manager.Instance.AddModifiers(itemList.currentPurchasable as Item);
-        purchasablesPlaced.Add(item.purchasable);
+        placeable.Set(purchasable);
+        purchasablesPlaced.Add(purchasable);
         placeablesPlaced.Add(placeable);
+        placeable.gameObject.transform.SetParent(placementParent.transform, false);
+        if(placeable != null && PlaceablePlaced != null)
+        {
+            PlaceablePlaced.Invoke(placeable);
+        }
+        return placeable;
     }
 
-    void OnSelect() //when the placeable menu selects an item
+    public void Select(Placeable placeable) //when the placeable menu selects an item
     {
-        //select the placeable in the shop too
-        //Shop.Select(menu.currentPlaceable.purchasable);
-        //Select(); ////////////////todo
+        if(placeable != null && PlaceableSelected != null)
+        {
+            PlaceableSelected.Invoke(placeable);
+        }
     }
 
-    public void Sell(Placeable placeable)
+    public void PutBackPlaceable(Placeable placeable)
     {
-        /*if (menu.currentPlaceable != null && itemList.currentPurchasable != menu.currentPlaceable.purchasable) ////////////todo
-        {
-            placeable = menu.currentPlaceable;
-        }
-        else
-        {
-            //placeable = placeablesPlaced.Find(x => x.purchasable == itemList.currentPurchasable); ///////////todo
-        }
-        Manager.Instance.RemoveModifiers(placeable.purchasable as Item);
-        Manager.Instance.Sell(placeable.purchasable);
-        if (menu.currentPlaceable)
-        {
-            menu.currentPlaceable.selected = false;
-            menu.currentPlaceable = null;
-        }
         purchasablesPlaced.Remove(placeable.purchasable);
         placeablesPlaced.Remove(placeable);
-
-        //////////////////todo
-        //UpdateInv();
-        //itemList.UpdateSelection();
-        placeablePool.StartCoroutine("ReturnRigidbody", placeable.gameObject);*/
-    }
-    public void PutBackPlaceable()
-    {
-        Placeable placeable = menu.currentPlaceable;
-        placeablePool.StartCoroutine("ReturnRigidbody", placeable.gameObject);
-        purchasablesPlaced.Remove(placeable.purchasable);
-        //itemList.purchasableUIs[itemList.purchasables.IndexOf(placeable.purchasable)].Set(placeable.purchasable); /////////todo
-        menu.currentPlaceable.selected = false;
-        placeablesPlaced.Remove(menu.currentPlaceable);
-        //itemList.UpdateSelection(); //////////todo
-        //enable the buttons again
+        if (placeable.purchasable.prefab == null)
+        {
+            placeablePool.StartCoroutine("ReturnRigidbody", placeable.gameObject);
+        }
+        if(placeable != null && PlaceableReturned != null)
+        {
+            PlaceableReturned.Invoke(placeable);
+        }
     }
 }

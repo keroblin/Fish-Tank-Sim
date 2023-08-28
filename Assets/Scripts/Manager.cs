@@ -22,9 +22,6 @@ public class Manager : MonoBehaviour
     public float tankTemp = baseTemp;
     public float tankHardness = baseHardness;
 
-    public enum ItemCategories { SUBSTRATE, ORNAMENTS, LIVEPLANTS, HEATING };
-    public enum FoodCategories { FLAKES, PELLETS, FROZEN, LIVE, VEG};
-    public enum FishCategories { COLDWATER, TROPICAL, BRACKISH };
     public enum FishPersonalities { BOTTOMFEEDER, HUNTER, CASUAL, TERRITORIAL };
 
     public Animator menuAnim;
@@ -76,6 +73,15 @@ public class Manager : MonoBehaviour
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
     }
 
+    public void EditMode()
+    {
+
+    }
+    public void ViewMode()
+    {
+
+    }
+
     public void AddModifiers(Item item)
     {
         tankPh += item.pHMod;
@@ -122,9 +128,9 @@ public class Manager : MonoBehaviour
             RemoveModifiers(currentSubstrate);
         }
         currentSubstrate = item;
-        if (item == nullSubstrate)
+        if(item == null)
         {
-            currentSubstrate.model = null;
+            currentSubstrate = new Substrate();
         }
         AddModifiers(currentSubstrate);
         substrateRenderer.material = currentSubstrate.material;

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 using UnityEngine.UI;
+using UnityEngine.Windows;
 using static UnityEditor.Progress;
 
 public class Shop:MonoBehaviour
@@ -21,19 +23,18 @@ public class Shop:MonoBehaviour
     public Button sell;
     public Button place;
 
+    public PlacementManager placementManager;
     public PlacingMenu menu;
 
     public Pool pool;
-    public Pool placeablesPool;
-    public GameObject placementParent;
 
     public List<ShopItem> boughtItems;
     public List<MainCategory> mainCategories;
     public MainCategory currentMainCategory;
     public ShopCategory currentCategory;
-    public int currentCategoryIndex;
-    //public CategoryList mainCategoryList;
-    //public CategoryList subCategoryList;
+
+    public int placeableIndex;
+    public Placeable selectedPlaceable;
 
     public GameObject noneSelectedMask;
     public ShopDetail shopDetail;
@@ -74,6 +75,8 @@ public class Shop:MonoBehaviour
     {
         //get all the purchasableuis and set up their events
         //not sure how best to do this
+        menu.sell.onClick.AddListener(Sell);
+        menu.putBack.onClick.AddListener(PutBack);
 
         for(int i = 0; i < mainCategories.Count; i++)
         {
@@ -99,6 +102,8 @@ public class Shop:MonoBehaviour
         buy.onClick.AddListener(Buy);
         sell.onClick.AddListener(Sell);
         place.onClick.AddListener(Place);
+
+        PlacementManager.Instance.PlaceableSelected += SelectPlaceableItem;
     }
 
     public void SetMainCategory(int index)
@@ -125,20 +130,6 @@ public class Shop:MonoBehaviour
         UpdateSelection();
     }
 
-    ///<summary>
-    //this is the shop
-    //in the shop we have our main categories and our subcategories
-    //when the game starts, or in a debug function or something
-    //we should create buttons for the categories
-    //and child the content to objects
-    //each category should contain a list of associated purchasables?
-    //we use these to spawn and check if they are assigned to the parent category
-    //we need to make it flexible enough to work with the food
-    //maybe purchasables have their own buy and sell functionality?
-    //like when we buy an item, change the values in the manager directly
-    //or we could have a tag system in the purchasables, might be annoying tho
-    ///</summary>
-
     public void UpdateSelection()
     {
         if (selectedShopItem == null || currentCategory.items.Count == 0)//if there isnt anything in the list
@@ -150,6 +141,19 @@ public class Shop:MonoBehaviour
         {
             noneSelectedMask.SetActive(false);
             Select(currentCategory.items[0]);
+        }
+    }
+
+    public void SelectPlaceableItem(Placeable placeable)
+    {
+        selectedPlaceable = placeable;
+        foreach (ShopItem item in currentCategory.items)
+        {
+            if (item.purchasable == placeable.purchasable)
+            {
+                Select(item);
+                break;
+            }
         }
     }
 
@@ -210,7 +214,6 @@ public class Shop:MonoBehaviour
 
     public void Sell()
     {
-        
         if (selectedShopItem.quantity > 0)
         {
             if (selectedShopItem.purchasable.stackable)
@@ -226,14 +229,15 @@ public class Shop:MonoBehaviour
 
             if (selectedShopItem.placeables.Count > 0)
             {
-                if (menu.currentPlaceable != null)
+                Debug.Log("Detected sellable placeables");
+                if (!selectedPlaceable || !selectedShopItem.placeables.Contains(selectedPlaceable))
                 {
-                    selectedShopItem.placeables.Remove(menu.currentPlaceable);
+                    Debug.Log("Menu hasnt selected a placeable, getting most recent");
+                    selectedPlaceable = selectedShopItem.placeables[selectedShopItem.placeables.Count - 1];
                 }
-                else
-                {
-                    selectedShopItem.placeables.RemoveAt(0);
-                }
+                selectedShopItem.placeables.Remove(selectedPlaceable);
+                selectedShopItem.purchasable.Remove();
+                PlacementManager.Instance.PutBackPlaceable(selectedPlaceable);
             }
 
             selectedShopItem.ui.ChangeQuantity(selectedShopItem.quantity);
@@ -248,22 +252,19 @@ public class Shop:MonoBehaviour
 
     public void Place()
     {
-        //turn off interactable on place button
-        GameObject obj;
-        Placeable placeable;
-        if(selectedShopItem.purchasable.prefab != null)
+        Debug.Log("Placing " + selectedShopItem.purchasable.name);
+        Placeable p = selectedShopItem.purchasable.Place();
+        if(p != null)
         {
-            obj = Instantiate(selectedShopItem.purchasable.prefab);
+            selectedShopItem.placeables.Add(p);
         }
-        else
-        {
-            obj = placeablesPool.Pull(); //change to placeables pool
-        }
-        obj.transform.SetParent(placementParent.transform,false);
-        placeable = obj.GetComponent<Placeable>();
-        selectedShopItem.placeables.Add(placeable);
-        selectedShopItem.purchasable.Place();
-        UpdateButtons();
+    }
+
+    public void PutBack()
+    {
+        PlacementManager.Instance.PutBackPlaceable(selectedPlaceable);
+        selectedShopItem.placeables.Remove(selectedPlaceable);
+        UpdateSelection();
     }
 
     public static string CheckSetPosNegative(float val, TextMeshProUGUI ui)

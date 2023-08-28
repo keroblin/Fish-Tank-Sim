@@ -40,6 +40,7 @@ public class Placeable : MonoBehaviour
     {
         cam = Camera.main;
         bounds = Manager.Instance.tankBounds;
+        placeableClicked.AddListener(delegate { PlacementManager.Instance.Select(this); });
     }
 
     public void Set(Purchasable _purchasable)

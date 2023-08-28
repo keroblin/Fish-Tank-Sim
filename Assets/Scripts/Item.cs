@@ -9,4 +9,16 @@ public class Item : Purchasable
     public float dGHMod;
     public float lightMod;
     public float tempMod;
+
+    public override Placeable Place()
+    {
+        Manager.Instance.AddModifiers(this);
+        Placeable p = PlacementManager.Instance.Place(this);
+        return p;
+    }
+    public override void Remove()
+    {
+        base.Remove();
+        Manager.Instance.RemoveModifiers(this);
+    }
 }

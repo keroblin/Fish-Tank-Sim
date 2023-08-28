@@ -29,9 +29,8 @@ public class PlacingMenu : MonoBehaviour
 
     private void Start()
     {
-        sell.onClick.AddListener(Unset);
-        putBack.onClick.AddListener(Unset);
         close.onClick.AddListener(Unset);
+        PlacementManager.Instance.PlaceableSelected += Set;
     }
 
     public void Set(Placeable placeable)
@@ -101,5 +100,16 @@ public class PlacingMenu : MonoBehaviour
         {
             Unset();
         }
+    }
+
+    public void Sell()
+    {
+        
+    }
+
+    public void PutBack()
+    {
+        PlacementManager.Instance.PutBackPlaceable(currentPlaceable);
+        Unset();
     }
 }
