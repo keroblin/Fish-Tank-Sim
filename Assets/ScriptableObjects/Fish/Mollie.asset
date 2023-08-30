@@ -13,12 +13,16 @@ MonoBehaviour:
   m_Name: Mollie
   m_EditorClassIdentifier: 
   category: 0
+  stackable: 0
+  placeable: 1
+  prefab: {fileID: 0}
   icon: {fileID: 21300000, guid: c71ddaeb2ecb3254a930c91783f6e89c, type: 3}
-  model: {fileID: 0}
+  model: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 0}
   description: 
   price: 0
-  speed: 0
+  speed: 6
+  maxSpeed: 10
   personality: 0
   minPH: 7.5
   maxPH: 8.5

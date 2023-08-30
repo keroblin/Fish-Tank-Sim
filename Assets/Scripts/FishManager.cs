@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class FishManager : MonoBehaviour
 {
+    public static FishManager instance;
     public List<FishBehaviour> liveFish;
+
+    private void Start()
+    {
+        instance = this;
+    }
 
     //temp, may change
     IEnumerator HungerTick()

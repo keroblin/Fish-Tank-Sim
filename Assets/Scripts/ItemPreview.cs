@@ -25,31 +25,6 @@ public class ItemPreview : MonoBehaviour
     }
     public void Set(Purchasable purchasable)
     {
-        //check if it has a prefab assigned
-        //if it doesnt, then use its mesh and material
-
-
-        /*if(purchasable.prefab != null)
-        {
-            GameObject source = PrefabUtility.GetCorrespondingObjectFromSource(purchasable.prefab); //not sure how performant this is
-            foreach (GameObject prefab in prefabs)
-            {
-                if (prefab == source)
-                {
-                    prefab.SetActive(true);
-                }
-                else
-                {
-                    prefab.SetActive(false);
-                }
-            }
-        }
-        else
-        {
-            
-        }*/
-
-
         if(purchasable != null)
         {
             mesh.mesh = purchasable.model;
@@ -62,6 +37,5 @@ public class ItemPreview : MonoBehaviour
         {
             mesh.mesh = null;
         }
-
     }
 }

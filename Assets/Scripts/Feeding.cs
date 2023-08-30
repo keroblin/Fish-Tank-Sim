@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Feeding : MonoBehaviour
 {
@@ -12,15 +13,19 @@ public class Feeding : MonoBehaviour
     Camera cam;
     Bounds bounds;
     public delegate void FoodPlaced(GameObject food);
-    public static event FoodPlaced OnFoodPlaced;
+    public event FoodPlaced OnFoodPlaced;
     public Pool foodPool;
     public GameObject foodRef;
     public Food currentFood;
 
+    public static Feeding Instance { get; private set; }
+
     bool inBounds;
     Vector3 debugHitPoint;
-    void Start()
+
+    private void OnEnable()
     {
+        Instance = this;
         cam = Camera.main;
         bounds = Manager.Instance.tankBounds;
         bounds.size *= 1.3f;
@@ -38,7 +43,7 @@ public class Feeding : MonoBehaviour
     {
         if (isOpen)
         {
-            if (Input.GetMouseButtonDown(0) && !isDown)
+            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0) && !isDown)
             {
                 SpawnFood();
                 Debug.Log("Clicked");
@@ -86,7 +91,10 @@ public class Feeding : MonoBehaviour
             behaviour.food = currentFood;
             behaviour.Use += RemoveFood;
             newFood.SetActive(true);
-            OnFoodPlaced.Invoke(newFood);
+            if(OnFoodPlaced != null && newFood != null)
+            {
+                OnFoodPlaced(newFood);
+            }
         }
         else
         {

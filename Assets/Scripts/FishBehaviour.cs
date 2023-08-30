@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static FishBehaviour;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.EventSystems;
 
-public class FishBehaviour : MonoBehaviour
+public class FishBehaviour : MonoBehaviour //maybe make it inherit placeable?
 {
     public Fish fish;
     public Rigidbody rb;
@@ -14,6 +13,7 @@ public class FishBehaviour : MonoBehaviour
     public bool targetReached;
 
     float length = .5f;
+    float speed;
     
     bool waiting = false;
     Bounds bounds;
@@ -51,6 +51,9 @@ public class FishBehaviour : MonoBehaviour
 
     public List<Target> targets = new List<Target>();
 
+    //all stuff in placeable, gonna decide whether to inherit soon
+    public MeshFilter meshFilter;
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
@@ -59,7 +62,8 @@ public class FishBehaviour : MonoBehaviour
     void Start()
     {
         bounds = Manager.Instance.tankBounds;
-        Feeding.OnFoodPlaced += FoodPlaced;
+        Feeding.Instance.OnFoodPlaced += FoodPlaced;
+        speed = fish.speed;
     }
 
     private void FixedUpdate()
@@ -67,9 +71,9 @@ public class FishBehaviour : MonoBehaviour
         switch (state)
         {
             case States.IDLE:
-                if (primaryTarget.position == Vector3.zero || primaryTarget == null || targetReached) //if we dont have a position, choose a random one
+                if (primaryTarget == null || primaryTarget.position == Vector3.zero || targetReached) //if we dont have a position, choose a random one
                 {
-                    Debug.Log("Setting idle pos");
+                    Debug.Log("Setting idle pos on " + fish.name);
                     Vector3 idleTarget = new Vector3(
                        UnityEngine.Random.Range(-bounds.extents.x, bounds.extents.x),
                        UnityEngine.Random.Range(-bounds.extents.y, bounds.extents.y),
@@ -86,7 +90,14 @@ public class FishBehaviour : MonoBehaviour
             case States.SMELL:
                 break;
             case States.FEED:
-                SetPrimaryTarget(currentFood.go.transform.position, States.FEED);
+                if (currentFood != null)
+                {
+                    SetPrimaryTarget(currentFood.go.transform.position, States.FEED);
+                }
+                else
+                {
+                    TargetReached();
+                }
                 break;
             case States.HIDE:
                 break;
@@ -134,7 +145,7 @@ public class FishBehaviour : MonoBehaviour
     public void MoveTowardTarget()
     {
         Debug.Log("running");
-        rb.AddForce(transform.forward * Time.deltaTime * 6f); //move forward
+        rb.AddForce(transform.forward * Time.deltaTime * speed); //move forward
 
         Vector3 cross = Vector3.Cross(transform.forward, (currentTargetPosition - transform.position).normalized); //how much to rotate by
         //steer toward target
@@ -174,7 +185,7 @@ public class FishBehaviour : MonoBehaviour
     {
         while (rb.velocity.magnitude > 0f)
         {
-            rb.AddForce(-rb.velocity * Time.deltaTime * 6f);
+            rb.AddForce(-rb.velocity * Time.deltaTime * speed);
             yield return new WaitForFixedUpdate();
         }
         yield return null;
@@ -207,19 +218,21 @@ public class FishBehaviour : MonoBehaviour
         temp.Set(food, fish);
         if (temp.isFavourite)
         {
-            //go extra fast
+            speed = fish.maxSpeed;
         }
         else if (temp.isLiked)
         {
-            //go toward it
+            speed = fish.speed;
         }
         else
         {
-            //ignore it
+            Debug.Log(fish.name + " didnt like");
             return;
         }
+        Debug.Log(fish.name + " liked in some way");
+        SetPrimaryTarget(food.transform.position, States.FEED);
         currentFood = temp;
-        SetPrimaryTarget(currentFood.go.transform.position, States.FEED);
+        currentFood.foodBehaviour.Use += RemoveFood;
         //SetPrimaryTarget(food.transform.position, States.SMELL);
         /*if(Vector3.Distance(transform.position, currentTargetPosition) > Vector3.Distance(transform.position, food.transform.position))
         {
@@ -250,7 +263,14 @@ public class FishBehaviour : MonoBehaviour
                 hunger = 0;
             }
         }
+        speed = fish.speed;
         Debug.Log(fish.name + "'s hunger is " + hunger);
+    }
+
+    void RemoveFood(FoodBehaviour foodBehaviour)
+    {
+        foodBehaviour.Use -= RemoveFood;
+        currentFood = null;
     }
 
     private void OnTriggerEnter(Collider other) //when in range of food
@@ -269,6 +289,14 @@ public class FishBehaviour : MonoBehaviour
             {
                 Eat(currentFood);
             }
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            FishMonitor.instance.Set(this);
         }
     }
 }

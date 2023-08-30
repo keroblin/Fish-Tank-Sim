@@ -88,11 +88,11 @@ public class CameraMove : MonoBehaviour
         if (Physics.Raycast(cam.transform.position,cam.transform.forward, out hit, Mathf.Infinity, layerMask))
         {
             face = hit.collider.gameObject;
-            Debug.Log("Ignoring face: " + hit.collider.gameObject.name);
+            //Debug.Log("Ignoring face: " + hit.collider.gameObject.name);
         }
         else
         {
-            Debug.Log("Did not Hit");
+            //Debug.Log("Did not Hit");
         }
 
         foreach (GameObject go in sides)

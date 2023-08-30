@@ -4,11 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Fish", menuName = "ScriptableObjects/Fish")]
 public class Fish: Purchasable
 {
-    [Space]
-    [Header("COLDWATER, TROPICAL, BRACKISH")]
-    [Space]
-
-    public float speed;
+    public float speed = 6f;
+    public float maxSpeed = 10f;
     public Manager.FishPersonalities personality;
 
     public float minPH = 6.0f,maxPH = 8.5f;
@@ -73,6 +70,12 @@ public class Fish: Purchasable
             }
 
         }
+    }
+
+    public override Placeable Place()
+    {
+        //spawn the fish in the tank
+        return null;
     }
 
 }

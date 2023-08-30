@@ -59,10 +59,10 @@ public class Shop:MonoBehaviour
     [System.Serializable]
     public class MainCategory
     {
-        public List<ShopCategory> subcategories;
         public Category category;
         public CategoryList subList;
         public ShopDetail detail;
+        public List<ShopCategory> subcategories;
     }
     [System.Serializable]
     public class ShopCategory

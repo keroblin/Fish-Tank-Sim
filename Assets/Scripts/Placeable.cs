@@ -18,6 +18,8 @@ public class Placeable : MonoBehaviour
     public UnityEvent placeableClicked;
     public BoxCollider col;
 
+    public bool editable;
+
     float zMod;
     Vector2 input;
     int dir = 0;
@@ -43,14 +45,17 @@ public class Placeable : MonoBehaviour
         placeableClicked.AddListener(delegate { PlacementManager.Instance.Select(this); });
     }
 
-    public void Set(Purchasable _purchasable)
+    public virtual void Set(Purchasable _purchasable)
     {
         purchasable = _purchasable;
         meshFilter.mesh = purchasable.model;
         meshRenderer.material = _purchasable.material;
         mat = meshRenderer.material; //gets unique version of mat
-        SetColor(color);
-        menuOffset = new Vector3(0f, purchasable.model.bounds.extents.y, -(purchasable.model.bounds.extents.z + .3f));
+        if (editable)
+        {
+            SetColor(color);
+            menuOffset = new Vector3(0f, purchasable.model.bounds.extents.y, -(purchasable.model.bounds.extents.z + .3f));
+        }
         col.size = purchasable.model.bounds.size;
         meshFilter.gameObject.transform.localPosition = new Vector3(0, purchasable.model.bounds.extents.y, 0);
         col.center = purchasable.model.bounds.center;
@@ -68,50 +73,53 @@ public class Placeable : MonoBehaviour
         //open menu
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            placeableClicked.Invoke();
-            Debug.Log("Clicked on");
-
-            screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-            offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+            Clicked();
         }
     }
-    private void OnMouseEnter()
+
+    public virtual void Clicked()
     {
-        Debug.Log("Mouse over");
+        placeableClicked.Invoke();
+
+        screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+        offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
     }
 
     private void Update()
     {
-        Debug.Log(CameraMove.isUp + " cam state");
-        if (selected)
+        if (editable)
         {
-            if (!Input.GetKeyDown(KeyCode.Q) && dir == -1) { dir = 0; }
-            if (!Input.GetKeyDown(KeyCode.E) && dir == 1) { dir = 0; }
-
-            if (Input.GetKeyDown(KeyCode.Q) && dir == 0) { dir = -1; }
-            if (Input.GetKeyDown(KeyCode.E) && dir == 0) { dir = 1; }
-
-            if (dir != 0)
+            Debug.Log(CameraMove.isUp + " cam state");
+            if (selected)
             {
-                transform.Rotate(0, 45 * dir, 0);
-            }
+                if (!Input.GetKeyDown(KeyCode.Q) && dir == -1) { dir = 0; }
+                if (!Input.GetKeyDown(KeyCode.E) && dir == 1) { dir = 0; }
 
-            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-            {
-                input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-            }
+                if (Input.GetKeyDown(KeyCode.Q) && dir == 0) { dir = -1; }
+                if (Input.GetKeyDown(KeyCode.E) && dir == 0) { dir = 1; }
 
-            if(Mathf.Abs(Input.GetAxisRaw("Mouse ScrollWheel")) > 0)
-            {
-                if(Mathf.Abs(zMod + Input.GetAxisRaw("Mouse ScrollWheel")) < 4f)
+                if (dir != 0)
                 {
-                    zMod += Input.GetAxisRaw("Mouse ScrollWheel");
-                    Debug.Log("zMod: " + zMod);
+                    transform.Rotate(0, 45 * dir, 0);
                 }
-            }
 
-            Move();
-            input = Vector2.zero;
+                if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+                {
+                    input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+                }
+
+                if (Mathf.Abs(Input.GetAxisRaw("Mouse ScrollWheel")) > 0)
+                {
+                    if (Mathf.Abs(zMod + Input.GetAxisRaw("Mouse ScrollWheel")) < 4f)
+                    {
+                        zMod += Input.GetAxisRaw("Mouse ScrollWheel");
+                        Debug.Log("zMod: " + zMod);
+                    }
+                }
+
+                Move();
+                input = Vector2.zero;
+            }
         }
     }
 
@@ -160,7 +168,7 @@ public class Placeable : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        if (selected)
+        if (selected && editable)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             int layerMask = ~((1 << LayerMask.NameToLayer("Fish")) | (1 << LayerMask.NameToLayer("Ignore Raycast")) | (1 << LayerMask.NameToLayer("Item")));
