@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Purchasable : ScriptableObject
 {
-    public int category;
+    public List<Tag> tags;
     public bool stackable = false;
     public bool placeable = true;
     public GameObject prefab;
