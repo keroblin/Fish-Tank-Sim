@@ -9,19 +9,18 @@ public class Manager : MonoBehaviour
 {
     //a class that is singleton to store essential variables for many different types of objects and situations
     public static Manager Instance;
-    public PlacingMenu placingMenu;
+
+    public Pool itemPool;
+    public Pool fishAiPool;
+    public Pool foodPool;
+
     public GameObject placingRef;
-    const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f, baseHygeine = 100f;
-    const float totalMoney = 200.00f;
+    public const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f, baseHygeine = 100f;
+    public const float totalMoney = 200.00f;
     public float currentMoney = totalMoney;
     public TextMeshProUGUI money;
 
-    public float tankHygeine = baseHygeine;
-    public float tankPh = basePh;
-    [Range(0f, 1f)]
-    public float tankLight = baseLight;
-    public float tankTemp = baseTemp;
-    public float tankHardness = baseHardness;
+    public Tank currentTank;
 
     public enum FishPersonalities { BOTTOMFEEDER, HUNTER, CASUAL, TERRITORIAL };
 
@@ -31,22 +30,14 @@ public class Manager : MonoBehaviour
     public Sprite ok;
     public Sprite happy;
     public List<Fish> allFish;
-    public List<Purchasable> allPurchasables;
+    public List<Purchasable> allPurchasableSOs;
+    public Dictionary<Purchasable,int> allPurchasables = new Dictionary<Purchasable, int>(); //ask everything else when grabbing quantity to do it from here
     public List<Purchasable> inventory;
-    public Item currentSubstrate;
-    public Item nullSubstrate;
-    public MeshFilter substrateMesh;
-    public MeshRenderer substrateRenderer;
-
-    public UnityEvent onStatUpdate;
     public UnityEvent onBuy;
     public UnityEvent onSell;
+    public UnityEvent onQuantityChange;
 
     public Pool purchasableUiPool;
-
-    public Bounds tankBounds;
-
-    bool useDefault = true;
 
     public Camera editCam;
     public Camera viewCam;
@@ -55,29 +46,21 @@ public class Manager : MonoBehaviour
     public GameObject editButton;
     public GameObject viewButton;
 
-    private void OnDrawGizmos()
-    {
-        //tank bounds testing
-        Gizmos.color = new Color(255,0,255,.3f);
-        Gizmos.DrawCube(tankBounds.center, tankBounds.size);
-    }
-
     private void Awake()
     {
         //replace these w saved values
         currentMoney = totalMoney;
-        if (useDefault)
+
+        foreach (Purchasable purchasable in allPurchasableSOs)
         {
-            tankPh = basePh;
-            tankLight = baseLight;
-            tankTemp = baseTemp;
-            tankHardness = baseHardness;
+            //replace 0 with saved value here
+            int quantity = 0;
+            allPurchasables.Add(purchasable,quantity);
         }
         Instance = this;
     }
     private void Start()
     {
-        onStatUpdate.Invoke();
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
     }
 
@@ -102,58 +85,49 @@ public class Manager : MonoBehaviour
         }
     }
 
-    public void AddModifiers(Item item)
-    {
-        tankPh += item.pHMod;
-        tankTemp += item.tempMod;
-        tankHardness += item.dGHMod;
-        tankLight += item.lightMod;
-        onStatUpdate.Invoke();
-    }
-    public void RemoveModifiers(Item item)
-    {
-        tankPh -= item.pHMod;
-        tankTemp -= item.tempMod;
-        tankHardness -= item.dGHMod;
-        tankLight -= item.lightMod;
-        onStatUpdate.Invoke();
-    }
-
     public void Buy(Purchasable purchasable)
     {
-        if (currentMoney - purchasable.price > 0.00 && !inventory.Contains(purchasable))
+        if (currentMoney - purchasable.price > 0.00) //do something here to deal with stacking
         {
-            currentMoney -= purchasable.price;
-            inventory.Add(purchasable);
+            if (!inventory.Contains(purchasable))
+            {
+                Debug.Log("Inventory did not contain purchasable, adding it");
+                inventory.Add(purchasable);
+                allPurchasables[purchasable]++;
+            }
+            else if (purchasable.stackable)
+            {
+                Debug.Log("Stackable! Adding to quantity...");
+                allPurchasables[purchasable]++;
+                Debug.Log("Quantity is " + allPurchasables[purchasable].ToString());
+            }
+            else
+            {
+                Debug.Log("Already bought!");
+                return;
+            }
         }
+        currentMoney -= purchasable.price;
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onBuy.Invoke();
+        onQuantityChange.Invoke();
     }
 
     public void Sell(Purchasable purchasable)
     {
-        if (inventory.Contains(purchasable))
+        if (allPurchasables[purchasable] > 0)
         {
-            inventory.Remove(purchasable);
+            allPurchasables[purchasable]--;
             currentMoney += purchasable.price;
         }
+
+        if (allPurchasables[purchasable] <=0) 
+        { 
+            inventory.Remove(purchasable);
+        }
+
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onSell.Invoke();
-    }
-
-    public void SwapSubstrate(Item item)
-    {
-        if (currentSubstrate)
-        {
-            RemoveModifiers(currentSubstrate);
-        }
-        currentSubstrate = item;
-        if(item == null)
-        {
-            currentSubstrate = new Substrate();
-        }
-        AddModifiers(currentSubstrate);
-        substrateRenderer.material = currentSubstrate.material;
-        substrateMesh.mesh = currentSubstrate.model;
+        onQuantityChange.Invoke();
     }
 }

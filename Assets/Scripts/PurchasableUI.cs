@@ -13,6 +13,11 @@ public class PurchasableUI : MonoBehaviour
     public TextMeshProUGUI quantityUI;
     public Purchasable purchasable;
 
+    public void Start()
+    {
+        Manager.Instance.onQuantityChange.AddListener(ChangeQuantity);
+    }
+
     public void Set(Purchasable _purchasable)
     {
         purchasable = _purchasable;
@@ -21,8 +26,9 @@ public class PurchasableUI : MonoBehaviour
         //shop menu links itself to the onclick to update the description
     }
 
-    public void ChangeQuantity(int quantity = 0)
+    public void ChangeQuantity()
     {
+        int quantity = Manager.Instance.allPurchasables[purchasable];
         quantityObj.SetActive(quantity > 0);
         if (quantity > 0)
         {

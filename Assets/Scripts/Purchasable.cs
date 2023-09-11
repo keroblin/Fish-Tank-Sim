@@ -24,10 +24,9 @@ public class Purchasable : ScriptableObject
     {
         Manager.Instance.Sell(this);
     }
-    public virtual Placeable Place()//doesn't have to be used if its not placeable
+    public virtual void Place()//doesn't have to be used if its not placeable
     {
-        Placeable p = PlacementManager.Instance.Place(this);
-        return p;
+        PlacementManager.Instance.Place(this);
     }
     public virtual void Remove()
     {

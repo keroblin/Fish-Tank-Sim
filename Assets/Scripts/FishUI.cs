@@ -16,7 +16,7 @@ public class FishUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void Set()
     {
-        Manager.Instance.onStatUpdate.AddListener(UpdateStats);
+        Manager.Instance.currentTank.onStatUpdate.AddListener(UpdateStats);
         fishIcon.sprite = fish.icon;
         UpdateStats();
     }

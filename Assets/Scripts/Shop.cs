@@ -24,11 +24,10 @@ public class Shop:MonoBehaviour
     public Button place;
 
     public PlacementManager placementManager;
-    public PlacingMenu menu;
+    public ItemMenu menu;
 
     public Pool pool;
 
-    public List<ShopItem> boughtItems;
     public List<MainCategory> mainCategories;
     public MainCategory currentMainCategory;
     public ShopCategory currentCategory;
@@ -45,17 +44,10 @@ public class Shop:MonoBehaviour
 
     public ItemPreview itemPreview;
 
-    List<PurchasableUI> purchasableUIs;
+    List<PurchasableUI> purchasableUIs = new List<PurchasableUI>();
     Purchasable currentPurchasable;
-    ShopItem selectedShopItem;
-    [System.Serializable]
-    public class ShopItem
-    {
-        public Purchasable purchasable;
-        [HideInInspector]public PurchasableUI ui;
-        [HideInInspector] public List<Placeable> placeables = new List<Placeable>();
-        [HideInInspector] public int quantity = 0;
-    }
+    Purchasable selectedItem;
+    
     [System.Serializable]
     public class MainCategory
     {
@@ -68,7 +60,7 @@ public class Shop:MonoBehaviour
     public class ShopCategory
     {
         public Category category;
-        public List<ShopItem> items;
+        public List<Purchasable> items;
     }
 
     private void Start()
@@ -85,16 +77,15 @@ public class Shop:MonoBehaviour
             foreach (ShopCategory category in mainCategories[index].subcategories)
             {
                 category.category.onSelect.AddListener(UpdateSelection);
-                foreach (ShopItem item in category.items)
+                foreach (Purchasable item in category.items)
                 {
                     GameObject instance = pool.Pull();
                     PurchasableUI ui = instance.GetComponent<PurchasableUI>();
-                    ShopItem _item = item;
-                    item.ui = ui;
-                    ui.Set(item.purchasable);
+                    ui.Set(item);
                     ui.button.onClick.RemoveAllListeners();
-                    ui.button.onClick.AddListener(delegate { Select(_item);});
+                    ui.button.onClick.AddListener(delegate { Select(item);});
                     ui.transform.SetParent(category.category.gameObject.transform);
+                    purchasableUIs.Add(ui);
                 }
             }
         }
@@ -108,10 +99,6 @@ public class Shop:MonoBehaviour
 
     public void SetMainCategory(int index)
     {
-        if(selectedShopItem != null)
-        {
-            selectedShopItem.ui.button.interactable = true;
-        }
         if(currentMainCategory != null && currentMainCategory.subList != null)
         {
             currentMainCategory.subList.SwapCategory(-1);
@@ -132,7 +119,7 @@ public class Shop:MonoBehaviour
 
     public void UpdateSelection()
     {
-        if (selectedShopItem == null || currentCategory.items.Count == 0)//if there isnt anything in the list
+        if (selectedItem == null || currentCategory.items.Count == 0)//if there isnt anything in the list
         {
             itemPreview.Set(null);
             noneSelectedMask.SetActive(true);
@@ -147,101 +134,70 @@ public class Shop:MonoBehaviour
     public void SelectPlaceableItem(Placeable placeable)
     {
         selectedPlaceable = placeable;
-        foreach (ShopItem item in currentCategory.items)
-        {
-            if (item.purchasable == placeable.purchasable)
-            {
-                Select(item);
-                break;
-            }
-        }
+        Select(placeable.purchasable);
     }
 
-    public void Select(ShopItem item)
+    public void Select(Purchasable purchasable) //might change to just be purchasable
     {
-        if(selectedShopItem != null)
-        {
-            selectedShopItem.ui.button.interactable = true;
-        }
-        item.ui.button.interactable = false;
         noneSelectedMask.SetActive(false);
-        currentPurchasable = item.purchasable;
-        itemTitle.text = item.purchasable.name;
-        itemPrice.text = "Price: £" + item.purchasable.price.ToString("#.00");
-        itemDescription.text = item.purchasable.description;
+        currentPurchasable = purchasable;
+        itemTitle.text = purchasable.name;
+        itemPrice.text = "Price: £" + purchasable.price.ToString("#.00");
+        itemDescription.text = purchasable.description;
 
-        itemPreview.Set(item.purchasable);
-        shopDetail.Set(item.purchasable);
+        itemPreview.Set(purchasable);
+        shopDetail.Set(purchasable);
         
         
         //account for placeables here
         onSelect.Invoke();
-        selectedShopItem = item;
+        selectedItem = purchasable;
         UpdateButtons();
     }
 
     void UpdateButtons()
     {
-        if (selectedShopItem.quantity > 0)
+        if (Manager.Instance.allPurchasables[selectedItem] > 0)
         {
-            buy.interactable = selectedShopItem.purchasable.stackable;
-            place.interactable = selectedShopItem.quantity > selectedShopItem.placeables.Count;
+            buy.interactable = selectedItem.stackable;
+            place.interactable = Manager.Instance.allPurchasables[selectedItem] > PlacementManager.Instance.GetAmountPlaced(selectedItem); //not sure how to deal with this hmm
         }
         else
         {
             buy.interactable = true;
             place.interactable = false;
         }
-        
+
+        foreach(PurchasableUI ui in purchasableUIs)
+        {
+            ui.button.interactable = ui.purchasable != selectedItem;
+        }
     }
 
-    public void Buy()
+    public void Buy()//redundant i think, does stuff in manager
     {
-        if (selectedShopItem.purchasable.stackable)
-        {
-            selectedShopItem.quantity++;
-        }
-        else
-        {
-            //add item to inventory
-            selectedShopItem.quantity = 1;
-            boughtItems.Add(selectedShopItem);
-        }
-        selectedShopItem.purchasable.Buy();
-        selectedShopItem.ui.ChangeQuantity(selectedShopItem.quantity);
+        selectedItem.Buy();
         UpdateButtons();
     }
 
     public void Sell()
     {
-        if (selectedShopItem.quantity > 0)
+        if (Manager.Instance.allPurchasables[selectedItem] > 0)
         {
-            if (selectedShopItem.purchasable.stackable)
-            {
-                selectedShopItem.quantity--;
-            }
-            else
-            {
-                //remove from inventory, enable buy button
-                selectedShopItem.quantity = 0;
-                boughtItems.Remove(selectedShopItem);
-            }
-
-            if (selectedShopItem.placeables.Count > 0)
+            if (PlacementManager.Instance.GetAmountPlaced(selectedItem) > 0)
             {
                 Debug.Log("Detected sellable placeables");
-                if (!selectedPlaceable || !selectedShopItem.placeables.Contains(selectedPlaceable))
+                if (!selectedPlaceable)
                 {
                     Debug.Log("Menu hasnt selected a placeable, getting most recent");
-                    selectedPlaceable = selectedShopItem.placeables[selectedShopItem.placeables.Count - 1];
+                    selectedPlaceable = PlacementManager.Instance.GetMostRecentPlaceable(selectedItem);
                 }
-                selectedShopItem.placeables.Remove(selectedPlaceable);
-                selectedShopItem.purchasable.Remove();
                 PlacementManager.Instance.PutBackPlaceable(selectedPlaceable);
+                PlacementManager.Instance.instances.Remove(selectedPlaceable);
+                selectedItem.Remove();
             }
 
-            selectedShopItem.ui.ChangeQuantity(selectedShopItem.quantity);
-            selectedShopItem.purchasable.Sell();
+            selectedItem.Sell();
         }
         else
         {
@@ -252,18 +208,14 @@ public class Shop:MonoBehaviour
 
     public void Place()
     {
-        Debug.Log("Placing " + selectedShopItem.purchasable.name);
-        Placeable p = selectedShopItem.purchasable.Place();
-        if(p != null)
-        {
-            selectedShopItem.placeables.Add(p);
-        }
+        Debug.Log("Placing " + selectedItem.name);
+        selectedItem.Place();
+        UpdateButtons();
     }
 
     public void PutBack()
     {
         PlacementManager.Instance.PutBackPlaceable(selectedPlaceable);
-        selectedShopItem.placeables.Remove(selectedPlaceable);
         UpdateSelection();
     }
 

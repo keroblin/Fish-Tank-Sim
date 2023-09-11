@@ -10,15 +10,21 @@ public class Item : Purchasable
     public float lightMod;
     public float tempMod;
 
-    public override Placeable Place()
+    public override void Place()
     {
-        Manager.Instance.AddModifiers(this);
-        Placeable p = PlacementManager.Instance.Place(this);
-        return p;
+        Manager.Instance.currentTank.AddModifiers(this);
+        if(prefab == null)
+        {
+            PlacementManager.Instance.Place(this,Manager.Instance.itemPool);
+        }
+        else
+        {
+            PlacementManager.Instance.Place(this);
+        }
     }
     public override void Remove()
     {
         base.Remove();
-        Manager.Instance.RemoveModifiers(this);
+        Manager.Instance.currentTank.RemoveModifiers(this);
     }
 }

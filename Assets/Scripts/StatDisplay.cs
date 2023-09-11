@@ -11,14 +11,14 @@ public class StatDisplay : MonoBehaviour
     public Slider hardness;
     private void Start()
     {
-        Manager.Instance.onStatUpdate.AddListener(UpdateStats);
+        Manager.Instance.currentTank.onStatUpdate.AddListener(UpdateStats);
         UpdateStats();
     }
     public void UpdateStats()
     {
-        ph.value = Manager.Instance.tankPh;
-        temp.value = Manager.Instance.tankTemp;
-        lightLevel.value = Manager.Instance.tankLight;
-        hardness.value = Manager.Instance.tankHardness;
+        ph.value = Manager.Instance.currentTank.tankPh;
+        temp.value = Manager.Instance.currentTank.tankTemp;
+        lightLevel.value = Manager.Instance.currentTank.tankLight;
+        hardness.value = Manager.Instance.currentTank.tankHardness;
     }
 }

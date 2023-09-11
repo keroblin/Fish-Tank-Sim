@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FishBehaviour : MonoBehaviour //maybe make it inherit placeable?
+public class FishBehaviour : Placeable
 {
     public Fish fish;
-    public Rigidbody rb;
     public Target primaryTarget = new Target();
     public Vector3 currentTargetPosition;
     public bool targetReached;
@@ -51,17 +50,17 @@ public class FishBehaviour : MonoBehaviour //maybe make it inherit placeable?
 
     public List<Target> targets = new List<Target>();
 
-    //all stuff in placeable, gonna decide whether to inherit soon
-    public MeshFilter meshFilter;
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
         Gizmos.DrawSphere(currentTargetPosition, .05f);
     }
-    void Start()
+
+    public override void Set(Purchasable _purchasable, bool fromPool = false)
     {
-        bounds = Manager.Instance.tankBounds;
+        purchasable = _purchasable;
+        fish = _purchasable as Fish;
+        bounds = Manager.Instance.currentTank.tankBounds;
         Feeding.Instance.OnFoodPlaced += FoodPlaced;
         speed = fish.speed;
     }
@@ -285,7 +284,7 @@ public class FishBehaviour : MonoBehaviour //maybe make it inherit placeable?
     {
         if (collision.gameObject.CompareTag("Food"))
         {
-            if(currentFood.go == collision.gameObject) //maybe change and query the food to check if its liked, maybe do this in foodbehaviour
+            if(currentFood != null && currentFood.go == collision.gameObject) //maybe change and query the food to check if its liked, maybe do this in foodbehaviour
             {
                 Eat(currentFood);
             }

@@ -9,7 +9,7 @@ public class Feeding : MonoBehaviour
     //food object should have a big massive area
     //when fish enter the area they go toward it
     bool isDown;
-    bool isOpen = true;
+    bool isOpen = false;
     Camera cam;
     Bounds bounds;
     public delegate void FoodPlaced(GameObject food);
@@ -27,7 +27,7 @@ public class Feeding : MonoBehaviour
     {
         Instance = this;
         cam = Camera.main;
-        bounds = Manager.Instance.tankBounds;
+        bounds = Manager.Instance.currentTank.tankBounds;
         bounds.size *= 1.3f;
     }
 

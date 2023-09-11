@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 586ec84cdced4ec4f81bad6af536362a, type: 3}
   m_Name: Betta
   m_EditorClassIdentifier: 
-  category: 0
+  tags: []
   stackable: 0
   placeable: 1
-  prefab: {fileID: 0}
+  prefab: {fileID: 7288040808445679479, guid: 8be49c17d22c5834986e48a77306368a, type: 3}
   icon: {fileID: 0}
   model: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 0}

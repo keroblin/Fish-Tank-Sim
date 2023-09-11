@@ -44,10 +44,10 @@ public class Fish: Purchasable
         //do some averaging against current stats
         //check if the stats are in range and how close to range they are
         //use abs to get distance without knowing which is bigger
-        float pHCompat = GetCompat(minPH, maxPH, Manager.Instance.tankPh);
-        float hardnessCompat = GetCompat(minHardness, maxHardness, Manager.Instance.tankHardness);
-        float tempCompat = GetCompat(minTemp, maxTemp, Manager.Instance.tankTemp);
-        float lightCompat = GetCompat(minLight, maxLight, Manager.Instance.tankLight);
+        float pHCompat = GetCompat(minPH, maxPH, Manager.Instance.currentTank.tankPh);
+        float hardnessCompat = GetCompat(minHardness, maxHardness, Manager.Instance.currentTank.tankHardness);
+        float tempCompat = GetCompat(minTemp, maxTemp, Manager.Instance.currentTank.tankTemp);
+        float lightCompat = GetCompat(minLight, maxLight, Manager.Instance.currentTank.tankLight);
 
         return (pHCompat + hardnessCompat + tempCompat + lightCompat) / 4;
     }
@@ -72,10 +72,25 @@ public class Fish: Purchasable
         }
     }
 
-    public override Placeable Place()
+    public override void Buy()
+    {
+        base.Buy();
+    }
+
+    public override void Sell()
+    {
+        base.Sell();
+    }
+
+    public override void Place()
     {
         //spawn the fish in the tank
-        return null;
+        FishManager.instance.AddFish(this);
+    }
+    public override void Remove()
+    {
+        base.Remove();
+        FishManager.instance.RemoveFish(this);
     }
 
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class FishManager : MonoBehaviour
 {
     public static FishManager instance;
+    public GameObject fishParent;
     public List<FishBehaviour> liveFish;
 
     private void Start()
@@ -12,41 +13,16 @@ public class FishManager : MonoBehaviour
         instance = this;
     }
 
-    //temp, may change
-    IEnumerator HungerTick()
+    public void AddFish(Fish fish)
     {
-        while (liveFish.Count > 0)
-        {
-            foreach(FishBehaviour fish in liveFish)
-            {
-                if(fish.happiness > 2)
-                {
-                    fish.hunger -= .5f;
-                }
-                else
-                {
-                    fish.hunger -= 1f;
-                }
-            }
-            yield return new WaitForSecondsRealtime(180f);
-        }
+        FishBehaviour placeable = PlacementManager.Instance.Place(fish) as FishBehaviour;
+        placeable.fish = fish;
+        placeable.gameObject.transform.SetParent(fishParent.transform, false);
+        placeable.Set(fish);
     }
-    /*IEnumerator HappinessTick()
+    public void RemoveFish(Fish fish)
     {
-        while (liveFish.Count > 0)
-        {
-            foreach (FishBehaviour fish in liveFish)
-            {
-                if (fish.happiness > 2)
-                {
-                    fish.hunger -= .5f;
-                }
-                else
-                {
-                    fish.hunger -= 1f;
-                }
-            }
-            yield return new WaitForSecondsRealtime(180f);
-        }
-    }*/
+        FishBehaviour behaviour = liveFish.Find(x => x.fish == fish);
+        liveFish.Remove(behaviour);
+    }
 }

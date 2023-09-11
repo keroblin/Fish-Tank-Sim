@@ -27,7 +27,7 @@ public class FishList:MonoBehaviour
 
     void Start()
     {
-        Manager.Instance.onStatUpdate.AddListener(Sort);
+        Manager.Instance.currentTank.onStatUpdate.AddListener(Sort);
         fish = Manager.Instance.allFish;
         foreach (Fish fish in fish)
         {
@@ -69,13 +69,13 @@ public class FishList:MonoBehaviour
         fishName.text = fish.name;
         fishDescription.text = fish.description;
         fishPhText.text = "pH: " + fish.minPH.ToString() + " - " + fish.maxPH.ToString();
-        fishPhIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minPH, fish.maxPH, Manager.Instance.tankPh));
+        fishPhIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minPH, fish.maxPH, Manager.Instance.currentTank.tankPh));
         fishHardnessText.text = "Water Hardness: " + fish.minHardness.ToString() + "dGH - " + fish.maxHardness.ToString() + "dGH";
-        fishHardnessIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minHardness, fish.maxHardness, Manager.Instance.tankHardness));
+        fishHardnessIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minHardness, fish.maxHardness, Manager.Instance.currentTank.tankHardness));
         fishTempText.text = "Temperature: " + fish.minTemp.ToString() + "f - " + fish.maxTemp.ToString() +"f";
-        fishTempIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minTemp,fish.maxTemp,Manager.Instance.tankTemp));
+        fishTempIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minTemp,fish.maxTemp,Manager.Instance.currentTank.tankTemp));
         fishLightText.text = "Light: " + (fish.minLight * 100f).ToString() + "% - " + (fish.maxLight*100f).ToString() + "%";
-        fishLightIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minLight, fish.maxLight, Manager.Instance.tankLight));
+        fishLightIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minLight, fish.maxLight, Manager.Instance.currentTank.tankLight));
     }
     void Unset(FishUI fishUI)
     {

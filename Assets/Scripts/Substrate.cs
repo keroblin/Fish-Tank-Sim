@@ -4,16 +4,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Substrate", menuName = "ScriptableObjects/Substrate")]
 public class Substrate : Item
 {
-    public override Placeable Place()
+    public override void Place()
     {
-        Manager.Instance.AddModifiers(this);
-        Manager.Instance.SwapSubstrate(this);
-        return null;
+        Manager.Instance.currentTank.AddModifiers(this);
+        Manager.Instance.currentTank.SwapSubstrate(this);
     }
     public override void Remove()
     {
-        Manager.Instance.RemoveModifiers(this);
-        Manager.Instance.SwapSubstrate(null);
+        Manager.Instance.currentTank.RemoveModifiers(this);
+        Manager.Instance.currentTank.SwapSubstrate(null);
     }
 
     public override void Sell()
