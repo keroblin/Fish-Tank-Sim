@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unity.Burst.CompilerServices;
 
 public class Feeding : MonoBehaviour
 {
@@ -14,13 +16,20 @@ public class Feeding : MonoBehaviour
     Bounds bounds;
     public delegate void FoodPlaced(GameObject food);
     public event FoodPlaced OnFoodPlaced;
-    public Pool foodPool;
     public GameObject foodRef;
+    public Pool foodPool;
+    public GameObject foodIndicator;
+    public SpriteRenderer foodIndicatorSprite;
+    public Sprite foodBag;
+    public Sprite foodPour;
+    public Sprite foodNotAllowed;
+
     [SerializeField] public Food currentFood { get;set;}
 
     public static Feeding Instance { get; private set; }
 
     bool inBounds;
+    Vector3 indicatorTarget;
     Vector3 debugHitPoint;
 
     private void OnEnable()
@@ -43,14 +52,52 @@ public class Feeding : MonoBehaviour
     {
         if (isOpen)
         {
+
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            int layerMask = ~(1 << 11) & ~(1 << 2); //fish
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+            {
+                Debug.Log("Did Hit");
+            }
+            else
+            {
+                Debug.Log("Did not Hit");
+            }
+
+            if (bounds.Contains(hit.point))
+            {
+                inBounds = true;
+                indicatorTarget = hit.point;
+                if (!isDown)
+                {
+                    foodIndicatorSprite.sprite = foodBag;
+                }
+            }
+            else
+            {
+                inBounds = false;
+                foodIndicatorSprite.sprite = foodNotAllowed;
+            }
+
+            debugHitPoint = hit.point;
+
+            foodIndicator.transform.position = new Vector3(indicatorTarget.x, foodIndicator.transform.position.y, foodIndicator.transform.position.z);
+            
+            if(inBounds && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButton(0))
+            {
+                foodIndicatorSprite.sprite = foodPour;
+                Debug.Log("Pouring");
+            }
+
             if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0) && !isDown)
             {
                 SpawnFood();
                 Debug.Log("Clicked");
                 isDown = true;
-                return;
             }
-            else
+            else if(isDown)
             {
                 isDown = false;
             }
@@ -60,48 +107,37 @@ public class Feeding : MonoBehaviour
     public void Open()
     {
         isOpen = true;
+        foodIndicator.gameObject.SetActive(true);
+        //do indicator stuff here
     }
     public void Close()
     {
         isOpen = false;
+        foodIndicator.gameObject.SetActive(false);
+        //do closing indicator here
     }
 
     private void SpawnFood()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        int layerMask = ~(1 << 11) & ~(1 << 2); //fish
-
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+        GameObject newFood;
+        if (currentFood.prefab == null)
         {
-            Debug.Log("Did Hit");
+            newFood = foodPool.Pull();
         }
         else
         {
-            Debug.Log("Did not Hit");
+            newFood = Instantiate(currentFood.prefab);
         }
-
-        if (bounds.Contains(hit.point))
+        newFood.transform.SetParent(null, false);
+        newFood.transform.position = foodIndicator.transform.position;
+        FoodBehaviour behaviour = newFood.GetComponent<FoodBehaviour>();
+        behaviour.food = currentFood;
+        behaviour.Use += RemoveFood;
+        newFood.SetActive(true);
+        if (OnFoodPlaced != null && newFood != null)
         {
-            inBounds = true;
-            GameObject newFood = foodPool.Pull();
-            newFood.transform.SetParent(null, false);
-            newFood.transform.position = hit.point;
-            FoodBehaviour behaviour = newFood.GetComponent<FoodBehaviour>();
-            behaviour.food = currentFood;
-            behaviour.Use += RemoveFood;
-            newFood.SetActive(true);
-            if(OnFoodPlaced != null && newFood != null)
-            {
-                OnFoodPlaced(newFood);
-            }
+            OnFoodPlaced(newFood);
         }
-        else
-        {
-            inBounds = false;
-        }
-
-        debugHitPoint = hit.point;
     }
 
     void RemoveFood(FoodBehaviour food)
