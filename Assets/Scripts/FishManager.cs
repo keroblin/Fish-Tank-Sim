@@ -35,6 +35,10 @@ public class FishManager : MonoBehaviour
             //if the fish is really unhappy, take down their hunger faster
             //if the fish dislikes other fish, take down their happiness a lot
 
+            //sort out hygeine here based on number of fish
+
+            fishBehaviour.ageInTicks++;
+
             if(fishBehaviour.hunger > 0)
             {
                 if (fishBehaviour.happiness > 2)
@@ -65,5 +69,19 @@ public class FishManager : MonoBehaviour
             //calculate balance of liked and disliked fish
         }
         return harmony;
+    }
+
+    public int GetFishPoo()
+    {
+        int pooAmount = 0;
+        foreach(FishBehaviour fish in liveFish)
+        {
+            if(fish.ageInTicks % 50 == 0) //every nth tick
+            {
+                pooAmount++;
+                //do modifiers if its hungry or ill or whatever here
+            }
+        }
+        return pooAmount;
     }
 }

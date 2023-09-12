@@ -14,24 +14,32 @@ public class FishMonitor : MonoBehaviour
     public TextMeshProUGUI fishComment;
     public Slider happiness;
     public Slider hunger;
+    public FishBehaviour currentFish;
 
     bool set;
     void Start()
     {
         instance = this;
+        Manager.Instance.currentTank.onTankTick.AddListener(UpdateUI);
     }
 
     public void Set(FishBehaviour fishB)
     {
         visuals.SetActive(true);
+        currentFish = fishB;
         fishName.text = fishB.fish.name;
-        happiness.value = fishB.happiness; //maybe do this in an event or something so its always up to date
-        hunger.value = fishB.hunger;
-        fishComment.text = "Not sure how to implement this yet!";
+        UpdateUI();
         fishCam.transform.SetParent(fishB.gameObject.transform, false);
         fishCam.transform.localPosition = Vector3.zero;
         fishCam.transform.localPosition = new Vector3(-(fishB.fish.model.bounds.size.x * fishB.meshFilter.gameObject.transform.localScale.x) * 4, 0f, 0f);
         set = true;
+    }
+
+    public void UpdateUI()
+    {
+        happiness.value = currentFish.happiness; //maybe do this in an event or something so its always up to date
+        hunger.value = currentFish.hunger;
+        fishComment.text = "Not sure how to implement this yet!";
     }
 
     public void Unset()

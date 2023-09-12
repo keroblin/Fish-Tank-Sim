@@ -66,6 +66,7 @@ public class Tank : MonoBehaviour
     public void StatUpdate()
     {
         //update all the sliders
+        tankHygeine -= FishManager.instance.GetFishPoo();
         hygeineSlider.value = tankHygeine;
         harmonySlider.value = FishManager.instance.GetFishHarmony();
         //style handles itself when items are added or removed

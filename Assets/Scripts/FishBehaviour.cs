@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class FishBehaviour : Placeable
 {
     public Fish fish;
+    public float ageInTicks;
     public Target primaryTarget = new Target();
     public Vector3 currentTargetPosition;
     public bool targetReached;
