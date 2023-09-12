@@ -46,7 +46,7 @@ public class FishList:MonoBehaviour
     void Sort() //better way to do this im sure
     {
         List<FishUI> sortedUIs = fishUIs;
-        fishUIs = sortedUIs.OrderBy(x => x.fish.CalculateHappiness()).ToList();
+        fishUIs = sortedUIs.OrderBy(x => x.fish.CalculateCompat()).ToList();
         for(int i =0; i< fishUIs.Count; i++)
         {
             fishUIs[i].gameObject.transform.SetSiblingIndex(i);
@@ -69,13 +69,13 @@ public class FishList:MonoBehaviour
         fishName.text = fish.name;
         fishDescription.text = fish.description;
         fishPhText.text = "pH: " + fish.minPH.ToString() + " - " + fish.maxPH.ToString();
-        fishPhIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minPH, fish.maxPH, Manager.Instance.currentTank.tankPh));
+        fishPhIcon.sprite = fish.GetCompatIcon(fish.GetCompat(fish.minPH, fish.maxPH, Manager.Instance.currentTank.tankPh));
         fishHardnessText.text = "Water Hardness: " + fish.minHardness.ToString() + "dGH - " + fish.maxHardness.ToString() + "dGH";
-        fishHardnessIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minHardness, fish.maxHardness, Manager.Instance.currentTank.tankHardness));
+        fishHardnessIcon.sprite = fish.GetCompatIcon(fish.GetCompat(fish.minHardness, fish.maxHardness, Manager.Instance.currentTank.tankHardness));
         fishTempText.text = "Temperature: " + fish.minTemp.ToString() + "f - " + fish.maxTemp.ToString() +"f";
-        fishTempIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minTemp,fish.maxTemp,Manager.Instance.currentTank.tankTemp));
+        fishTempIcon.sprite = fish.GetCompatIcon(fish.GetCompat(fish.minTemp,fish.maxTemp,Manager.Instance.currentTank.tankTemp));
         fishLightText.text = "Light: " + (fish.minLight * 100f).ToString() + "% - " + (fish.maxLight*100f).ToString() + "%";
-        fishLightIcon.sprite = fish.GetHappinessIcon(fish.GetCompat(fish.minLight, fish.maxLight, Manager.Instance.currentTank.tankLight));
+        fishLightIcon.sprite = fish.GetCompatIcon(fish.GetCompat(fish.minLight, fish.maxLight, Manager.Instance.currentTank.tankLight));
     }
     void Unset(FishUI fishUI)
     {

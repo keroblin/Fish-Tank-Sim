@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72e680779af78614eba842063626a80f, type: 3}
   m_Name: Adventure
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 932fbd74f561dc34888e7015d1765760, type: 3}

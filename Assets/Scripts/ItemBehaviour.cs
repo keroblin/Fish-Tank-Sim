@@ -64,8 +64,7 @@ public class ItemBehaviour : Placeable
     {
         placeableClicked.Invoke();
 
-        screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+        screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position); //current position on screen point (constant)
     }
 
     private void Update()
@@ -108,6 +107,7 @@ public class ItemBehaviour : Placeable
 
     void Move()
     {
+        Camera cam = Camera.main;
         if (input.magnitude > 0 && !isDown)
         {
             Vector3 target = transform.position + new Vector3(input.x * increment, 0f, input.y * increment);

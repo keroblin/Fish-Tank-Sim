@@ -12,6 +12,6 @@ public class FishDetail : ShopDetail
     {
         Fish fish = purchasable as Fish;
         //fishstatview.set(fish)
-        compatibility.text = "Compatibility: " + (fish.CalculateHappiness() * 100f).ToString("#.00") + "%";
+        compatibility.text = "Compatibility: " + (fish.CalculateCompat() * 100f).ToString("#.00") + "%";
     }
 }

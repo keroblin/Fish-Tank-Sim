@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 502b159f767812d4ca3173ba57bd78d2, type: 3}
   m_Name: Spirulina Wafer
   m_EditorClassIdentifier: 
-  category: 0
-  icon: {fileID: 0}
+  tags: []
+  stackable: 1
+  placeable: 0
+  prefab: {fileID: 0}
+  icon: {fileID: 21300000, guid: 2df5baf9ff319564faed1125f5cb3975, type: 3}
   model: {fileID: 0}
   material: {fileID: 0}
   description: 
   price: 0
   portionSize: 0
+  rotTime: 10
   favourites:
   - {fileID: 11400000, guid: 18aaea47f71fbdc43af057e9ffd2eebd, type: 2}
   likes: []

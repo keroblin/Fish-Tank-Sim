@@ -11,9 +11,7 @@ public class Tank : MonoBehaviour
     public Bounds tankBounds;
     public bool drawBounds;
 
-    public float hygieneInterval;
-    public float digestionInterval;
-    public float illnessInterval;
+    public float tickInterval = 50f;
     public float currentTime;
 
     public float tankHygeine = Manager.baseHygeine;
@@ -28,14 +26,20 @@ public class Tank : MonoBehaviour
     public MeshFilter substrateMesh;
     public MeshRenderer substrateRenderer;
 
-    public Slider harmony;
-    public Slider cleanliness;
-    public Image style;
+    public Slider harmonySlider;
+    public Slider hygeineSlider;
+    public Image styleIcon;
     public Slider valueSlider;
     public TextMeshProUGUI valueText;
 
     public UnityEvent onStatUpdate;
+    public UnityEvent onTankTick;
     bool useDefault = true;
+
+    public List<Placeable> assignedItems;
+    public List<FishBehaviour> assignedFish;
+
+    public Dictionary<Tag, int> tags = new Dictionary<Tag, int>();
     private void OnDrawGizmos()
     {
         //tank bounds testing
@@ -55,6 +59,50 @@ public class Tank : MonoBehaviour
             tankTemp = Manager.baseTemp;
             tankHardness = Manager.baseHardness;
         }
+        Manager.Instance.onQuantityChange.AddListener(UpdateValue);
+        this.onStatUpdate.AddListener(StatUpdate);
+    }
+
+    public void StatUpdate()
+    {
+        //update all the sliders
+        hygeineSlider.value = tankHygeine;
+        harmonySlider.value = FishManager.instance.GetFishHarmony();
+        //style handles itself when items are added or removed
+        UpdateValue();
+    }
+
+    public void UpdateValue()//calculate the value of the tank (the value of the items within, then subtract any fish health issues and dirtiness, or add if fish are really happy and the tank is healthy)
+
+    {
+        float value = 0.0f;
+        foreach (Purchasable purchasable in Manager.Instance.inventory) //change the inventory bit to be like a held items list in here
+        {
+            value += purchasable.price * Manager.Instance.allPurchasables[purchasable];
+            //add in a modifier for like tank quality too later
+        } 
+        valueText.text = "£"+ value.ToString("#.00");
+    }
+
+    void UpdateStyle()
+    {
+        Tag mostCommon = null;
+        foreach(KeyValuePair<Tag,int> tag in tags)
+        {
+            if(mostCommon == null)
+            {
+                mostCommon = tag.Key;
+            }
+            if(tag.Value > tags[mostCommon])
+            {
+                mostCommon = tag.Key;
+            }
+        }
+
+        if (mostCommon != null)
+        {
+            styleIcon.sprite = mostCommon.icon;
+        }
     }
 
     public void AddModifiers(Item item)
@@ -63,6 +111,18 @@ public class Tank : MonoBehaviour
         tankTemp += item.tempMod;
         tankHardness += item.dGHMod;
         tankLight += item.lightMod;
+        foreach (Tag tag in item.tags)
+        {
+            if (tags == null || !tags.ContainsKey(tag))
+            {
+                tags.Add(tag, 1);
+            }
+            else
+            {
+                tags[tag]++;
+            }
+        }
+        UpdateStyle();
         onStatUpdate.Invoke();
     }
     public void RemoveModifiers(Item item)
@@ -71,6 +131,14 @@ public class Tank : MonoBehaviour
         tankTemp -= item.tempMod;
         tankHardness -= item.dGHMod;
         tankLight -= item.lightMod;
+        foreach (Tag tag in item.tags)
+        {
+            if (tags.ContainsKey(tag))
+            {
+                tags[tag]--;
+            }
+        }
+        UpdateStyle();
         onStatUpdate.Invoke();
     }
 
@@ -92,30 +160,21 @@ public class Tank : MonoBehaviour
 
     private void Update()
     {
-        currentTime += Time.deltaTime; //probably do something different so this number doesnt get infinitely high
+        currentTime += Time.deltaTime;
 
-        if(currentTime >= hygieneInterval)
+        if(currentTime >= tickInterval)
         {
-            //do function stuff here
-            //reset timer
+            onTankTick.Invoke();
+            onStatUpdate.Invoke();
+            currentTime = 0;
         }
     }
 
-    /*
-    while (liveFish.Count > 0)
+    public void AddRottenFood()
+    {
+        if(tankHygeine > 0)
         {
-            foreach (FishBehaviour fish in liveFish)
-            {
-                if (fish.happiness > 2)
-                {
-                    fish.hunger -= .5f;
-                }
-                else
-                {
-                    fish.hunger -= 1f;
-                }
-            }
-            yield return new WaitForSecondsRealtime(180f);
+            tankHygeine -= 10;
         }
-    */
+    }
 }

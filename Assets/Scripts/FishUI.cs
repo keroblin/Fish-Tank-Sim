@@ -23,7 +23,7 @@ public class FishUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void UpdateStats()
     {
-        fishHappiness.sprite = fish.GetHappinessIcon();
+        fishHappiness.sprite = fish.GetCompatIcon();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

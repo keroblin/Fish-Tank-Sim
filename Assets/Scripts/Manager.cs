@@ -36,6 +36,8 @@ public class Manager : MonoBehaviour
     public UnityEvent onBuy;
     public UnityEvent onSell;
     public UnityEvent onQuantityChange;
+    public UnityEvent enterEdit;
+    public UnityEvent enterView;
 
     public Pool purchasableUiPool;
 

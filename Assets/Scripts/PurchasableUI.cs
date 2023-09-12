@@ -9,6 +9,7 @@ public class PurchasableUI : MonoBehaviour
     public Button button;
     public MeshFilter meshFilter;
     public TextMeshProUGUI displayName;
+    public Image icon;
     public GameObject quantityObj;
     public TextMeshProUGUI quantityUI;
     public Purchasable purchasable;
@@ -23,6 +24,15 @@ public class PurchasableUI : MonoBehaviour
         purchasable = _purchasable;
         displayName.text = purchasable.name;
         meshFilter.mesh = purchasable.model;
+        if(_purchasable.icon != null)
+        {
+            icon.gameObject.SetActive(true);
+            icon.sprite = _purchasable.icon;
+        }
+        else
+        {
+            icon.gameObject.SetActive(false);
+        }
         //shop menu links itself to the onclick to update the description
     }
 

@@ -11,6 +11,7 @@ public class FishManager : MonoBehaviour
     private void Start()
     {
         instance = this;
+        Manager.Instance.currentTank.onTankTick.AddListener(FishTick);
     }
 
     public void AddFish(Fish fish)
@@ -24,5 +25,45 @@ public class FishManager : MonoBehaviour
     {
         FishBehaviour behaviour = liveFish.Find(x => x.fish == fish);
         liveFish.Remove(behaviour);
+    }
+
+    public void FishTick()
+    {
+        foreach (FishBehaviour fishBehaviour in liveFish) //potentially use the tank's fish list we shall see
+        {
+            //if the fish is really hungry, take down their happiness
+            //if the fish is really unhappy, take down their hunger faster
+            //if the fish dislikes other fish, take down their happiness a lot
+
+            if(fishBehaviour.hunger > 0)
+            {
+                if (fishBehaviour.happiness > 2)
+                {
+                    fishBehaviour.hunger -= .5f;
+                }
+                else
+                {
+                    fishBehaviour.hunger -= 1f;
+                }
+            }
+            
+            if(fishBehaviour.hunger < 2 && fishBehaviour.happiness > 0)
+            {
+                fishBehaviour.happiness -= .5f;
+            }
+
+            //check fishs dislikes
+            //remove happiness
+        }
+    }
+
+    public float GetFishHarmony()
+    {
+        float harmony = 5f;
+        foreach(FishBehaviour fish in liveFish)
+        {
+            //calculate balance of liked and disliked fish
+        }
+        return harmony;
     }
 }

@@ -23,6 +23,8 @@ public class Placeable : MonoBehaviour
     private void Start()
     {
         placeableClicked.AddListener(delegate { PlacementManager.Instance.Select(this); });
+        Manager.Instance.enterEdit.AddListener(delegate { this.editable = true; });
+        Manager.Instance.enterView.AddListener(delegate { this.editable = false; });
     }
 
     public virtual void Set(Purchasable _purchasable, bool fromPool = false)

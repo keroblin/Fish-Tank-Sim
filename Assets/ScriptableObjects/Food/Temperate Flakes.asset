@@ -12,12 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 502b159f767812d4ca3173ba57bd78d2, type: 3}
   m_Name: Temperate Flakes
   m_EditorClassIdentifier: 
-  category: 0
-  icon: {fileID: 0}
+  tags: []
+  stackable: 1
+  placeable: 0
+  prefab: {fileID: 0}
+  icon: {fileID: 21300000, guid: 2df5baf9ff319564faed1125f5cb3975, type: 3}
   model: {fileID: 0}
   material: {fileID: 0}
   description: 
   price: 0
   portionSize: 0
-  favourites: []
-  likes: []
+  rotTime: 10
+  favourites:
+  - {fileID: 11400000, guid: 3567e4eb9c083f149b24f21a69680c79, type: 2}
+  - {fileID: 11400000, guid: e365b66b2cb47dd42bed29770c30698b, type: 2}
+  likes:
+  - {fileID: 11400000, guid: e267f98c3fcfcd24d9a7ebe871c402da, type: 2}
+  - {fileID: 11400000, guid: b4d9b2b56e426104b93d005c9925a9d3, type: 2}

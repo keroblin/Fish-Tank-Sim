@@ -16,7 +16,7 @@ public class Feeding : MonoBehaviour
     public event FoodPlaced OnFoodPlaced;
     public Pool foodPool;
     public GameObject foodRef;
-    public Food currentFood;
+    [SerializeField] public Food currentFood { get;set;}
 
     public static Feeding Instance { get; private set; }
 

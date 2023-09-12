@@ -157,10 +157,12 @@ public class Shop:MonoBehaviour
 
     void UpdateButtons()
     {
+        place.gameObject.SetActive(selectedItem.placeable);
+
         if (Manager.Instance.allPurchasables[selectedItem] > 0)
         {
             buy.interactable = selectedItem.stackable;
-            place.interactable = Manager.Instance.allPurchasables[selectedItem] > PlacementManager.Instance.GetAmountPlaced(selectedItem); //not sure how to deal with this hmm
+            place.interactable = Manager.Instance.allPurchasables[selectedItem] > PlacementManager.Instance.GetAmountPlaced(selectedItem);
         }
         else
         {

@@ -25,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 204101408919635130}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.16031, y: 0.16031, z: 0.16031}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5445839482240046421}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!33 &8571406730724924392
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 204101408919635130}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -3965410645895262243, guid: dc04f8a9f0a65e44696cd6c106f33a8f, type: 3}
 --- !u!23 &6980131301934507014
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8defebd9bd61ccb48b86d1ab8b96fc9a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,8 +130,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21bbcd064a64a9944aaad25746a0640e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fish: {fileID: 0}
+  mat: {fileID: 0}
   rb: {fileID: 5613894503783741543}
+  meshFilter: {fileID: 0}
+  meshRenderer: {fileID: 0}
+  purchasable: {fileID: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
+  menuOffset: {x: 0, y: 0, z: 0}
+  selected: 0
+  placeableClicked:
+    m_PersistentCalls:
+      m_Calls: []
+  col: {fileID: 0}
+  editable: 0
+  fish: {fileID: 0}
   primaryTarget:
     position: {x: 0, y: 0, z: 0}
     type: 0

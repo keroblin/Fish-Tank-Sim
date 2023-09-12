@@ -8,28 +8,30 @@ public class Fish: Purchasable
     public float maxSpeed = 10f;
     public Manager.FishPersonalities personality;
 
+    public List<Fish> dislikedFish;
+
     public float minPH = 6.0f,maxPH = 8.5f;
     public float minHardness = 5f,maxHardness = 30f;
     public float minTemp = 33f,maxTemp = 90f;
     public float minLight = 0f,maxLight = 1f;
 
-    public Sprite GetHappinessIcon(float statOverride = 0.0f)
+    public Sprite GetCompatIcon(float statOverride = 0.0f)
     {
-        float happiness;
+        float compat;
         if (statOverride == 0.0f)
         {
-            happiness = CalculateHappiness();
+            compat = CalculateCompat();
         }
         else
         {
-            happiness = statOverride;
+            compat = statOverride;
         }
 
-        if(happiness > 0.55)
+        if(compat > 0.55)
         {
             return Manager.Instance.happy;
         }
-        else if(happiness > 0.3)
+        else if(compat > 0.3)
         {
             return Manager.Instance.ok;
         }
@@ -39,7 +41,7 @@ public class Fish: Purchasable
         }
     }
 
-    public float CalculateHappiness()
+    public float CalculateCompat()
     {
         //do some averaging against current stats
         //check if the stats are in range and how close to range they are

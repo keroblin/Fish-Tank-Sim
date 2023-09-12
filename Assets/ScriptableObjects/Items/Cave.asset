@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
   m_Name: Cave
   m_EditorClassIdentifier: 
-  category: 0
+  tags:
+  - {fileID: 11400000, guid: 6f1e86c62d805794ab56acf5181ceeb1, type: 2}
+  - {fileID: 11400000, guid: 0ae5ffe8384b4af409b9dfb9310cf6ae, type: 2}
   stackable: 0
   placeable: 1
   prefab: {fileID: 0}
