@@ -130,10 +130,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21bbcd064a64a9944aaad25746a0640e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mat: {fileID: 0}
+  mat: {fileID: 2100000, guid: 8defebd9bd61ccb48b86d1ab8b96fc9a, type: 2}
   rb: {fileID: 5613894503783741543}
-  meshFilter: {fileID: 0}
-  meshRenderer: {fileID: 0}
+  meshFilter: {fileID: 8571406730724924392}
+  meshRenderer: {fileID: 6980131301934507014}
   purchasable: {fileID: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   menuOffset: {x: 0, y: 0, z: 0}
@@ -144,6 +144,7 @@ MonoBehaviour:
   col: {fileID: 0}
   editable: 0
   fish: {fileID: 0}
+  ageInTicks: 0
   primaryTarget:
     position: {x: 0, y: 0, z: 0}
     type: 0
