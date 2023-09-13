@@ -31,15 +31,18 @@ public class FishMonitor : MonoBehaviour
         UpdateUI();
         fishCam.transform.SetParent(fishB.gameObject.transform, false);
         fishCam.transform.localPosition = Vector3.zero;
-        fishCam.transform.localPosition = new Vector3(-(fishB.fish.model.bounds.size.x * fishB.meshFilter.gameObject.transform.localScale.x) * 4, 0f, 0f);
+        fishCam.transform.localPosition = new Vector3(-(fishB.meshFilter.mesh.bounds.size.x * fishB.meshFilter.gameObject.transform.localScale.x) * 4, 0f, 0f);
         set = true;
     }
 
     public void UpdateUI()
     {
-        happiness.value = currentFish.happiness; //maybe do this in an event or something so its always up to date
-        hunger.value = currentFish.hunger;
-        fishComment.text = "Not sure how to implement this yet!";
+        if (currentFish)
+        {
+            happiness.value = currentFish.happiness; //maybe do this in an event or something so its always up to date
+            hunger.value = currentFish.hunger;
+            fishComment.text = "Not sure how to implement this yet!";
+        }
     }
 
     public void Unset()
