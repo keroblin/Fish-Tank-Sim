@@ -41,6 +41,7 @@ public class PlacementManager:MonoBehaviour
             placeable = obj.GetComponent<Placeable>();
         }
         placeable.Set(purchasable);
+        Debug.Log(placeable.GetType());
         instances.Add(placeable);
         placeable.gameObject.transform.SetParent(placementParent.transform, false);
         if(placeable != null && PlaceablePlaced != null)

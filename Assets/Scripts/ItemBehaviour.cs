@@ -33,13 +33,13 @@ public class ItemBehaviour : Placeable
         placeableClicked.AddListener(delegate { PlacementManager.Instance.Select(this); });
     }
 
-    public virtual void Set(Purchasable _purchasable)
+    public override void Set(Purchasable _purchasable, bool fromPool = false)
     {
         Debug.Log("Set item to " +  _purchasable.name);
         purchasable = _purchasable;
-        this.meshFilter.mesh = purchasable.model;
-        this.meshRenderer.material = purchasable.material;
-        this.mat = this.meshRenderer.material; //gets unique version of mat
+        meshFilter.mesh = purchasable.model;
+        meshRenderer.material = purchasable.material;
+        mat = meshRenderer.material; //gets unique version of mat
         if (editable)
         {
             SetColor(color);
