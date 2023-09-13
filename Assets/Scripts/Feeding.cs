@@ -144,6 +144,8 @@ public class Feeding : MonoBehaviour
         }
         newFood.transform.SetParent(null, false);
         newFood.transform.position = foodIndicator.transform.position;
+        Manager.Instance.allPurchasables[currentFood]--;
+        Manager.Instance.onQuantityChange.Invoke();
         FoodBehaviour behaviour = newFood.GetComponent<FoodBehaviour>();
         behaviour.food = currentFood;
         behaviour.Use += RemoveFood;
