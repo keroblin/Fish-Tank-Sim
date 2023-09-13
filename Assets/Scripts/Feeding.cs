@@ -7,9 +7,6 @@ using Unity.Burst.CompilerServices;
 
 public class Feeding : MonoBehaviour
 {
-    //Food currentFood;
-    //food object should have a big massive area
-    //when fish enter the area they go toward it
     bool isDown;
     bool isOpen = false;
     Camera cam;
@@ -22,6 +19,7 @@ public class Feeding : MonoBehaviour
     public SpriteRenderer foodIndicatorSprite;
     public Sprite foodBag;
     public Sprite foodPour;
+    public Sprite foodEmpty;
     public Sprite foodNotAllowed;
 
     [SerializeField] public Food currentFood { get;set;}
@@ -38,6 +36,7 @@ public class Feeding : MonoBehaviour
         cam = Camera.main;
         bounds = Manager.Instance.currentTank.tankBounds;
         bounds.size *= 1.3f;
+        Manager.Instance.enterView.AddListener(Close);
     }
 
     private void OnDrawGizmos()
@@ -52,7 +51,6 @@ public class Feeding : MonoBehaviour
     {
         if (isOpen)
         {
-
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             int layerMask = ~(1 << 11) & ~(1 << 2); //fish
             RaycastHit hit;
@@ -72,10 +70,17 @@ public class Feeding : MonoBehaviour
                 indicatorTarget = hit.point;
                 if (!isDown)
                 {
-                    foodIndicatorSprite.sprite = foodBag;
+                    if (Manager.Instance.allPurchasables[currentFood] > 0)
+                    {
+                        foodIndicatorSprite.sprite = foodBag;
+                    }
+                    else
+                    {
+                        foodIndicatorSprite.sprite = foodEmpty;
+                    }
                 }
             }
-            else
+            else if(!bounds.Contains(hit.point))
             {
                 inBounds = false;
                 foodIndicatorSprite.sprite = foodNotAllowed;
@@ -85,13 +90,22 @@ public class Feeding : MonoBehaviour
 
             foodIndicator.transform.position = new Vector3(indicatorTarget.x, foodIndicator.transform.position.y, foodIndicator.transform.position.z);
             
+            //do something here to check quantity of food available
+
             if(inBounds && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButton(0))
             {
-                foodIndicatorSprite.sprite = foodPour;
+                if (Manager.Instance.allPurchasables[currentFood] > 0)
+                {
+                    foodIndicatorSprite.sprite = foodPour;
+                }
+                else
+                {
+                    foodIndicatorSprite.sprite = foodNotAllowed;
+                }
                 Debug.Log("Pouring");
             }
 
-            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0) && !isDown)
+            if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0) && !isDown && Manager.Instance.allPurchasables[currentFood] > 0)
             {
                 SpawnFood();
                 Debug.Log("Clicked");
