@@ -11,6 +11,7 @@ public class FishBehaviour : Placeable
     public Target primaryTarget = new Target();
     public Vector3 currentTargetPosition;
     public bool targetReached;
+    public SpriteRenderer alert;
 
     float length = .5f;
     float speed;
@@ -90,7 +91,7 @@ public class FishBehaviour : Placeable
             case States.SMELL:
                 break;
             case States.FEED:
-                if (currentFood != null)
+                if (currentFood != null && currentFood.go != null)
                 {
                     SetPrimaryTarget(currentFood.go.transform.position, States.FEED);
                 }
@@ -153,9 +154,18 @@ public class FishBehaviour : Placeable
 
         if (cross.magnitude > 0.01) //if we arent facing the target, turn to face it
         {
-            rb.AddTorque(cross);
-            rb.angularVelocity = Vector3.Lerp(Vector3.zero, rb.angularVelocity, cross.magnitude);
+            Vector3 target;
+            target = cross;
+            rb.AddTorque(target);
+            rb.AddTorque((transform.up - Vector3.up) * -cross.magnitude);
+            rb.angularVelocity = Vector3.Lerp(Vector3.zero, rb.angularVelocity, -cross.magnitude); //move more based on distance
+            //add stuff to modify it to keep it pointing up here
+            //we are rotating the normalised cross product of the distance from the target to us
+            //
         }
+
+        //NOT COMPLETE/////////////
+
 
         if (Vector3.Distance(transform.position, currentTargetPosition) < .2f) //if we're within distance
         {
