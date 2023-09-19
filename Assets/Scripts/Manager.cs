@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
@@ -15,7 +16,7 @@ public class Manager : MonoBehaviour
     public Pool foodPool;
 
     public GameObject placingRef;
-    public const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f, baseHygeine = 100f;
+    public const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f, baseDirt = 0f;
     public const float totalMoney = 200.00f;
     public float currentMoney = totalMoney;
     public TextMeshProUGUI money;
@@ -61,6 +62,7 @@ public class Manager : MonoBehaviour
         }
         Instance = this;
     }
+
     private void Start()
     {
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
@@ -131,5 +133,18 @@ public class Manager : MonoBehaviour
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onSell.Invoke();
         onQuantityChange.Invoke();
+    }
+
+    public void SubmitTankRequest()
+    {
+        //review tank
+        //if its accepted send it off
+        //if not, go back to the tank we're in and show a 'poof' effect on the request
+        //add any bonuses
+        //send stuff to request ui to turn on and off
+    }
+    public void CancelTankRequest()
+    {
+
     }
 }

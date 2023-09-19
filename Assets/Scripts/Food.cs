@@ -17,8 +17,4 @@ public class Food : Purchasable
         base.Buy();
 
     }
-
-    public override void Place()
-    {
-    }
 }

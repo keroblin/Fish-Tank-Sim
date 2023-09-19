@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using Unity.Burst.CompilerServices;
 
 public class Feeding : MonoBehaviour
 {

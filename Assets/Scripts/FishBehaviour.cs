@@ -157,7 +157,7 @@ public class FishBehaviour : Placeable
             Vector3 target;
             target = cross;
             rb.AddTorque(target);
-            rb.AddTorque((transform.up - Vector3.up) * -cross.magnitude);
+            rb.AddTorque((transform.up - Vector3.up) * -cross.magnitude); //upright correction, does flips atm
             rb.angularVelocity = Vector3.Lerp(Vector3.zero, rb.angularVelocity, -cross.magnitude); //move more based on distance
             //add stuff to modify it to keep it pointing up here
             //we are rotating the normalised cross product of the distance from the target to us

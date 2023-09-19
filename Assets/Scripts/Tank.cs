@@ -11,35 +11,43 @@ public class Tank : MonoBehaviour
     public Bounds tankBounds;
     public bool drawBounds;
 
-    public float tickInterval = 50f;
+    public float tickInterval = 5f;
     public float currentTime;
 
-    public float tankHygeine = Manager.baseHygeine;
+    bool useDefault = true;
+    public float tankDirtiness = Manager.baseDirt;
+    public float tankHarmony = 0;
     public float tankPh = Manager.basePh;
     [Range(0f, 1f)]
     public float tankLight = Manager.baseLight;
     public float tankTemp = Manager.baseTemp;
     public float tankHardness = Manager.baseHardness;
+    public float value = 0.0f;
 
     public Item currentSubstrate;
     public Item nullSubstrate;
     public MeshFilter substrateMesh;
     public MeshRenderer substrateRenderer;
+    public Material glass;
 
     public Slider harmonySlider;
-    public Slider hygeineSlider;
+    public Slider dirtSlider;
     public Image styleIcon;
     public Slider valueSlider;
     public TextMeshProUGUI valueText;
 
     public UnityEvent onStatUpdate;
     public UnityEvent onTankTick;
-    bool useDefault = true;
+
+    public Request assignedRequest;
 
     public List<Placeable> assignedItems;
     public List<FishBehaviour> assignedFish;
 
     public Dictionary<Tag, int> tags = new Dictionary<Tag, int>();
+    public Tag mostCommonStyle = null;
+
+    public Animator animator;
     private void OnDrawGizmos()
     {
         //tank bounds testing
@@ -66,17 +74,16 @@ public class Tank : MonoBehaviour
     public void StatUpdate()
     {
         //update all the sliders
-        tankHygeine -= FishManager.instance.GetFishPoo();
-        hygeineSlider.value = tankHygeine;
+        tankDirtiness += FishManager.instance.GetFishPoo();
+        dirtSlider.value = tankDirtiness;
         harmonySlider.value = FishManager.instance.GetFishHarmony();
+        //glass.dirtiness = tankDirtiness; //do this for a dirtiness material
         //style handles itself when items are added or removed
         UpdateValue();
     }
 
-    public void UpdateValue()//calculate the value of the tank (the value of the items within, then subtract any fish health issues and dirtiness, or add if fish are really happy and the tank is healthy)
-
+    public void UpdateValue()//calculate the value of the tank (the value of the items within, then subtract any fish health issues and dirtiness, or add if fish are really happy and the tank is healthy
     {
-        float value = 0.0f;
         foreach (Purchasable purchasable in Manager.Instance.inventory) //change the inventory bit to be like a held items list in here
         {
             value += purchasable.price * Manager.Instance.allPurchasables[purchasable];
@@ -87,22 +94,21 @@ public class Tank : MonoBehaviour
 
     void UpdateStyle()
     {
-        Tag mostCommon = null;
         foreach(KeyValuePair<Tag,int> tag in tags)
         {
-            if(mostCommon == null)
+            if(mostCommonStyle == null)
             {
-                mostCommon = tag.Key;
+                mostCommonStyle = tag.Key;
             }
-            if(tag.Value > tags[mostCommon])
+            if(tag.Value > tags[mostCommonStyle])
             {
-                mostCommon = tag.Key;
+                mostCommonStyle = tag.Key;
             }
         }
 
-        if (mostCommon != null)
+        if (mostCommonStyle != null)
         {
-            styleIcon.sprite = mostCommon.icon;
+            styleIcon.sprite = mostCommonStyle.icon;
         }
     }
 
@@ -165,6 +171,7 @@ public class Tank : MonoBehaviour
 
         if(currentTime >= tickInterval)
         {
+            //Debug.Log("Tick!");
             onTankTick.Invoke();
             onStatUpdate.Invoke();
             currentTime = 0;
@@ -173,9 +180,17 @@ public class Tank : MonoBehaviour
 
     public void AddRottenFood()
     {
-        if(tankHygeine > 0)
+        if(tankDirtiness < dirtSlider.maxValue)
         {
-            tankHygeine -= 10;
+            tankDirtiness++;
+            StatUpdate();
         }
+    }
+
+    public void CleanTank()
+    {
+        animator.Play("CurtainDown");
+        tankDirtiness = 0;
+        StatUpdate();
     }
 }
