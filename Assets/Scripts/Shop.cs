@@ -69,6 +69,7 @@ public class Shop:MonoBehaviour
         //not sure how best to do this
         menu.sell.onClick.AddListener(Sell);
         menu.putBack.onClick.AddListener(PutBack);
+        Manager.Instance.onQuantityChange.AddListener(UpdateButtons);
 
         for(int i = 0; i < mainCategories.Count; i++)
         {
@@ -212,6 +213,7 @@ public class Shop:MonoBehaviour
     {
         Debug.Log("Placing " + selectedItem.name);
         selectedItem.Place();
+        Manager.Instance.onQuantityChange.Invoke(); //unsure about this being right here
         UpdateButtons();
     }
 

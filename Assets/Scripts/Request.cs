@@ -8,7 +8,6 @@ public class Request : ScriptableObject //maybe make it a class so we can random
     public float budget;
     public float lengthInTicks;
     public Tag style;
-    public Tag fishType;
     public Fish specificFishRequest;
     public Item specificItemRequest;
 
@@ -17,24 +16,22 @@ public class Request : ScriptableObject //maybe make it a class so we can random
     public string characterName;
     public string[] dirtResponse = { "Its a lil dirty..", "EW. Sorry its just.. a bit gross" };
     public string[] styleResponse = { "You got the [style] vibe spot on!", "Ah you didn't quite get the [style] style I was looking for.." };
-    public string[] fishTypeResponse = { "You got the [fishType] fish in! Yay!", "There aren't many [fishType] fish in there.." };
     public string[] harmonyResponse = { "The fish look super happy!", "The fish are getting along well", "The fish look a bit agitated", "The fish seem really angry" };
     public string[] budgetResponse = { "Oop its a little over budget...", "But I'm willing to pay", "I can't really afford that, sorry" };
-    public string gotSpecificFish = "Oh hey you got in my favourite fish, the [specficFish]! Thanks so much!";
+    public string gotSpecificFish = "Oh hey you got in my favourite fish, the [specificFish]! Thanks so much!";
     public string gotSpecificItem = "Cheers for putting in the [specificItem]!!";
 
     public string[] scoreResponse = {"This is amazing! I''l pay double!", "Good job, I'll pay a lil extra ;)", "Cool stuff, thanks!", "I can fix it up..."};
 
     public string cancelResponse;
     public string outOfTimeResponse;
-    public string requestText = "Hey can I have a [style] tank with [fishType] fish? I would like to see a [specificFishRequest] in there too, and a [specificItemRequest]. I have a budget of [budget]. Thanks!";
+    public string requestText = "Hey can I have a [style] tank? I would like to see a [specificFish] in there too, and a [specificItem]. I have a budget of [budget]. Thanks!";
 
     public string GenerateRequest(string textToParse)
     {
         textToParse = textToParse.Replace("[style]",style.name);
-        textToParse = textToParse.Replace("[fishType]", fishType.name);
-        textToParse = textToParse.Replace("[specificFishRequest]", specificFishRequest.name);
-        textToParse = textToParse.Replace("[specificItemRequest]", specificItemRequest.name);
+        textToParse = textToParse.Replace("[specificFish]", specificFishRequest.name);
+        textToParse = textToParse.Replace("[specificItem]", specificItemRequest.name);
         textToParse = textToParse.Replace("[budget]", "£" + budget.ToString("#.00"));
         return textToParse;
     }

@@ -22,7 +22,6 @@ public class Item : Purchasable
         {
             behaviour = PlacementManager.Instance.Place(this) as ItemBehaviour;
         }
-        Manager.Instance.currentTank.assignedItems.Add(behaviour);
     }
     public override void Remove()
     {

@@ -36,8 +36,7 @@ public class Tank : MonoBehaviour
 
     public Request assignedRequest;
 
-    public List<ItemBehaviour> assignedItems;
-    public List<FishBehaviour> assignedFish;
+    public List<Placeable> assignedPlaceables;
 
     public Dictionary<Tag, int> tags = new Dictionary<Tag, int>();
     public Tag mostCommonStyle = null;
@@ -78,11 +77,17 @@ public class Tank : MonoBehaviour
 
     public void UpdateValue()//calculate the value of the tank (the value of the items within, then subtract any fish health issues and dirtiness, or add if fish are really happy and the tank is healthy
     {
-        foreach (Purchasable purchasable in Manager.Instance.inventory) //change the inventory bit to be like a held items list in here
+        float updatedVal = 0;
+        foreach (Placeable placeable in assignedPlaceables) //change the inventory bit to be like a held items list in here
         {
-            value += purchasable.price * Manager.Instance.allPurchasables[purchasable];
+            updatedVal += placeable.purchasable.price * Manager.Instance.allPurchasables[placeable.purchasable];
             //add in a modifier for like tank quality too later
-        } 
+        }
+        if (assignedSubstrate)
+        {
+            updatedVal += assignedSubstrate.price;
+        }
+        value = updatedVal;
         Manager.Instance.valueText.text = "£"+ value.ToString("#.00");
     }
 
@@ -195,23 +200,23 @@ public class Tank : MonoBehaviour
     public void ResetTank()
     {
         //remove listeners as needed here
+        Debug.Log("resetting...");
         Manager.Instance.onQuantityChange.RemoveListener(UpdateValue);
         value = 0;
-        //maybe make these one list? unsure
-        foreach (FishBehaviour fish in assignedFish)
+        List<Placeable> allAssignedPlaceables = new List<Placeable>(); //they get removed as we iterate
+        allAssignedPlaceables.AddRange(assignedPlaceables);
+        assignedPlaceables.Clear();
+        UnityEvent destroy = new UnityEvent();
+        foreach (Placeable placeable in allAssignedPlaceables) //maybe have these as functionality in the behaviour? in ondestroy? works for now though
         {
-            FishManager.instance.RemoveFish(fish.fish);
-            Manager.Instance.allPurchasables[fish.fish]--;
-            Destroy(fish.gameObject);
+            destroy.AddListener(placeable.SendOff);
         }
-        foreach(ItemBehaviour item in assignedItems)
+        destroy.Invoke();
+        if (assignedSubstrate)
         {
-            Manager.Instance.allPurchasables[item.purchasable]--;
-            Destroy(item.gameObject);
+            Manager.Instance.allPurchasables[assignedSubstrate]--;
+            SwapSubstrate(nullSubstrate);
         }
-
-        Manager.Instance.allPurchasables[assignedSubstrate]--;
-        SwapSubstrate(nullSubstrate);
         Manager.Instance.onQuantityChange.Invoke();
         Manager.Instance.onQuantityChange.AddListener(UpdateValue);
         tankPh = Manager.basePh;

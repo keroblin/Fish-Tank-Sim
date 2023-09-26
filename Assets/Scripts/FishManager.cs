@@ -23,13 +23,11 @@ public class FishManager : MonoBehaviour
         placeable.gameObject.transform.SetParent(fishParent.transform, false);
         placeable.placeableClicked.AddListener(delegate { monitor.Set(placeable); });
         placeable.Set(fish);
-        Manager.Instance.currentTank.assignedFish.Add(placeable);
     }
     public void RemoveFish(Fish fish)
     {
         FishBehaviour behaviour = liveFish.Find(x => x.fish == fish);
         liveFish.Remove(behaviour);
-        Manager.Instance.currentTank.assignedFish.Remove(behaviour);
     }
 
     public void FishTick()

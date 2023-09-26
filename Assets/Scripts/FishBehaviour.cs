@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Progress;
 
 public class FishBehaviour : Placeable
 {
@@ -300,5 +301,11 @@ public class FishBehaviour : Placeable
                 Eat(currentFood);
             }
         }
+    }
+
+    public override void SendOff()
+    {
+        FishManager.instance.RemoveFish(fish); 
+        base.SendOff();
     }
 }

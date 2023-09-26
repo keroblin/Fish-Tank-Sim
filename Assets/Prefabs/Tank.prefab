@@ -5046,7 +5046,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3200027159702747134}
-  m_Mesh: {fileID: 3523059709116458499, guid: 79ed50524491c4f4d993f5db0822d80d, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &5844547995655924410
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5648,8 +5648,8 @@ MonoBehaviour:
   tankTemp: 68
   tankHardness: 7
   value: 0
-  currentSubstrate: {fileID: 0}
-  nullSubstrate: {fileID: 0}
+  assignedSubstrate: {fileID: 0}
+  nullSubstrate: {fileID: 11400000, guid: 1a64acb1493471a4ab9b1f65c2cc2734, type: 2}
   substrateMesh: {fileID: 4528578489821788656}
   substrateRenderer: {fileID: 5844547995655924410}
   glass: {fileID: 0}
@@ -5660,9 +5660,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   assignedRequest: {fileID: 11400000, guid: 4a447567bf84bb4469aebe8d0ecc54fd, type: 2}
-  assignedItems: []
-  assignedFish: []
+  assignedPlaceables: []
   mostCommonStyle: {fileID: 0}
+  mostCommonFishType: {fileID: 0}
 --- !u!1 &8909119283372007335
 GameObject:
   m_ObjectHideFlags: 0

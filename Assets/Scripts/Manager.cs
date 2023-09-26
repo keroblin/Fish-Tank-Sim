@@ -38,7 +38,6 @@ public class Manager : MonoBehaviour
     public List<Fish> allFish;
     public List<Purchasable> allPurchasableSOs;
     public Dictionary<Purchasable,int> allPurchasables = new Dictionary<Purchasable, int>(); //ask everything else when grabbing quantity to do it from here
-    public List<Purchasable> inventory;
     public UnityEvent onBuy;
     public UnityEvent onSell;
     public UnityEvent onQuantityChange;
@@ -106,10 +105,9 @@ public class Manager : MonoBehaviour
     {
         if (currentMoney - purchasable.price > 0.00) //do something here to deal with stacking
         {
-            if (!inventory.Contains(purchasable))
+            if (!allPurchasables.ContainsKey(purchasable) || allPurchasables[purchasable] == 0)
             {
                 Debug.Log("Inventory did not contain purchasable, adding it");
-                inventory.Add(purchasable);
                 allPurchasables[purchasable]++;
             }
             else if (purchasable.stackable)
@@ -118,7 +116,7 @@ public class Manager : MonoBehaviour
                 allPurchasables[purchasable]++;
                 Debug.Log("Quantity is " + allPurchasables[purchasable].ToString());
             }
-            else
+            else if (!purchasable.stackable && (allPurchasables.ContainsKey(purchasable) || allPurchasables[purchasable] > 0))
             {
                 Debug.Log("Already bought!");
                 return;
@@ -139,8 +137,8 @@ public class Manager : MonoBehaviour
         }
 
         if (allPurchasables[purchasable] <=0) 
-        { 
-            inventory.Remove(purchasable);
+        {
+            allPurchasables.Remove(purchasable);
         }
 
         money.text = "Your cash: £" + currentMoney.ToString("#.00");

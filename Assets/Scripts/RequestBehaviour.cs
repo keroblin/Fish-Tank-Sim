@@ -13,7 +13,7 @@ public class RequestBehaviour : MonoBehaviour
     public RequestSelector selector;
 
     public Button requestManager;
-    public GameObject RequestView;
+    public GameObject requestView;
     public Image portrait;
     public TextMeshProUGUI charName;
     public TextMeshProUGUI requestUI;
@@ -50,6 +50,7 @@ public class RequestBehaviour : MonoBehaviour
         submit.onClick.AddListener(SubmitTankRequest);
         cancel.onClick.AddListener(CancelTankRequest);
         timeLeft.maxValue = request.lengthInTicks;
+        timeLeft.value = request.lengthInTicks;
         Manager.Instance.currentTank.onTankTick.AddListener(UpdateTimer);
     }
 
@@ -62,14 +63,13 @@ public class RequestBehaviour : MonoBehaviour
         else
         {
             Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);
-            //Speak(request.outOfTimeResponse);
+            Speak(request.outOfTimeResponse);
         }
     }
 
     public IEnumerator Speak(string response)
     {
         //read a line, wait at \n, read another line, wait at \n until done
-        Debug.Log("Called");
         string[] lines = response.Split("\n");
         reviewText.text = response;
         reviewText.maxVisibleCharacters = 0;
@@ -87,7 +87,6 @@ public class RequestBehaviour : MonoBehaviour
 
     public IEnumerator Review()
     {
-        Debug.Log("Reviewing");
         reviewScreen.SetActive(true);
         anim.Play("ReviewIn");
         yield return Speak(GenerateResponse(Manager.Instance.currentTank));
@@ -95,8 +94,9 @@ public class RequestBehaviour : MonoBehaviour
         earningsText.text = "Earnings: £" + earnings.ToString("#.00");
         Manager.Instance.currentMoney += earnings;
         anim.Play(animQuery);
-        //figure out which sound and icon to use here
-        //Manager.Instance.universalSFX.PlayOneShot(AssetRefs.talkSound);
+        requestManager.gameObject.SetActive(false);
+        requestView.SetActive(false);
+        selector.gameObject.SetActive(true);
     }
 
     public string GenerateResponse(Tank ctx)
@@ -109,7 +109,11 @@ public class RequestBehaviour : MonoBehaviour
         {
             //say its a little dirty
             response += request.dirtResponse[0] + "\n";
-            if(score - 1 >= 0)
+        }
+        else if (ctx.tankDirtiness > 4)
+        {
+            //say its filthy
+            if (score - 1 >= 0)
             {
                 score -= 1;
             }
@@ -117,27 +121,14 @@ public class RequestBehaviour : MonoBehaviour
             {
                 score = 0;
             }
-        }
-        else if (ctx.tankDirtiness > 4)
-        {
-            //say its filthy
-            if (score - 2 >= 0)
-            {
-                score -= 2;
-            }
-            else
-            {
-                score = 0;
-            }
             response += request.dirtResponse[1] + "\n";
         }
-        Debug.Log("Score after dirt" + score);
         if (ctx.mostCommonStyle == request.style)
         {
             response += request.styleResponse[0].Replace("[style]", request.style.name) + "\n";
-            if (score + 2 <= 5)
+            if (score + 1 <= 5)
             {
-                score += 2;
+                score += 1;
             }
             else
             {
@@ -148,31 +139,30 @@ public class RequestBehaviour : MonoBehaviour
         {
             response += request.styleResponse[1].Replace("[style]", request.style.name) + "\n";
         }
-        Debug.Log("Score after style" + score);
-        if (ctx.mostCommonFishType == request.fishType)
+
+        if (ctx.assignedPlaceables.Find(x => x.purchasable == request.specificFishRequest))
         {
-            response += request.fishTypeResponse[0].Replace("[fishType]", request.style.name) + "\n";
-            if (score + 2 <= 5)
+            response += request.gotSpecificFish.Replace("[specificFish]", request.specificFishRequest.name) + "\n";
+            if (score + 1 <= 5)
             {
-                score += 2;
+                score += 1;
             }
             else
             {
                 score = 5;
             }
         }
-        else
+        if (ctx.assignedPlaceables.Find(x => x.purchasable == request.specificItemRequest))
         {
-            response += request.fishTypeResponse[1].Replace("[fishType]", request.style.name) + "\n";
-        }
-
-        if (ctx.assignedFish.Find(x => x.fish == request.specificFishRequest))
-        {
-            response += request.gotSpecificFish.Replace("[specificFish]", request.specificFishRequest.name) + "\n";
-        }
-        if (ctx.assignedItems.Find(x => x.purchasable == request.specificItemRequest))
-        {
-            response += request.gotSpecificItem.Replace("[specificItem]", request.specificFishRequest.name) + "\n";
+            response += request.gotSpecificItem.Replace("[specificItem]", request.specificItemRequest.name) + "\n";
+            if (score + 1 <= 5)
+            {
+                score += 1;
+            }
+            else
+            {
+                score = 5;
+            }
         }
 
         if (ctx.tankHarmony > 4.5)
@@ -219,16 +209,16 @@ public class RequestBehaviour : MonoBehaviour
         if (ctx.value > request.budget)
         {
             response += request.budgetResponse[0].Replace("[budget]", "£" + request.budget.ToString("#.00")) + "\n";
-            if (score > 4 && ctx.value - request.budget < request.budget + (request.budget / 3))
+            if (score > 4 && ctx.value - request.budget < request.budget + (request.budget / 2))
             {
                 response += request.budgetResponse[1].Replace("[budget]", "£" + request.budget.ToString("#.00")) + "\n";
             }
             else
             {
                 response += request.budgetResponse[2].Replace("[budget]", "£" + request.budget.ToString("#.00")) + "\n";
-                if (score - 2 >= 0)
+                if (score - 1 >= 0)
                 {
-                    score -= 2;
+                    score -= 1;
                 }
                 else
                 {
@@ -250,7 +240,7 @@ public class RequestBehaviour : MonoBehaviour
             earnings = request.budget + (request.budget / 3); //50% extra
             animQuery = "Good";
         }
-        else if (score > 1.7)
+        else if (score > 0)
         {
             response += request.scoreResponse[2];
             earnings = request.budget + (request.budget / 4); //standard pay, budget + a quarter
@@ -262,7 +252,8 @@ public class RequestBehaviour : MonoBehaviour
             earnings = request.budget - (request.budget/2); //half refund
             animQuery = "Bad";
         }
-
+        Debug.Log("Score was " + score);
+        Debug.Log("Anim was " + animQuery);
         return response;
     }
     //maybe put this in a different helper script
@@ -288,6 +279,7 @@ public class RequestBehaviour : MonoBehaviour
     {
         StartCoroutine("WaitForNewTank");
         reviewScreen.SetActive(false);
+        earningsText.text = "";
     }
 
     IEnumerator WaitForNewTank()

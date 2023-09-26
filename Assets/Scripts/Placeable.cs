@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using static UnityEditor.Progress;
 
 public class Placeable : MonoBehaviour
 {
@@ -64,6 +65,12 @@ public class Placeable : MonoBehaviour
     public virtual void Clicked()
     {
         placeableClicked.Invoke();
+    }
+
+    public virtual void SendOff()
+    {
+        Manager.Instance.allPurchasables[purchasable]--;
+        PlacementManager.Instance.PutBackPlaceable(this);
     }
 
     private void OnDestroy()

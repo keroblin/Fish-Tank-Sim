@@ -48,6 +48,7 @@ public class PlacementManager:MonoBehaviour
         {
             PlaceablePlaced.Invoke(placeable);
         }
+        Manager.Instance.currentTank.assignedPlaceables.Add(placeable);
         return placeable;
     }
 
@@ -62,6 +63,7 @@ public class PlacementManager:MonoBehaviour
     public void PutBackPlaceable(Placeable placeable)
     {
         instances.Remove(placeable);
+        Manager.Instance.currentTank.assignedPlaceables.Remove(placeable);
         if (placeable.purchasable.prefab == null)
         {
             placeablePool.StartCoroutine("ReturnRigidbody", placeable.gameObject);
