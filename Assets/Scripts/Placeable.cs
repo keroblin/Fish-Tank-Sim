@@ -65,4 +65,9 @@ public class Placeable : MonoBehaviour
     {
         placeableClicked.Invoke();
     }
+
+    private void OnDestroy()
+    {
+        placeableClicked.RemoveAllListeners();
+    }
 }

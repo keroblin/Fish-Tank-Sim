@@ -13,14 +13,16 @@ public class Item : Purchasable
     public override void Place()
     {
         Manager.Instance.currentTank.AddModifiers(this);
+        ItemBehaviour behaviour;
         if(prefab == null)
         {
-            PlacementManager.Instance.Place(this,Manager.Instance.itemPool);
+            behaviour = PlacementManager.Instance.Place(this,Manager.Instance.itemPool) as ItemBehaviour;
         }
         else
         {
-            PlacementManager.Instance.Place(this);
+            behaviour = PlacementManager.Instance.Place(this) as ItemBehaviour;
         }
+        Manager.Instance.currentTank.assignedItems.Add(behaviour);
     }
     public override void Remove()
     {

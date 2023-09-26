@@ -15,10 +15,14 @@ public class Manager : MonoBehaviour
     public Pool fishAiPool;
     public Pool foodPool;
 
+    public AudioSource universalSFX;
+    public AudioSource universalMusic;
+
     public GameObject placingRef;
     public const float basePh = 7f, baseLight = .8f, baseTemp = 68f, baseHardness = 7f, baseDirt = 0f;
     public const float totalMoney = 200.00f;
     public float currentMoney = totalMoney;
+    public float hourlyRate = 5.00f;
     public TextMeshProUGUI money;
 
     public Tank currentTank;
@@ -30,6 +34,7 @@ public class Manager : MonoBehaviour
     public Sprite sad;
     public Sprite ok;
     public Sprite happy;
+    public AudioClip talkSound;
     public List<Fish> allFish;
     public List<Purchasable> allPurchasableSOs;
     public Dictionary<Purchasable,int> allPurchasables = new Dictionary<Purchasable, int>(); //ask everything else when grabbing quantity to do it from here
@@ -48,6 +53,14 @@ public class Manager : MonoBehaviour
     public GameObject viewObjs;
     public GameObject editButton;
     public GameObject viewButton;
+
+    public Slider harmonySlider;
+    public Slider dirtSlider;
+    public Image styleIcon;
+    public Slider valueSlider;
+    public TextMeshProUGUI valueText;
+
+    public GameObject tankPrefab;
 
     private void Awake()
     {
@@ -133,18 +146,5 @@ public class Manager : MonoBehaviour
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
         onSell.Invoke();
         onQuantityChange.Invoke();
-    }
-
-    public void SubmitTankRequest()
-    {
-        //review tank
-        //if its accepted send it off
-        //if not, go back to the tank we're in and show a 'poof' effect on the request
-        //add any bonuses
-        //send stuff to request ui to turn on and off
-    }
-    public void CancelTankRequest()
-    {
-
     }
 }

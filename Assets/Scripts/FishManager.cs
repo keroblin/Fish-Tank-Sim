@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class FishManager : MonoBehaviour
 {
     public static FishManager instance;
+    public FishMonitor monitor;
     public GameObject fishParent;
     public List<FishBehaviour> liveFish;
 
@@ -19,12 +21,15 @@ public class FishManager : MonoBehaviour
         FishBehaviour placeable = PlacementManager.Instance.Place(fish) as FishBehaviour;
         placeable.fish = fish;
         placeable.gameObject.transform.SetParent(fishParent.transform, false);
+        placeable.placeableClicked.AddListener(delegate { monitor.Set(placeable); });
         placeable.Set(fish);
+        Manager.Instance.currentTank.assignedFish.Add(placeable);
     }
     public void RemoveFish(Fish fish)
     {
         FishBehaviour behaviour = liveFish.Find(x => x.fish == fish);
         liveFish.Remove(behaviour);
+        Manager.Instance.currentTank.assignedFish.Remove(behaviour);
     }
 
     public void FishTick()

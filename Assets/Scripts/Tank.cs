@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -24,30 +25,23 @@ public class Tank : MonoBehaviour
     public float tankHardness = Manager.baseHardness;
     public float value = 0.0f;
 
-    public Item currentSubstrate;
+    public Item assignedSubstrate;
     public Item nullSubstrate;
     public MeshFilter substrateMesh;
     public MeshRenderer substrateRenderer;
     public Material glass;
-
-    public Slider harmonySlider;
-    public Slider dirtSlider;
-    public Image styleIcon;
-    public Slider valueSlider;
-    public TextMeshProUGUI valueText;
 
     public UnityEvent onStatUpdate;
     public UnityEvent onTankTick;
 
     public Request assignedRequest;
 
-    public List<Placeable> assignedItems;
+    public List<ItemBehaviour> assignedItems;
     public List<FishBehaviour> assignedFish;
 
     public Dictionary<Tag, int> tags = new Dictionary<Tag, int>();
     public Tag mostCommonStyle = null;
-
-    public Animator animator;
+    public Fish mostCommonFishType = null;
     private void OnDrawGizmos()
     {
         //tank bounds testing
@@ -58,7 +52,7 @@ public class Tank : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void Start()
     {
         if (useDefault)
         {
@@ -75,8 +69,8 @@ public class Tank : MonoBehaviour
     {
         //update all the sliders
         tankDirtiness += FishManager.instance.GetFishPoo();
-        dirtSlider.value = tankDirtiness;
-        harmonySlider.value = FishManager.instance.GetFishHarmony();
+        Manager.Instance.dirtSlider.value = tankDirtiness;
+        Manager.Instance.harmonySlider.value = FishManager.instance.GetFishHarmony();
         //glass.dirtiness = tankDirtiness; //do this for a dirtiness material
         //style handles itself when items are added or removed
         UpdateValue();
@@ -89,7 +83,7 @@ public class Tank : MonoBehaviour
             value += purchasable.price * Manager.Instance.allPurchasables[purchasable];
             //add in a modifier for like tank quality too later
         } 
-        valueText.text = "£"+ value.ToString("#.00");
+        Manager.Instance.valueText.text = "£"+ value.ToString("#.00");
     }
 
     void UpdateStyle()
@@ -108,7 +102,7 @@ public class Tank : MonoBehaviour
 
         if (mostCommonStyle != null)
         {
-            styleIcon.sprite = mostCommonStyle.icon;
+            Manager.Instance.styleIcon.sprite = mostCommonStyle.icon;
         }
     }
 
@@ -151,18 +145,18 @@ public class Tank : MonoBehaviour
 
     public void SwapSubstrate(Item item)
     {
-        if (currentSubstrate)
+        if (assignedSubstrate)
         {
-            RemoveModifiers(currentSubstrate);
+            RemoveModifiers(assignedSubstrate);
         }
-        currentSubstrate = item;
+        assignedSubstrate = item;
         if (item == null)
         {
-            currentSubstrate = new Substrate();
+            assignedSubstrate = new Substrate();
         }
-        AddModifiers(currentSubstrate);
-        substrateRenderer.material = currentSubstrate.material;
-        substrateMesh.mesh = currentSubstrate.model;
+        AddModifiers(assignedSubstrate);
+        substrateRenderer.material = assignedSubstrate.material;
+        substrateMesh.mesh = assignedSubstrate.model;
     }
 
     private void Update()
@@ -175,12 +169,16 @@ public class Tank : MonoBehaviour
             onTankTick.Invoke();
             onStatUpdate.Invoke();
             currentTime = 0;
+
+            //temporary! need a global tick to stop people swapping tanks and being fine
+            Manager.Instance.currentMoney += Manager.Instance.hourlyRate;
+            //might make it so the tick is just based on realtime
         }
     }
 
     public void AddRottenFood()
     {
-        if(tankDirtiness < dirtSlider.maxValue)
+        if(tankDirtiness < Manager.Instance.dirtSlider.maxValue)
         {
             tankDirtiness++;
             StatUpdate();
@@ -189,8 +187,39 @@ public class Tank : MonoBehaviour
 
     public void CleanTank()
     {
-        animator.Play("CurtainDown");
+        Curtain.Instance.CurtainDown("Cleaning",1f);
         tankDirtiness = 0;
         StatUpdate();
+    }
+
+    public void ResetTank()
+    {
+        //remove listeners as needed here
+        Manager.Instance.onQuantityChange.RemoveListener(UpdateValue);
+        value = 0;
+        //maybe make these one list? unsure
+        foreach (FishBehaviour fish in assignedFish)
+        {
+            FishManager.instance.RemoveFish(fish.fish);
+            Manager.Instance.allPurchasables[fish.fish]--;
+            Destroy(fish.gameObject);
+        }
+        foreach(ItemBehaviour item in assignedItems)
+        {
+            Manager.Instance.allPurchasables[item.purchasable]--;
+            Destroy(item.gameObject);
+        }
+
+        Manager.Instance.allPurchasables[assignedSubstrate]--;
+        SwapSubstrate(nullSubstrate);
+        Manager.Instance.onQuantityChange.Invoke();
+        Manager.Instance.onQuantityChange.AddListener(UpdateValue);
+        tankPh = Manager.basePh;
+        tankLight = Manager.baseLight;
+        tankTemp = Manager.baseTemp;
+        tankHardness = Manager.baseHardness;
+        tankDirtiness = Manager.baseDirt;
+        tankHarmony = 0;
+        onStatUpdate.Invoke();
     }
 }

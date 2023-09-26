@@ -301,12 +301,4 @@ public class FishBehaviour : Placeable
             }
         }
     }
-
-    private void OnMouseDown()
-    {
-        if (!EventSystem.current.IsPointerOverGameObject())
-        {
-            FishMonitor.instance.Set(this);
-        }
-    }
 }
