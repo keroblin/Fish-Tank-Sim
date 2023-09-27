@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47d634d394094a941b531676f4c5c18f, type: 3}
-  m_Name: Request
+  m_Name: Cody
   m_EditorClassIdentifier: 
-  budget: 200
-  lengthInTicks: 2
-  style: {fileID: 11400000, guid: a3156f9c32948e549a7fa2e738764550, type: 2}
-  specificFishRequest: {fileID: 11400000, guid: 73e77e7b0386510479cbfea451c6fc93, type: 2}
-  specificItemRequest: {fileID: 11400000, guid: b68862c74b8019946bfddd3ae14c1501, type: 2}
-  portrait: {fileID: 21300000, guid: 2512b87ca625d994db99a9b23980e5f9, type: 3}
+  budget: 900
+  lengthInTicks: 70
+  style: {fileID: 11400000, guid: 0ae5ffe8384b4af409b9dfb9310cf6ae, type: 2}
+  specificFishRequest: {fileID: 11400000, guid: 3567e4eb9c083f149b24f21a69680c79, type: 2}
+  specificItemRequest: {fileID: 11400000, guid: 0c1aa7b930c751a4ea8dd672ddee7b6b, type: 2}
+  portrait: {fileID: 21300000, guid: 784c74971b2dcf4409599d387a487180, type: 3}
   requestName: 
-  characterName: Callie
+  characterName: Cody
   dirtResponse:
   - Its a lil dirty..
   - EW. Sorry its just.. a bit gross
@@ -39,11 +39,11 @@ MonoBehaviour:
     so much!
   gotSpecificItem: Cheers for putting in the [specificItem]!!
   scoreResponse:
-  - This is amazing! I'll pay double!
-  - Thanks, heres a lil extra
-  - Cool, thanks for your time
-  - I can.. fix it up..
-  cancelResponse: Oh thats cool, I'll come back another time
-  outOfTimeResponse: Oh you're late, sorry I've already taken my business elsewhere
+  - This is amazing! I''l pay double!
+  - Good job, I'll pay a lil extra ;)
+  - Cool stuff, thanks!
+  - I can fix it up...
+  cancelResponse: Thats chill
+  outOfTimeResponse: 
   requestText: Hey can I have a [style] tank? I would like to see a [specificFish]
     in there too, and a [specificItem]. I have a budget of [budget]. Thanks!

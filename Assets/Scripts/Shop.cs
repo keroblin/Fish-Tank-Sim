@@ -158,6 +158,11 @@ public class Shop:MonoBehaviour
 
     void UpdateButtons()
     {
+        if(selectedItem == null)
+        {
+            UpdateSelection();
+            return;
+        }
         place.gameObject.SetActive(selectedItem.placeable);
 
         if (Manager.Instance.allPurchasables[selectedItem] > 0)

@@ -8,6 +8,7 @@ public class Fish: Purchasable
     public float maxSpeed = 10f;
     public Manager.FishPersonalities personality;
 
+    public List<Fish> lovedFish;
     public List<Fish> dislikedFish;
 
     public float minPH = 6.0f,maxPH = 8.5f;

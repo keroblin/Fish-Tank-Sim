@@ -197,7 +197,7 @@ public class Tank : MonoBehaviour
         StatUpdate();
     }
 
-    public void ResetTank()
+    public IEnumerator ResetTank()
     {
         //remove listeners as needed here
         Debug.Log("resetting...");
@@ -226,5 +226,6 @@ public class Tank : MonoBehaviour
         tankDirtiness = Manager.baseDirt;
         tankHarmony = 0;
         onStatUpdate.Invoke();
+        yield return true;
     }
 }

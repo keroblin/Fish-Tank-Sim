@@ -303,6 +303,11 @@ public class FishBehaviour : Placeable
         }
     }
 
+    public void CheckHarmony()
+    {
+        
+    }
+
     public override void SendOff()
     {
         FishManager.instance.RemoveFish(fish); 

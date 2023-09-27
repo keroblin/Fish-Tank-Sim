@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -37,6 +38,7 @@ public class RequestBehaviour : MonoBehaviour
         {
             Set(Manager.Instance.currentTank.assignedRequest);
         }
+        selector.OnRequestSelected += Set;
     }
 
     public void Set(Request _request)
@@ -52,6 +54,12 @@ public class RequestBehaviour : MonoBehaviour
         timeLeft.maxValue = request.lengthInTicks;
         timeLeft.value = request.lengthInTicks;
         Manager.Instance.currentTank.onTankTick.AddListener(UpdateTimer);
+        if(!requestManager.interactable)
+        {
+            anim.Play("NewRequest");
+            requestManager.interactable = true;
+        }
+        
     }
 
     public void UpdateTimer()
@@ -62,9 +70,24 @@ public class RequestBehaviour : MonoBehaviour
         }
         else
         {
+            timeLeft.value--;
             Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);
-            Speak(request.outOfTimeResponse);
+            StartCoroutine("OutOfTime");
         }
+    }
+
+    IEnumerator OutOfTime()
+    {
+        reviewScreen.SetActive(true);
+        yield return Speak(request.outOfTimeResponse);
+        earnings = -50;
+        earningsText.text = "Reparations: £" + earnings.ToString("#.00");
+        yield return new WaitForSeconds(2);
+        //StartCoroutine("WaitForNewTank");
+        Manager.Instance.currentMoney += earnings;
+        reviewScreen.SetActive(false);
+        EndRequest();
+        yield return null;
     }
 
     public IEnumerator Speak(string response)
@@ -87,16 +110,20 @@ public class RequestBehaviour : MonoBehaviour
 
     public IEnumerator Review()
     {
+        Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);
         reviewScreen.SetActive(true);
         anim.Play("ReviewIn");
         yield return Speak(GenerateResponse(Manager.Instance.currentTank));
         yield return new WaitForSeconds(.5f);
         earningsText.text = "Earnings: £" + earnings.ToString("#.00");
-        Manager.Instance.currentMoney += earnings;
         anim.Play(animQuery);
-        requestManager.gameObject.SetActive(false);
-        requestView.SetActive(false);
-        selector.gameObject.SetActive(true);
+        yield return new WaitForEndOfFrame();
+        while (anim.GetCurrentAnimatorStateInfo(0).IsName(animQuery))
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        yield return WaitForNewTank();
+        EndRequest();
     }
 
     public string GenerateResponse(Tank ctx)
@@ -266,39 +293,42 @@ public class RequestBehaviour : MonoBehaviour
     {
         Debug.Log("Submitted");
         StartCoroutine(Review());
-
-        //spawn a new tank
-        //remove all items by telling their placeables to get rid of themselves
-        //tell manager to make a new tank, i dont want that behaviour here
-        //once its done, open the curtain
-        //send stuff to request ui to turn on and off
-
-    }
-
-    public void ExitReview()
-    {
-        StartCoroutine("WaitForNewTank");
-        reviewScreen.SetActive(false);
-        earningsText.text = "";
     }
 
     IEnumerator WaitForNewTank()
     {
         Curtain.Instance.CurtainDown("Moving tank out", 100f);
-        Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);
-        Manager.Instance.currentTank.ResetTank();
-        //put the request select back on
-        //put the request manager off
-        yield return new WaitForSeconds(5f); //eventually this will awaiting be a coroutine that does a lot more loading things
+        yield return Manager.Instance.currentTank.ResetTank();
         Curtain.Instance.CurtainUp();
+        yield return null;
     }
 
     public void CancelTankRequest()
     {
+        StartCoroutine("Cancel");
+    }
+
+    IEnumerator Cancel()
+    {
+        Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);
+        earnings = 0;
+        reviewScreen.gameObject.SetActive(true);
+        yield return Speak(request.cancelResponse);
+        reviewScreen.gameObject.SetActive(false);
+        EndRequest();
+    }
+
+    void EndRequest()
+    {
         //show a 'poof' effect on the request
-        Manager.Instance.currentTank.onTankTick.AddListener(UpdateTimer);
-        anim.Play("CancelRequest");
+        Manager.Instance.currentMoney += earnings;
+        anim.Play("CloseOut");
         request = null;
-        //tell the request selector to become active
+        Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);
+        timeLeft.value = 1000f; //arbitrary high number
+        selector.gameObject.SetActive(true);
+        requestView.SetActive(false);
+        earnings = 0;
+        earningsText.text = "";
     }
 }

@@ -45,6 +45,26 @@ public class FishMonitor : MonoBehaviour
         }
     }
 
+    void GetComment()
+    {
+        //check which area is most impacting the fish, have that be the comment
+        if(currentFish.hunger > currentFish.happiness)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// OK SO
+    /// FISH HAPPINESS IS ALREADY CONTEROLLED BY FACOURITE FOODS VS REGULAR FOODS
+    /// I WANT HAPPINESS TO BE INFLUENCED BY LIKES AND DISLIKES FISH TOO
+    /// AND HOW COMPATIBLE THE FISH IS IN THE TANK
+    /// HAPPINESS CAN BE JUST THE READOUT FOR THE HARMONY AND IT CAN BE AN AVERAGE OF ALL THE FISH HAPPINESS
+    /// THEY CAN CALCULATE
+    /// 
+    /// </summary>
+
+
     public void Unset()
     {
         visuals.SetActive(false);

@@ -12,6 +12,7 @@ public class Feeding : MonoBehaviour
     Bounds bounds;
     public delegate void FoodPlaced(GameObject food);
     public event FoodPlaced OnFoodPlaced;
+    public GameObject rotParticle;
     public GameObject foodRef;
     public Pool foodPool;
     public GameObject foodIndicator;
