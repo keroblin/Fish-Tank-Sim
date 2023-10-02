@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Betta
   m_EditorClassIdentifier: 
   tags: []
-  stackable: 0
+  stackable: 1
   placeable: 1
   prefab: {fileID: 7288040808445679479, guid: 8be49c17d22c5834986e48a77306368a, type: 3}
   icon: {fileID: 0}
@@ -24,7 +24,10 @@ MonoBehaviour:
   speed: 6
   maxSpeed: 10
   personality: 0
+  lovedFish: []
   dislikedFish: []
+  favouriteFoods: []
+  hatedFoods: []
   minPH: 7
   maxPH: 7
   minHardness: 0

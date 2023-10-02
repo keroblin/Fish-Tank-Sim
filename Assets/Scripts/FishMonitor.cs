@@ -9,6 +9,7 @@ public class FishMonitor : MonoBehaviour
 {
     public GameObject visuals;
     public static FishMonitor instance;
+    public FishStatView statView;
     public Camera fishCam;
     public TextMeshProUGUI fishName;
     public TextMeshProUGUI fishComment;
@@ -41,29 +42,55 @@ public class FishMonitor : MonoBehaviour
         {
             happiness.value = currentFish.happiness; //maybe do this in an event or something so its always up to date
             hunger.value = currentFish.hunger;
-            fishComment.text = "Not sure how to implement this yet!";
+            statView.Set(currentFish.fish);
+            fishComment.text = GetComment();
         }
     }
 
-    void GetComment()
+    string GetComment()
     {
         //check which area is most impacting the fish, have that be the comment
-        if(currentFish.hunger > currentFish.happiness)
+        float compat = currentFish.fish.CalculateCompat();
+        List<float> fishStats = new List<float>();
+        fishStats.Add(compat);
+        fishStats.Add(currentFish.harmony);
+        fishStats.Add(currentFish.hunger);
+        fishStats.Sort();
+
+        float lastItem = fishStats[2];
+        string comment = "";
+
+        if(lastItem == compat)
         {
-
+            comment = "Something about the items in here is making me queasy";
         }
+        else if(lastItem == currentFish.harmony)
+        {
+            List<Fish> badFish = new List<Fish>();
+            foreach(Fish dislikedFish in currentFish.fish.dislikedFish)
+            {
+                if (FishManager.instance.liveFish.Find( x => x.fish = dislikedFish))
+                {
+                    badFish.Add(dislikedFish);
+                }
+            }
+
+            if(badFish.Count > 1)
+            {
+                comment = badFish.Count.ToString() + " fish in here are not my vibe, " + badFish[Random.Range(0,badFish.Count-1)].name + " is a lil.. you know..";
+            }
+            else
+            {
+                comment = badFish[0] + " is harshing my vibe!";
+            }
+        }
+        else if(lastItem == currentFish.hunger)
+        {
+            comment = "I am absolutely STARVING for some " + currentFish.fish.favouriteFoods[Random.Range(0, currentFish.fish.favouriteFoods.Count - 1)];
+        }
+
+        return comment;
     }
-
-    /// <summary>
-    /// OK SO
-    /// FISH HAPPINESS IS ALREADY CONTEROLLED BY FACOURITE FOODS VS REGULAR FOODS
-    /// I WANT HAPPINESS TO BE INFLUENCED BY LIKES AND DISLIKES FISH TOO
-    /// AND HOW COMPATIBLE THE FISH IS IN THE TANK
-    /// HAPPINESS CAN BE JUST THE READOUT FOR THE HARMONY AND IT CAN BE AN AVERAGE OF ALL THE FISH HAPPINESS
-    /// THEY CAN CALCULATE
-    /// 
-    /// </summary>
-
 
     public void Unset()
     {
@@ -84,6 +111,4 @@ public class FishMonitor : MonoBehaviour
             }
         }
     }
-
-    //fish comments logic here!
 }

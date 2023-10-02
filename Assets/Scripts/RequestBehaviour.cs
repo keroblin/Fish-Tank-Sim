@@ -322,7 +322,8 @@ public class RequestBehaviour : MonoBehaviour
     {
         //show a 'poof' effect on the request
         Manager.Instance.currentMoney += earnings;
-        anim.Play("CloseOut");
+        anim.Play("EndRequest");
+        reviewScreen.SetActive(false);
         request = null;
         Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);
         timeLeft.value = 1000f; //arbitrary high number

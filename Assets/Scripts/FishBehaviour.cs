@@ -25,6 +25,8 @@ public class FishBehaviour : Placeable
     public float hunger;
     public float maxHappiness;
     public float happiness;
+    public float maxHarmony;
+    public float harmony;
 
     public enum States { IDLE, AVOID, HIDE, FEED, SMELL };
     public States state;
@@ -46,8 +48,8 @@ public class FishBehaviour : Placeable
             this.go = foodObj;
             this.foodBehaviour = foodObj.GetComponent<FoodBehaviour>();
             this.food = foodBehaviour.food;
-            this.isFavourite = food.favourites.Contains(fish);
-            this.isLiked = food.likes.Contains(fish);
+            this.isFavourite = fish.favouriteFoods.Contains(foodBehaviour.food);
+            this.isLiked = !fish.hatedFoods.Contains(foodBehaviour.food);
         }
     }
 
@@ -303,9 +305,61 @@ public class FishBehaviour : Placeable
         }
     }
 
-    public void CheckHarmony()
+    public float GetHappiness()
     {
-        
+        //i dont like this calculation! i feel like theres a way to do it a bit better
+        //if the fish is really hungry, take down their happiness
+        //if the fish is really unhappy, take down their hunger faster
+        //if the fish dislikes other fish, take down their happiness a lot
+        if (fish.CalculateCompat() > 0.6f)
+        {
+            happiness += .5f;
+        }
+        else if (fish.CalculateCompat() < 0.3f)
+        {
+            happiness -= .5f;
+        }
+
+        if (harmony > 3)
+        {
+            Debug.Log("Harmony above 3");
+            happiness += .2f;
+        }
+        else
+        {
+            Debug.Log("Harmony below 3");
+            happiness -= .2f;
+        }
+
+        if (hunger > 0)
+        {
+            if (happiness > 2)
+            {
+                hunger -= .5f;
+            }
+            else
+            {
+                hunger -= 1f;
+            }
+        }
+
+        if (hunger < 2 && happiness > 0)
+        {
+            happiness -= .5f;
+        }
+
+
+        if (happiness < 2.5)
+        {
+            alert.enabled = true;
+            alert.sprite = fish.GetCompatIcon(happiness*2 / 10);
+        }
+        else
+        {
+            alert.enabled = false;
+        }
+
+        return happiness;
     }
 
     public override void SendOff()

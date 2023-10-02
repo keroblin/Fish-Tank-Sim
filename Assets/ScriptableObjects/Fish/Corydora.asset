@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Corydora
   m_EditorClassIdentifier: 
   tags: []
-  stackable: 0
+  stackable: 1
   placeable: 1
   prefab: {fileID: 7288040808445679479, guid: 8be49c17d22c5834986e48a77306368a, type: 3}
   icon: {fileID: 21300000, guid: 15915822f49300d4ea17f7f1e303fc63, type: 3}
@@ -24,7 +24,13 @@ MonoBehaviour:
   speed: 6
   maxSpeed: 10
   personality: 0
+  lovedFish: []
   dislikedFish: []
+  favouriteFoods:
+  - {fileID: 11400000, guid: 76d41ace51c98b948a33e4bf07fde85a, type: 2}
+  - {fileID: 11400000, guid: cb3a8b254d473d64bbb1fec8c13a8a2c, type: 2}
+  hatedFoods:
+  - {fileID: 11400000, guid: 7d82874f2a5d7a44bb9ef48325b99221, type: 2}
   minPH: 6.5
   maxPH: 7.8
   minHardness: 5

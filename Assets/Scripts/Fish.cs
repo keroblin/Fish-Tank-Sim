@@ -10,6 +10,9 @@ public class Fish: Purchasable
 
     public List<Fish> lovedFish;
     public List<Fish> dislikedFish;
+    //remove the favourite stuff from the foods, do em on a per fish basis instead
+    public List<Food> favouriteFoods;
+    public List<Food> hatedFoods;
 
     public float minPH = 6.0f,maxPH = 8.5f;
     public float minHardness = 5f,maxHardness = 30f;

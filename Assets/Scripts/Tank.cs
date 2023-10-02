@@ -69,7 +69,7 @@ public class Tank : MonoBehaviour
         //update all the sliders
         tankDirtiness += FishManager.instance.GetFishPoo();
         Manager.Instance.dirtSlider.value = tankDirtiness;
-        Manager.Instance.harmonySlider.value = FishManager.instance.GetFishHarmony();
+        Manager.Instance.harmonySlider.value = FishManager.instance.overallHappiness;
         //glass.dirtiness = tankDirtiness; //do this for a dirtiness material
         //style handles itself when items are added or removed
         UpdateValue();

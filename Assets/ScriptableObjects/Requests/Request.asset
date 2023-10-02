@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Request
   m_EditorClassIdentifier: 
   budget: 200
-  lengthInTicks: 2
+  lengthInTicks: 90
   style: {fileID: 11400000, guid: a3156f9c32948e549a7fa2e738764550, type: 2}
   specificFishRequest: {fileID: 11400000, guid: 73e77e7b0386510479cbfea451c6fc93, type: 2}
   specificItemRequest: {fileID: 11400000, guid: b68862c74b8019946bfddd3ae14c1501, type: 2}
