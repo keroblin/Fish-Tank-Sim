@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEditor.Progress;
 
 public class FishBehaviour : Placeable
 {
@@ -13,6 +12,8 @@ public class FishBehaviour : Placeable
     public Vector3 currentTargetPosition;
     public bool targetReached;
     public SpriteRenderer alert;
+    public Material alertMat;
+    int shaderPos = Shader.PropertyToID("_Position");
 
     float length = .5f;
     float speed;
@@ -61,6 +62,11 @@ public class FishBehaviour : Placeable
         Gizmos.DrawSphere(currentTargetPosition, .05f);
     }
 
+    private void Start()
+    {
+        alert.transform.parent = null;
+        alertMat = alert.material;
+    }
     public override void Set(Purchasable _purchasable, bool fromPool = false)
     {
         purchasable = _purchasable;
@@ -72,6 +78,7 @@ public class FishBehaviour : Placeable
 
     private void FixedUpdate()
     {
+        alertMat.SetVector(shaderPos, gameObject.transform.position);
         switch (state)
         {
             case States.IDLE:
@@ -364,7 +371,8 @@ public class FishBehaviour : Placeable
 
     public override void SendOff()
     {
-        FishManager.instance.RemoveFish(fish); 
+        FishManager.instance.RemoveFish(fish);
+        Destroy(alert);
         base.SendOff();
     }
 }
