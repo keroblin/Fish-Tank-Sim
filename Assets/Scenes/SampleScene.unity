@@ -10797,11 +10797,6 @@ MonoBehaviour:
   viewObjs: {fileID: 1406059087}
   editButton: {fileID: 576312821}
   viewButton: {fileID: 1914418269}
-  harmonySlider: {fileID: 486135101}
-  dirtSlider: {fileID: 1731269264}
-  styleIcon: {fileID: 117229095}
-  valueSlider: {fileID: 2099575279}
-  valueText: {fileID: 837228520}
   tankPrefab: {fileID: 0}
 --- !u!4 &319298943
 Transform:
@@ -10863,7 +10858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f6382ff7d53b154fa3572b9c20183c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotParticle: {fileID: 0}
+  rotParticle: {fileID: 1647566230920976217, guid: 097a19fe0619eb14a98eed5f20b19781, type: 3}
   foodRef: {fileID: 16048363}
   foodPool: {fileID: 1552232958}
   foodIndicator: {fileID: 530297306}
@@ -17096,7 +17091,7 @@ GameObject:
   - component: {fileID: 468012437}
   - component: {fileID: 468012439}
   m_Layer: 5
-  m_Name: Harmony
+  m_Name: Happiness
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42665,7 +42660,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 13.3
+  m_fontSize: 20.45
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -47078,7 +47073,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.42136616}
   m_AnchorMax: {x: 0.3068245, y: 1}
-  m_AnchoredPosition: {x: 3.0448914, y: 0}
+  m_AnchoredPosition: {x: 3.0449219, y: 0}
   m_SizeDelta: {x: -6.0897, y: -8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1257499328
@@ -75278,7 +75273,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 405146249}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.77833897
+  m_Size: 0.7785521
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -79148,6 +79143,10 @@ PrefabInstance:
       propertyPath: assignedRequest
       value: 
       objectReference: {fileID: 11400000, guid: 9c4201ba31c9dc44191c168f9c208b6d, type: 2}
+    - target: {fileID: 4598456584005876786, guid: 907a68255552f684fa9b2779ca07fa5e, type: 3}
+      propertyPath: happinessSlider
+      value: 
+      objectReference: {fileID: 486135101}
     - target: {fileID: 4598456584005876786, guid: 907a68255552f684fa9b2779ca07fa5e, type: 3}
       propertyPath: requestBehaviour
       value: 

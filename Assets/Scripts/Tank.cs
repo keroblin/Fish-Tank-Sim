@@ -1,3 +1,4 @@
+using SerializeTools;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,18 +7,100 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Tank : MonoBehaviour
+public class Tank : MonoBehaviour, ISaving
 {
-    //gonna move over some tank stat specific manager stuff in here to make it easier to have multiple tanks
+    private void OnEnable()
+    {
+        Saving.savers.Add(this);
+    }
+    private void OnDestroy()
+    {
+        Saving.savers.Remove(this);
+    }
+    public void Save()
+    {
+        Saving.currentSave.tankData = new SaveData.TankData(this);
+        //need to figure out getting and saving request age
+    }
+    public void Load()
+    {
+        SaveData.TankData tankData = Saving.currentSave.tankData;
+        if(tankData != null )
+        {
+            foreach (SaveData.PlaceableData placeableData in tankData.assignedPlaceables)
+            {
+                Debug.Log("Current placeable: " + placeableData.purchasableName);
+                if (assignedPlaceables.Find(x => x.purchasable.name == placeableData.purchasableName && x.transform.position == placeableData.transform.position.GetAsVector3() && x.transform.rotation == placeableData.transform.rotation.GetAsQuaternion()))
+                {
+                    Debug.Log(placeableData.purchasableName + " already assigned");
+                    //if the saved placeable is already here
+                    continue;
+                }
+                //do removing the placeable if its not present in the save here
+                else
+                {
+                    Purchasable purchasable = Manager.Instance.allPurchasableSOs.Find(x => x.name == placeableData.purchasableName);
+                    Placeable placedPlaceable = null;
+                    if (purchasable is Fish)
+                    {
+                        Debug.Log("Fish loaded: " + placeableData.purchasableName);
+                        Fish fish = purchasable as Fish;
+                        fish.Place();
+                        placedPlaceable = assignedPlaceables.Find(x => x.purchasable == fish);
+                        FishBehaviour fishB = placedPlaceable as FishBehaviour;
+                        SaveData.FishData fishData = Saving.currentSave.tankData.fishDatas.Find(x => x.purchasableName == fish.name);
+                        fishB.ageInTicks = fishData.age;
+                        fishB.happiness = fishData.happiness;
+                        fishB.hunger = fishData.hunger;
+                        fishB.harmony = fishData.harmony;
+                        fishB.currentTargetPosition = fishData.target.GetAsVector3();
+                        assignedPlaceables.Add(placedPlaceable);
+
+                    }
+                    else if (purchasable is Item)
+                    {
+                        Debug.Log("Item loaded: " + placeableData.purchasableName);
+                        Item item = purchasable as Item;
+                        item.Place();
+                        placedPlaceable = assignedPlaceables.Find(x => x.purchasable == item);
+                        ItemBehaviour placedItem = placedPlaceable as ItemBehaviour;
+                        SaveData.ItemData itemData = Saving.currentSave.tankData.itemDatas.Find(x => x.purchasableName == item.name);
+                        placedItem.SetColor(itemData.color);
+                        assignedPlaceables.Add(placedPlaceable);
+                    }
+                    placedPlaceable.transform.position = placeableData.transform.position.GetAsVector3();
+                    placedPlaceable.transform.rotation = placeableData.transform.rotation.GetAsQuaternion();
+                }
+            }
+            if(tankData.assignedRequest.Item1 != "")
+            {
+                Request request = Manager.Instance.allRequestSOs.Find(x => x.name == tankData.assignedRequest.Item1);
+                RequestBehaviour rqBehaviour = FindFirstObjectByType(typeof(RequestBehaviour)).GetComponent<RequestBehaviour>(); 
+                rqBehaviour.Set(request);
+                rqBehaviour.timeLeft.value = tankData.assignedRequest.Item2;
+            }
+            tankDirtiness = tankData.tankDirtiness;
+            tankHappiness = tankData.tankHappiness;
+            tankPh = tankData.tankPh;
+            tankLight = tankData.tankLight;
+            tankTemp = tankData.tankTemp;
+            tankHardness = tankData.tankHardness;
+            value = tankData.value;
+            SwapSubstrate(Manager.Instance.allPurchasableSOs.Find(x => x.name == tankData.assignedSubstrate) as Item);
+        }
+        Manager.Instance.onQuantityChange.Invoke();
+        onStatUpdate.Invoke();
+    }
     public Bounds tankBounds;
     public bool drawBounds;
 
     public float tickInterval = 5f;
+    public float age;
     public float currentTime;
 
     bool useDefault = true;
     public float tankDirtiness = Manager.baseDirt;
-    public float tankHarmony = 0;
+    public float tankHappiness = 0;
     public float tankPh = Manager.basePh;
     [Range(0f, 1f)]
     public float tankLight = Manager.baseLight;
@@ -35,12 +118,20 @@ public class Tank : MonoBehaviour
     public UnityEvent onTankTick;
 
     public Request assignedRequest;
+    public RequestBehaviour assignedRequestBehaviour;
 
     public List<Placeable> assignedPlaceables;
 
     public Dictionary<Tag, int> tags = new Dictionary<Tag, int>();
     public Tag mostCommonStyle = null;
     public Fish mostCommonFishType = null;
+
+    public Slider happinessSlider;
+    public Slider dirtSlider;
+    public Image styleIcon;
+    public Slider valueSlider;
+    public TextMeshProUGUI valueText;
+
     private void OnDrawGizmos()
     {
         //tank bounds testing
@@ -68,8 +159,8 @@ public class Tank : MonoBehaviour
     {
         //update all the sliders
         tankDirtiness += FishManager.instance.GetFishPoo();
-        Manager.Instance.dirtSlider.value = tankDirtiness;
-        Manager.Instance.harmonySlider.value = FishManager.instance.overallHappiness;
+        dirtSlider.value = tankDirtiness;
+        happinessSlider.value = FishManager.instance.overallHappiness;
         //glass.dirtiness = tankDirtiness; //do this for a dirtiness material
         //style handles itself when items are added or removed
         UpdateValue();
@@ -88,7 +179,7 @@ public class Tank : MonoBehaviour
             updatedVal += assignedSubstrate.price;
         }
         value = updatedVal;
-        Manager.Instance.valueText.text = "£"+ value.ToString("#.00");
+        valueText.text = "£"+ value.ToString("#.00");
     }
 
     void UpdateStyle()
@@ -107,7 +198,7 @@ public class Tank : MonoBehaviour
 
         if (mostCommonStyle != null)
         {
-            Manager.Instance.styleIcon.sprite = mostCommonStyle.icon;
+            styleIcon.sprite = mostCommonStyle.icon;
         }
     }
 
@@ -129,7 +220,10 @@ public class Tank : MonoBehaviour
             }
         }
         UpdateStyle();
-        onStatUpdate.Invoke();
+        if(onStatUpdate != null)
+        {
+            onStatUpdate.Invoke();
+        }
     }
     public void RemoveModifiers(Item item)
     {
@@ -137,11 +231,14 @@ public class Tank : MonoBehaviour
         tankTemp -= item.tempMod;
         tankHardness -= item.dGHMod;
         tankLight -= item.lightMod;
-        foreach (Tag tag in item.tags)
+        if(item.tags != null)
         {
-            if (tags.ContainsKey(tag))
+            foreach (Tag tag in item.tags)
             {
-                tags[tag]--;
+                if (tags.ContainsKey(tag))
+                {
+                    tags[tag]--;
+                }
             }
         }
         UpdateStyle();
@@ -157,7 +254,7 @@ public class Tank : MonoBehaviour
         assignedSubstrate = item;
         if (item == null)
         {
-            assignedSubstrate = new Substrate();
+            assignedSubstrate = nullSubstrate;
         }
         AddModifiers(assignedSubstrate);
         substrateRenderer.material = assignedSubstrate.material;
@@ -183,7 +280,7 @@ public class Tank : MonoBehaviour
 
     public void AddRottenFood()
     {
-        if(tankDirtiness < Manager.Instance.dirtSlider.maxValue)
+        if(tankDirtiness < dirtSlider.maxValue)
         {
             tankDirtiness++;
             StatUpdate();
@@ -224,7 +321,7 @@ public class Tank : MonoBehaviour
         tankTemp = Manager.baseTemp;
         tankHardness = Manager.baseHardness;
         tankDirtiness = Manager.baseDirt;
-        tankHarmony = 0;
+        tankHappiness = 0;
         onStatUpdate.Invoke();
         yield return true;
     }

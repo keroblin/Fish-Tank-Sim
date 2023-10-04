@@ -152,13 +152,11 @@ MonoBehaviour:
   currentTargetPosition: {x: 0, y: 0, z: 0}
   targetReached: 0
   alert: {fileID: 7262738886401990108}
+  alertOffset: {x: -0.22, y: 0.35, z: 0}
   alertMat: {fileID: 0}
-  maxHunger: 0
-  hunger: 0
-  maxHappiness: 0
-  happiness: 0
-  maxHarmony: 0
-  harmony: 0
+  hunger: 0.5
+  happiness: 0.5
+  harmony: 0.5
   state: 0
   targets: []
 --- !u!54 &5613894503783741543
@@ -234,7 +232,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7435404299803393401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.23, z: -0.153}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

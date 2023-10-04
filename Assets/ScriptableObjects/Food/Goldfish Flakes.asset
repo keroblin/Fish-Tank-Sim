@@ -21,11 +21,5 @@ MonoBehaviour:
   material: {fileID: 0}
   description: 
   price: 0
-  portionSize: 0
+  portionSize: 1
   rotTime: 10
-  favourites:
-  - {fileID: 11400000, guid: 530e712e428268c47862220c5b257bfa, type: 2}
-  likes:
-  - {fileID: 11400000, guid: 18aaea47f71fbdc43af057e9ffd2eebd, type: 2}
-  - {fileID: 11400000, guid: e365b66b2cb47dd42bed29770c30698b, type: 2}
-  - {fileID: 11400000, guid: 73e77e7b0386510479cbfea451c6fc93, type: 2}

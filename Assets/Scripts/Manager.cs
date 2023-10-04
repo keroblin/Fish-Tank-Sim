@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Manager : MonoBehaviour
+public class Manager : MonoBehaviour, ISaving
 {
     //a class that is singleton to store essential variables for many different types of objects and situations
     public static Manager Instance;
@@ -37,6 +37,7 @@ public class Manager : MonoBehaviour
     public AudioClip talkSound;
     public List<Fish> allFish;
     public List<Purchasable> allPurchasableSOs;
+    public List<Request> allRequestSOs;
     public Dictionary<Purchasable,int> allPurchasables = new Dictionary<Purchasable, int>(); //ask everything else when grabbing quantity to do it from here
     public UnityEvent onBuy;
     public UnityEvent onSell;
@@ -53,13 +54,42 @@ public class Manager : MonoBehaviour
     public GameObject editButton;
     public GameObject viewButton;
 
-    public Slider harmonySlider;
-    public Slider dirtSlider;
-    public Image styleIcon;
-    public Slider valueSlider;
-    public TextMeshProUGUI valueText;
-
     public GameObject tankPrefab;
+
+    private void OnEnable()
+    {
+        Saving.savers.Add(this);
+    }
+    private void OnDestroy()
+    {
+        Saving.savers.Remove(this);
+    }
+    public void Save()
+    {
+        Saving.currentSave.money = currentMoney;
+        SerializeTools.SerializeableDictionary<string, int> serializedInventory = new();
+        foreach (KeyValuePair<Purchasable,int> entry in allPurchasables)
+        {
+            serializedInventory.Add(entry.Key.name, entry.Value);
+        }
+        Saving.currentSave.inventory = serializedInventory;
+    }
+    public void Load()
+    {
+        currentMoney = Saving.currentSave.money;
+        foreach(KeyValuePair<string, int> entry in Saving.currentSave.inventory)
+        {
+            Purchasable purchasable = allPurchasableSOs.Find(x => x.name == entry.Key);
+            if (allPurchasables.ContainsKey(purchasable))
+            {
+                allPurchasables[purchasable] = entry.Value;
+            }
+            else
+            {
+                allPurchasables.Add(purchasable, entry.Value);
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -77,6 +107,7 @@ public class Manager : MonoBehaviour
 
     private void Start()
     {
+        Saving.Load();
         money.text = "Your cash: £" + currentMoney.ToString("#.00");
     }
 
@@ -101,24 +132,36 @@ public class Manager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            Saving.Save();
+        }
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            Saving.Load();
+        }
+    }
+
     public void Buy(Purchasable purchasable)
     {
         if (currentMoney - purchasable.price > 0.00) //do something here to deal with stacking
         {
             if (!allPurchasables.ContainsKey(purchasable) || allPurchasables[purchasable] == 0)
             {
-                Debug.Log("Inventory did not contain purchasable, adding it");
+                //Debug.Log("Inventory did not contain purchasable, adding it");
                 allPurchasables[purchasable]++;
             }
             else if (purchasable.stackable)
             {
-                Debug.Log("Stackable! Adding to quantity...");
+                //Debug.Log("Stackable! Adding to quantity...");
                 allPurchasables[purchasable]++;
-                Debug.Log("Quantity is " + allPurchasables[purchasable].ToString());
+                //Debug.Log("Quantity is " + allPurchasables[purchasable].ToString());
             }
             else if (!purchasable.stackable && (allPurchasables.ContainsKey(purchasable) || allPurchasables[purchasable] > 0))
             {
-                Debug.Log("Already bought!");
+                //Debug.Log("Already bought!");
                 return;
             }
         }

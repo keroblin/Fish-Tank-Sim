@@ -12,6 +12,7 @@ public class FishBehaviour : Placeable
     public Vector3 currentTargetPosition;
     public bool targetReached;
     public SpriteRenderer alert;
+    public Vector3 alertOffset;
     public Material alertMat;
     int shaderPos = Shader.PropertyToID("_Position");
 
@@ -22,12 +23,9 @@ public class FishBehaviour : Placeable
     Bounds bounds;
 
     public FoodData currentFood;
-    public float maxHunger;
-    public float hunger;
-    public float maxHappiness;
-    public float happiness;
-    public float maxHarmony;
-    public float harmony;
+    public float hunger = .5f;
+    public float happiness = .5f;
+    public float harmony = .5f;
 
     public enum States { IDLE, AVOID, HIDE, FEED, SMELL };
     public States state;
@@ -65,12 +63,15 @@ public class FishBehaviour : Placeable
     private void Start()
     {
         alert.transform.parent = null;
+        alert.transform.position = Vector3.zero;
+        alert.transform.rotation = Quaternion.identity;
         alertMat = alert.material;
     }
     public override void Set(Purchasable _purchasable, bool fromPool = false)
     {
         purchasable = _purchasable;
         fish = _purchasable as Fish;
+        //Debug.Log("Set to " + fish.name);
         bounds = Manager.Instance.currentTank.tankBounds;
         Feeding.Instance.OnFoodPlaced += FoodPlaced;
         speed = fish.speed;
@@ -78,13 +79,13 @@ public class FishBehaviour : Placeable
 
     private void FixedUpdate()
     {
-        alertMat.SetVector(shaderPos, gameObject.transform.position);
+        alertMat.SetVector(shaderPos, gameObject.transform.position+alertOffset);
         switch (state)
         {
             case States.IDLE:
                 if (primaryTarget == null || primaryTarget.position == Vector3.zero || targetReached) //if we dont have a position, choose a random one
                 {
-                    Debug.Log("Setting idle pos on " + fish.name);
+                   // Debug.Log("Setting idle pos on " + fish.name);
                     Vector3 idleTarget = new Vector3(
                        UnityEngine.Random.Range(-bounds.extents.x, bounds.extents.x),
                        UnityEngine.Random.Range(-bounds.extents.y, bounds.extents.y),
@@ -155,12 +156,10 @@ public class FishBehaviour : Placeable
 
     public void MoveTowardTarget()
     {
-        Debug.Log("running");
         rb.AddForce(transform.forward * Time.deltaTime * speed); //move forward
 
         Vector3 cross = Vector3.Cross(transform.forward, (currentTargetPosition - transform.position).normalized); //how much to rotate by
         //steer toward target
-        Debug.Log("Steering");
 
         if (cross.magnitude > 0.01) //if we arent facing the target, turn to face it
         {
@@ -174,7 +173,7 @@ public class FishBehaviour : Placeable
             //
         }
 
-        //NOT COMPLETE/////////////
+        //could be improved!/////////////
 
 
         if (Vector3.Distance(transform.position, currentTargetPosition) < .2f) //if we're within distance
@@ -185,7 +184,7 @@ public class FishBehaviour : Placeable
 
     public void TargetReached()
     {
-        Debug.Log("target reached");
+        //Debug.Log("target reached");
         switch (state)
         {
             case States.IDLE:
@@ -213,7 +212,7 @@ public class FishBehaviour : Placeable
 
     IEnumerator WaitAtTarget()
     {
-        Debug.Log("Waiting at target...");
+        //Debug.Log("Waiting at target...");
         waiting = true;
         StartCoroutine("Brake");
         yield return new WaitForSeconds(2f);
@@ -227,7 +226,7 @@ public class FishBehaviour : Placeable
             primaryTarget = null;
             state = States.IDLE;
         }
-        Debug.Log("Finished wait. Removed target.");
+        //Debug.Log("Finished wait. Removed target.");
         waiting = false;
         yield return null;
     }
@@ -262,15 +261,19 @@ public class FishBehaviour : Placeable
 
     void Eat(FoodData food)
     {
-        Debug.Log(fish.name + " is eating " + food.food.name);
+        //Debug.Log(fish.name + " is eating " + food.food.name);
         food.foodBehaviour.Use(currentFood.foodBehaviour);
         if(hunger > 0)
         {
             if (food.isFavourite)
             {
-                if(happiness < 4)
+                if(happiness + .1f < 1)
                 {
-                    happiness += 1;
+                    happiness += .1f;
+                }
+                else
+                {
+                    happiness = 1;
                 }
             }
            
@@ -335,31 +338,31 @@ public class FishBehaviour : Placeable
         else
         {
             Debug.Log("Harmony below 3");
-            happiness -= .2f;
+            happiness -= .1f;
         }
 
         if (hunger > 0)
         {
-            if (happiness > 2)
+            if (happiness > .8)
             {
-                hunger -= .5f;
+                hunger -= .2f;
             }
             else
             {
-                hunger -= 1f;
+                hunger -= .25f;
             }
         }
 
-        if (hunger < 2 && happiness > 0)
+        if (hunger < .2 && happiness > 0)
         {
-            happiness -= .5f;
+            happiness -= .1f;
         }
 
 
-        if (happiness < 2.5)
+        if (happiness < .25)
         {
             alert.enabled = true;
-            alert.sprite = fish.GetCompatIcon(happiness*2 / 10);
+            alert.sprite = fish.GetCompatIcon(happiness*2);
         }
         else
         {

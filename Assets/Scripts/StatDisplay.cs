@@ -9,7 +9,7 @@ public class StatDisplay : MonoBehaviour
     public Slider temp;
     public Slider lightLevel;
     public Slider hardness;
-    private void Start()
+    private void OnEnable()
     {
         Manager.Instance.currentTank.onStatUpdate.AddListener(UpdateStats);
         UpdateStats();

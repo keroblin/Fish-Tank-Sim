@@ -18,7 +18,7 @@ public class PlacementManager:MonoBehaviour
     public event OnPutBack PlaceableReturned;
 
     public static PlacementManager Instance;
-    void Start()
+    private void Awake()
     {
         Instance = this;
     }

@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI.MessageBox;
 
 public class RequestBehaviour : MonoBehaviour
 {
@@ -44,6 +42,7 @@ public class RequestBehaviour : MonoBehaviour
     public void Set(Request _request)
     {
         request = _request;
+        Manager.Instance.currentTank.assignedRequestBehaviour = this;
         submit.onClick.RemoveAllListeners();
         cancel.onClick.RemoveAllListeners();
         portrait.sprite = request.portrait;
@@ -54,12 +53,8 @@ public class RequestBehaviour : MonoBehaviour
         timeLeft.maxValue = request.lengthInTicks;
         timeLeft.value = request.lengthInTicks;
         Manager.Instance.currentTank.onTankTick.AddListener(UpdateTimer);
-        if(!requestManager.interactable)
-        {
-            anim.Play("NewRequest");
-            requestManager.interactable = true;
-        }
-        
+        anim.Play("NewRequest");
+        requestManager.interactable = true;
     }
 
     public void UpdateTimer()
@@ -122,6 +117,7 @@ public class RequestBehaviour : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+        yield return new WaitForSeconds(1.5f);
         yield return WaitForNewTank();
         EndRequest();
     }
@@ -192,7 +188,7 @@ public class RequestBehaviour : MonoBehaviour
             }
         }
 
-        if (ctx.tankHarmony > 4.5)
+        if (ctx.tankHappiness > 4.5)
         {
             response += request.harmonyResponse[0] + "\n";
             if (score + 2 <= 5)
@@ -204,7 +200,7 @@ public class RequestBehaviour : MonoBehaviour
                 score = 5;
             }
         }
-        else if (ctx.tankHarmony > 3.5)
+        else if (ctx.tankHappiness > 3.5)
         {
             response += request.harmonyResponse[1] + "\n";
             if (score + 1 <= 5)
@@ -216,7 +212,7 @@ public class RequestBehaviour : MonoBehaviour
                 score = 5;
             }
         }
-        else if (ctx.tankHarmony > 2.5)
+        else if (ctx.tankHappiness > 2.5)
         {
             response += request.harmonyResponse[2] + "\n";
         }
@@ -322,7 +318,14 @@ public class RequestBehaviour : MonoBehaviour
     {
         //show a 'poof' effect on the request
         Manager.Instance.currentMoney += earnings;
-        anim.Play("EndRequest");
+        if(reviewScreen.activeSelf)
+        {
+            anim.Play("CloseOut");
+        }
+        else
+        {
+            anim.Play("EndRequest");
+        }
         reviewScreen.SetActive(false);
         request = null;
         Manager.Instance.currentTank.onTankTick.RemoveListener(UpdateTimer);

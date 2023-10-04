@@ -14,9 +14,12 @@ public class FishManager : MonoBehaviour
     public FishRemoved onFishRemoved;
     public float overallHappiness;
 
-    private void Start()
+    private void Awake()
     {
         instance = this;
+    }
+    private void Start()
+    {
         Manager.Instance.currentTank.onTankTick.AddListener(FishTick);
     }
 

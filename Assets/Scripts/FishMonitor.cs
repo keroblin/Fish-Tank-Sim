@@ -50,43 +50,67 @@ public class FishMonitor : MonoBehaviour
     string GetComment()
     {
         //check which area is most impacting the fish, have that be the comment
-        float compat = currentFish.fish.CalculateCompat();
-        List<float> fishStats = new List<float>();
-        fishStats.Add(compat);
-        fishStats.Add(currentFish.harmony);
-        fishStats.Add(currentFish.hunger);
-        fishStats.Sort();
-
-        float lastItem = fishStats[2];
-        string comment = "";
-
-        if(lastItem == compat)
+        float compat = currentFish.fish.CalculateCompat()*10;
+        List<(float,string)> fishStats = new List<(float, string)>();
+        fishStats.Add((compat, "compat"));
+        fishStats.Add((currentFish.harmony, "harmony"));
+        fishStats.Add((1-currentFish.hunger, "fullness")); //take away from 1 to invert it and make it fullness
+        (float,string) worstStat = (-100,"null");
+        foreach((float,string) stat in fishStats)
         {
-            comment = "Something about the items in here is making me queasy";
+            if(worstStat.Item2 == "null")
+            {
+                worstStat = stat;
+                continue;
+            }
+            if(stat.Item1 < worstStat.Item1)
+            {
+                worstStat = stat;
+            }
         }
-        else if(lastItem == currentFish.harmony)
+        string comment = "";
+        Debug.Log("Worst was " + worstStat.ToString());
+        if (worstStat.Item2 == "harmony") //on its own to cover if there are no bad fish actually
         {
             List<Fish> badFish = new List<Fish>();
-            foreach(Fish dislikedFish in currentFish.fish.dislikedFish)
+            foreach (Fish dislikedFish in currentFish.fish.dislikedFish)
             {
-                if (FishManager.instance.liveFish.Find( x => x.fish = dislikedFish))
+                if (FishManager.instance.liveFish.Find(x => x.fish == dislikedFish))
                 {
                     badFish.Add(dislikedFish);
                 }
             }
 
-            if(badFish.Count > 1)
+            if (badFish.Count > 1)
             {
-                comment = badFish.Count.ToString() + " fish in here are not my vibe, " + badFish[Random.Range(0,badFish.Count-1)].name + " is a lil.. you know..";
+                comment = badFish.Count.ToString() + " fish in here are not my vibe, " + badFish[Random.Range(0, badFish.Count - 1)].name + " is a lil.. you know..";
+                return comment;
+            }
+            else if (badFish.Count > 0)
+            {
+                comment = badFish[0] + " is harshing my vibe!";
+
+                return comment;
+            }
+        }
+
+        if (worstStat.Item2 == "fullness")
+        {
+            if (currentFish.fish.favouriteFoods.Count > 0)
+            {
+                comment = "I am absolutely STARVING for some " + currentFish.fish.favouriteFoods[Random.Range(0, currentFish.fish.favouriteFoods.Count - 1)];
+                return comment;
             }
             else
             {
-                comment = badFish[0] + " is harshing my vibe!";
+                comment = "I am absolutely STARVING!";
+                return comment;
             }
         }
-        else if(lastItem == currentFish.hunger)
+
+        if (worstStat.Item2 == "compat")
         {
-            comment = "I am absolutely STARVING for some " + currentFish.fish.favouriteFoods[Random.Range(0, currentFish.fish.favouriteFoods.Count - 1)];
+            comment = "Something about the items in here is making me queasy";
         }
 
         return comment;
