@@ -56,6 +56,11 @@ public class Manager : MonoBehaviour, ISaving
 
     public GameObject tankPrefab;
 
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
     private void OnEnable()
     {
         Saving.savers.Add(this);
@@ -64,6 +69,12 @@ public class Manager : MonoBehaviour, ISaving
     {
         Saving.savers.Remove(this);
     }
+
+    public void ForceASave()
+    {
+        Saving.Save();
+    }
+
     public void Save()
     {
         Saving.currentSave.money = currentMoney;

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   budget: 200
   lengthInTicks: 90
-  style: {fileID: 11400000, guid: a3156f9c32948e549a7fa2e738764550, type: 2}
+  style: {fileID: 11400000, guid: 2dbce00fd8f338d4bb67220bf8ac6407, type: 2}
   specificFishRequest: {fileID: 11400000, guid: 73e77e7b0386510479cbfea451c6fc93, type: 2}
   specificItemRequest: {fileID: 11400000, guid: b68862c74b8019946bfddd3ae14c1501, type: 2}
   portrait: {fileID: 21300000, guid: 2512b87ca625d994db99a9b23980e5f9, type: 3}

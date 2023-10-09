@@ -34,23 +34,30 @@ public class FishManager : MonoBehaviour
         foreach(FishBehaviour dweller in liveFish)
         {
             //check and set their harmony against the new fish
-            if (dweller.fish != fish)
+            if(dweller.fish.dislikedFish.Count > 0)
             {
-                if (dweller.fish.dislikedFish.Contains(fish))
+                if (dweller.fish != fish)
                 {
-                    dweller.harmony--;
-                    Debug.Log(dweller.name + " didn't like " + fish.name);
+                    if (dweller.fish.dislikedFish.Contains(fish))
+                    {
+                        dweller.harmony-= .1f;
+                        Debug.Log(dweller.name + " didn't like " + fish.name);
+                    }
+                    else if (dweller.fish.lovedFish.Contains(fish))
+                    {
+                        dweller.harmony+= .2f;
+                        Debug.Log(dweller.name + " liked " + fish.name);
+                    }
                 }
-                else if (dweller.fish.lovedFish.Contains(fish))
+                else
                 {
                     dweller.harmony++;
-                    Debug.Log(dweller.name + " liked " + fish.name);
+                    Debug.Log(dweller.name + " liked own breed " + fish.name);
                 }
             }
             else
             {
-                dweller.harmony++;
-                Debug.Log(dweller.name + " liked own breed " + fish.name);
+                dweller.harmony = 1;
             }
         }
         liveFish.Add(placeable);
@@ -64,11 +71,11 @@ public class FishManager : MonoBehaviour
             //undo modifiers basically
             if (dweller.fish.dislikedFish.Contains(fish))
             {
-                dweller.harmony++;
+                dweller.harmony+= .1f;
             }
             else if (dweller.fish.lovedFish.Contains(fish))
             {
-                dweller.harmony--;
+                dweller.harmony-= .2f;
             }
         }
     }

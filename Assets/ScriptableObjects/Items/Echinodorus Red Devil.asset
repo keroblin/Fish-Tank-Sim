@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: Echinodorus Red Devil
   m_EditorClassIdentifier: 
   tags:
-  - {fileID: 11400000, guid: fc4924420feab7d46b02573172c57cd9, type: 2}
   - {fileID: 11400000, guid: 0ae5ffe8384b4af409b9dfb9310cf6ae, type: 2}
-  - {fileID: 11400000, guid: 34ae658817e910c42905a54d9b806dd5, type: 2}
   stackable: 0
   placeable: 1
   prefab: {fileID: 0}

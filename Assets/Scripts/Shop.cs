@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 using UnityEngine.UI;
-using UnityEngine.Windows;
-using static UnityEditor.Progress;
 
 public class Shop:MonoBehaviour
 {

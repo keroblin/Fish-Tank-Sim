@@ -75,6 +75,10 @@ public class FishBehaviour : Placeable
         bounds = Manager.Instance.currentTank.tankBounds;
         Feeding.Instance.OnFoodPlaced += FoodPlaced;
         speed = fish.speed;
+        if (fish.dislikedFish.Count < 0)
+        {
+            harmony = 1;
+        }
     }
 
     private void FixedUpdate()
@@ -277,13 +281,13 @@ public class FishBehaviour : Placeable
                 }
             }
            
-            if(hunger - food.food.portionSize > 0)
+            if(hunger + food.food.portionSize < 1)
             {
-                hunger -= food.food.portionSize;
+                hunger += food.food.portionSize;
             }
             else
             {
-                hunger = 0;
+                hunger = 1;
             }
         }
         speed = fish.speed;
@@ -330,26 +334,31 @@ public class FishBehaviour : Placeable
             happiness -= .5f;
         }
 
-        if (harmony > 3)
+        if (harmony > .3f)
         {
-            Debug.Log("Harmony above 3");
+            Debug.Log("Harmony above .3");
             happiness += .2f;
         }
         else
         {
-            Debug.Log("Harmony below 3");
+            Debug.Log("Harmony below .3");
             happiness -= .1f;
         }
 
         if (hunger > 0)
         {
+            float hungerTarget;
             if (happiness > .8)
             {
-                hunger -= .2f;
+                hungerTarget = hunger -= .05f;
             }
             else
             {
-                hunger -= .25f;
+                hungerTarget = hunger -= .1f;
+            }
+            if(hunger - hungerTarget < 0)
+            {
+                hungerTarget = 0f;
             }
         }
 

@@ -54,17 +54,14 @@ public class FishMonitor : MonoBehaviour
         List<(float,string)> fishStats = new List<(float, string)>();
         fishStats.Add((compat, "compat"));
         fishStats.Add((currentFish.harmony, "harmony"));
-        fishStats.Add((1-currentFish.hunger, "fullness")); //take away from 1 to invert it and make it fullness
-        (float,string) worstStat = (-100,"null");
+        fishStats.Add((currentFish.hunger, "fullness")); //take away from 1 to invert it and make it fullness
+        (float,string) worstStat = (10000,"null");
         foreach((float,string) stat in fishStats)
         {
-            if(worstStat.Item2 == "null")
-            {
-                worstStat = stat;
-                continue;
-            }
+            Debug.Log("Current item " + stat);
             if(stat.Item1 < worstStat.Item1)
             {
+                Debug.Log(stat + " current worst");
                 worstStat = stat;
             }
         }

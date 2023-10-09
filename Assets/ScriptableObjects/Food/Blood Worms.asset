@@ -20,6 +20,6 @@ MonoBehaviour:
   model: {fileID: 0}
   material: {fileID: 0}
   description: Give your fish a taste for blood >:D
-  price: 3
+  price: 2
   portionSize: 1
-  rotTime: 10
+  rotTime: 120

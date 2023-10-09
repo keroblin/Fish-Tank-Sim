@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
   m_Name: High Wattage Heater
   m_EditorClassIdentifier: 
-  tags:
-  - {fileID: 11400000, guid: 0c3fa08ba6f9bf842a0be18b1c75c5f4, type: 2}
+  tags: []
   stackable: 0
   placeable: 1
   prefab: {fileID: 0}

@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Food", menuName = "ScriptableObjects/Food")]
 public class Food : Purchasable
 {
-    [Range(0, 2)]
+    [Range(0, 1)]
     public float portionSize;
     public float rotTime; //time in seconds
 

@@ -72,12 +72,13 @@ public class Tank : MonoBehaviour, ISaving
                     placedPlaceable.transform.rotation = placeableData.transform.rotation.GetAsQuaternion();
                 }
             }
-            if(tankData.assignedRequest.Item1 != "")
+            if(tankData.assignedRequestName != "null")
             {
-                Request request = Manager.Instance.allRequestSOs.Find(x => x.name == tankData.assignedRequest.Item1);
+                Request request = Manager.Instance.allRequestSOs.Find(x => x.name == tankData.assignedRequestName);
+                assignedRequest = request;
                 RequestBehaviour rqBehaviour = FindFirstObjectByType(typeof(RequestBehaviour)).GetComponent<RequestBehaviour>(); 
                 rqBehaviour.Set(request);
-                rqBehaviour.timeLeft.value = tankData.assignedRequest.Item2;
+                rqBehaviour.timeLeft.value = tankData.assignedRequestTime;
             }
             tankDirtiness = tankData.tankDirtiness;
             tankHappiness = tankData.tankHappiness;
@@ -171,6 +172,7 @@ public class Tank : MonoBehaviour, ISaving
         float updatedVal = 0;
         foreach (Placeable placeable in assignedPlaceables) //change the inventory bit to be like a held items list in here
         {
+            int val;
             updatedVal += placeable.purchasable.price * Manager.Instance.allPurchasables[placeable.purchasable];
             //add in a modifier for like tank quality too later
         }

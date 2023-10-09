@@ -32,9 +32,16 @@ public class RequestBehaviour : MonoBehaviour
 
     private void Start()
     {
-        if (Manager.Instance.currentTank.assignedRequest)
+        if (Manager.Instance.currentTank.assignedRequest != null)
         {
             Set(Manager.Instance.currentTank.assignedRequest);
+            selector.gameObject.SetActive(false);
+            requestView.SetActive(true);
+        }
+        else
+        {
+            selector.gameObject.SetActive(true);
+            requestView.SetActive(false);
         }
         selector.OnRequestSelected += Set;
     }

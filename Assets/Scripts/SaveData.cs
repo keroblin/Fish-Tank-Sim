@@ -30,7 +30,8 @@ public class SaveData
     [System.Serializable]
     public class TankData
     {
-        public (string,float) assignedRequest = new();
+        public string assignedRequestName = "null";
+        public float assignedRequestTime = 0f;
         public List<PlaceableData> assignedPlaceables = new();
         public List<FishData> fishDatas = new();
         public List<ItemData> itemDatas = new();
@@ -46,7 +47,8 @@ public class SaveData
         public float age;
         public TankData()
         {
-            this.assignedRequest = ("",-1f);
+            this.assignedRequestName = "null";
+            this.assignedRequestTime = 0f;
             this.assignedPlaceables = new List<PlaceableData>();
             this.itemDatas = new();
             this.fishDatas = new();
@@ -62,9 +64,17 @@ public class SaveData
         }
         public TankData(Tank tank)
         {
-            if (!tank.assignedRequest)
+            if (tank.assignedRequest != null)
             {
-                this.assignedRequest = (tank.assignedRequest.name, tank.assignedRequestBehaviour.timeLeft.value);
+                Debug.Log("Saved assigned request as " + tank.assignedRequest.name);
+                this.assignedRequestName = tank.assignedRequest.name;
+                this.assignedRequestTime = tank.assignedRequestBehaviour.timeLeft.value;
+            }
+            else
+            {
+                Debug.Log("Request null");
+                this.assignedRequestName = "null";
+                this.assignedRequestTime = 0f;
             }
             assignedPlaceables = new List<PlaceableData>();
             foreach (Placeable placeable in tank.assignedPlaceables)
