@@ -15,12 +15,12 @@ MonoBehaviour:
   tags: []
   stackable: 1
   placeable: 1
-  prefab: {fileID: 7288040808445679479, guid: 8be49c17d22c5834986e48a77306368a, type: 3}
+  prefab: {fileID: 5794117801501442680, guid: e8b3308560d90504599de734c88311e7, type: 3}
   icon: {fileID: 21300000, guid: 9cd88046ac0728f4784f7df077238d0c, type: 3}
-  model: {fileID: -3965410645895262243, guid: dc04f8a9f0a65e44696cd6c106f33a8f, type: 3}
-  material: {fileID: 2100000, guid: 8defebd9bd61ccb48b86d1ab8b96fc9a, type: 2}
+  model: {fileID: -7138440083763543109, guid: 06280859afff4f94981fb50b0d86cac6, type: 3}
+  material: {fileID: 2100000, guid: 2cc0f60ce0acf6d4385b938fab4dd331, type: 2}
   description: A little ray of sunshine! And tough as gold!
-  price: 0
+  price: 2.45
   speed: 6
   maxSpeed: 10
   personality: 0

@@ -20,15 +20,14 @@ MonoBehaviour:
   model: {fileID: -3965410645895262243, guid: dc04f8a9f0a65e44696cd6c106f33a8f, type: 3}
   material: {fileID: 2100000, guid: 8defebd9bd61ccb48b86d1ab8b96fc9a, type: 2}
   description: LONG!
-  price: 50
+  price: 8
   speed: 6
   maxSpeed: 10
   personality: 0
-  lovedFish:
-  - {fileID: 11400000, guid: 18aaea47f71fbdc43af057e9ffd2eebd, type: 2}
-  dislikedFish:
-  - {fileID: 11400000, guid: 73e77e7b0386510479cbfea451c6fc93, type: 2}
-  favouriteFoods: []
+  lovedFish: []
+  dislikedFish: []
+  favouriteFoods:
+  - {fileID: 11400000, guid: 76d41ace51c98b948a33e4bf07fde85a, type: 2}
   hatedFoods: []
   minPH: 6
   maxPH: 6.5

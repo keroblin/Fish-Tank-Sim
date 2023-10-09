@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
-  m_Name: Chest
+  m_Name: Driftwood
   m_EditorClassIdentifier: 
   tags:
+  - {fileID: 11400000, guid: 0ae5ffe8384b4af409b9dfb9310cf6ae, type: 2}
   - {fileID: 11400000, guid: 6f1e86c62d805794ab56acf5181ceeb1, type: 2}
-  - {fileID: 11400000, guid: 00e46ca41d9ffe84897aa475e9b67a60, type: 2}
-  - {fileID: 11400000, guid: 2dbce00fd8f338d4bb67220bf8ac6407, type: 2}
-  stackable: 1
+  - {fileID: 11400000, guid: fc4924420feab7d46b02573172c57cd9, type: 2}
+  stackable: 0
   placeable: 1
   prefab: {fileID: 0}
   icon: {fileID: 0}
-  model: {fileID: -69760931014144829, guid: 9a2b2544608df9843a89412e48adbeb6, type: 3}
-  material: {fileID: -5296931037203074916, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
-  description: Unburied treaures await!
-  price: 9
+  model: {fileID: -5332719528136428790, guid: abf8acb183d39724d983fcd1c3031c4f, type: 3}
+  material: {fileID: -3846018093981099296, guid: fd2ec142f5f9e4f4b8d508e98d482299, type: 3}
+  description: Makes your water softer, makes a cozy space for fish!
+  price: 7
   pHMod: 0
-  dGHMod: 0
-  lightMod: -0.01
-  tempMod: 0
+  dGHMod: -2
+  lightMod: -0.2
+  tempMod: 0.1

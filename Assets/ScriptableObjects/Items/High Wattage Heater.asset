@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
-  m_Name: Cave
+  m_Name: High Wattage Heater
   m_EditorClassIdentifier: 
   tags:
-  - {fileID: 11400000, guid: 6f1e86c62d805794ab56acf5181ceeb1, type: 2}
-  - {fileID: 11400000, guid: 0ae5ffe8384b4af409b9dfb9310cf6ae, type: 2}
+  - {fileID: 11400000, guid: 0c3fa08ba6f9bf842a0be18b1c75c5f4, type: 2}
   stackable: 0
   placeable: 1
   prefab: {fileID: 0}
   icon: {fileID: 0}
-  model: {fileID: -2258370131159463500, guid: f16026d786b4a2f48965eb95b92b3f2a, type: 3}
-  material: {fileID: 0}
-  description: A little space to hide
-  price: 13.99
+  model: {fileID: -2899594616680629632, guid: 7d97e9c3e2edee340a3e3880625c23ac, type: 3}
+  material: {fileID: 2100000, guid: 83b7f6242af3be54ca8cc9a17d977813, type: 2}
+  description: Toasty!
+  price: 32.19
   pHMod: 0
   dGHMod: 0
-  lightMod: -0.08
-  tempMod: 0
+  lightMod: 0.01
+  tempMod: 5

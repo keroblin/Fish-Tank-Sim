@@ -23,8 +23,8 @@ MonoBehaviour:
   model: {fileID: -7349132195360716778, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
   material: {fileID: -5296931037203074916, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
   description: Planty
-  price: 10
+  price: 7.99
   pHMod: 0
   dGHMod: 0
-  lightMod: 0
+  lightMod: -0.1
   tempMod: 0

@@ -15,19 +15,27 @@ MonoBehaviour:
   tags: []
   stackable: 1
   placeable: 1
-  prefab: {fileID: 7288040808445679479, guid: 8be49c17d22c5834986e48a77306368a, type: 3}
+  prefab: {fileID: 1700572006854595632, guid: e5a8d0e364567834f9ae8a3d6f976d6c, type: 3}
   icon: {fileID: 21300000, guid: 988745c28283af14884f0db898bb5b3a, type: 3}
-  model: {fileID: -3965410645895262243, guid: dc04f8a9f0a65e44696cd6c106f33a8f, type: 3}
-  material: {fileID: 2100000, guid: 8defebd9bd61ccb48b86d1ab8b96fc9a, type: 2}
+  model: {fileID: 4402686360814326762, guid: a3ae9efafc85ab148b3d0a0c4c8935d6, type: 3}
+  material: {fileID: 2100000, guid: caeace45dca9aea439835096396c5950, type: 2}
   description: 'DO NOT EAT: NOT A RASPBERRY'
-  price: 0
+  price: 2.3
   speed: 6
   maxSpeed: 10
   personality: 0
   lovedFish: []
   dislikedFish: []
-  favouriteFoods: []
-  hatedFoods: []
+  favouriteFoods:
+  - {fileID: 11400000, guid: ce33e05602b1d0147810b53acc2196b3, type: 2}
+  - {fileID: 11400000, guid: c0bdfa4755a14904aa83848c2c2efaa4, type: 2}
+  - {fileID: 11400000, guid: 985ed40536ace4f45aecaf31250009ab, type: 2}
+  - {fileID: 11400000, guid: c3240a5a903b82c47b284bcd6634848c, type: 2}
+  - {fileID: 11400000, guid: 6eaee31f1578f0d489c5497de0ea5aa2, type: 2}
+  hatedFoods:
+  - {fileID: 11400000, guid: 5408f636f199a0b478d29abd0e38ba44, type: 2}
+  - {fileID: 11400000, guid: cf47759ee297f1f47b7c3b47ccc95ae4, type: 2}
+  - {fileID: 11400000, guid: fb5d82c6e355e97488eb7ec02dd6b74d, type: 2}
   minPH: 7.2
   maxPH: 7.2
   minHardness: 3

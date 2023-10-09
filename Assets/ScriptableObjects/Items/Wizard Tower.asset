@@ -10,21 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
-  m_Name: Chest
+  m_Name: Wizard Tower
   m_EditorClassIdentifier: 
   tags:
-  - {fileID: 11400000, guid: 6f1e86c62d805794ab56acf5181ceeb1, type: 2}
   - {fileID: 11400000, guid: 00e46ca41d9ffe84897aa475e9b67a60, type: 2}
+  - {fileID: 11400000, guid: 546d5185095acc942b8ab8db954fd5f1, type: 2}
+  - {fileID: 11400000, guid: 57ddcd931afa64a43a115bfd22226e90, type: 2}
   - {fileID: 11400000, guid: 2dbce00fd8f338d4bb67220bf8ac6407, type: 2}
-  stackable: 1
+  stackable: 0
   placeable: 1
   prefab: {fileID: 0}
   icon: {fileID: 0}
-  model: {fileID: -69760931014144829, guid: 9a2b2544608df9843a89412e48adbeb6, type: 3}
-  material: {fileID: -5296931037203074916, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
-  description: Unburied treaures await!
-  price: 9
+  model: {fileID: -8958230418602191926, guid: e224857221327f5499a6bba74530d9cf, type: 3}
+  material: {fileID: 2100000, guid: 3f38fd3c9dc3a8e4189d0f0a32ff0065, type: 2}
+  description: Let your fish plot schemes and plans in here!
+  price: 14
   pHMod: 0
   dGHMod: 0
-  lightMod: -0.01
+  lightMod: -0.02
   tempMod: 0

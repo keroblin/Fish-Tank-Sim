@@ -20,7 +20,7 @@ MonoBehaviour:
   model: {fileID: -3965410645895262243, guid: dc04f8a9f0a65e44696cd6c106f33a8f, type: 3}
   material: {fileID: 2100000, guid: 8defebd9bd61ccb48b86d1ab8b96fc9a, type: 2}
   description: 
-  price: 10
+  price: 3.4
   speed: 6
   maxSpeed: 10
   personality: 0

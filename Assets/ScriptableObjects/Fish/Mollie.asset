@@ -15,12 +15,12 @@ MonoBehaviour:
   tags: []
   stackable: 1
   placeable: 1
-  prefab: {fileID: 7288040808445679479, guid: 8be49c17d22c5834986e48a77306368a, type: 3}
+  prefab: {fileID: 4720879191884158689, guid: 3f6a5977b88f0014ea8fae0f5627b703, type: 3}
   icon: {fileID: 21300000, guid: c71ddaeb2ecb3254a930c91783f6e89c, type: 3}
-  model: {fileID: -3965410645895262243, guid: dc04f8a9f0a65e44696cd6c106f33a8f, type: 3}
-  material: {fileID: 2100000, guid: 8defebd9bd61ccb48b86d1ab8b96fc9a, type: 2}
+  model: {fileID: -8690892522180118160, guid: 77537d68c48e6a74ead7c1074819d62e, type: 3}
+  material: {fileID: 2100000, guid: a30ac4fc60d60a84f8fad98507a052b3, type: 2}
   description: 
-  price: 0
+  price: 2
   speed: 6
   maxSpeed: 10
   personality: 0

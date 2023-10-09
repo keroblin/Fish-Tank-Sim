@@ -101,6 +101,7 @@ public class Manager : MonoBehaviour, ISaving
             //replace 0 with saved value here
             int quantity = 0;
             allPurchasables.Add(purchasable,quantity);
+            //Debug.Log("Added " + purchasable.name + " to allPurchasables with quantity " + allPurchasables[purchasable]);
         }
         Instance = this;
     }

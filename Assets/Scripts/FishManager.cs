@@ -34,15 +34,23 @@ public class FishManager : MonoBehaviour
         foreach(FishBehaviour dweller in liveFish)
         {
             //check and set their harmony against the new fish
-            if (dweller.fish.dislikedFish.Contains(fish))
+            if (dweller.fish != fish)
             {
-                dweller.harmony--;
-                Debug.Log(dweller.name + " didn't like " + fish.name);
+                if (dweller.fish.dislikedFish.Contains(fish))
+                {
+                    dweller.harmony--;
+                    Debug.Log(dweller.name + " didn't like " + fish.name);
+                }
+                else if (dweller.fish.lovedFish.Contains(fish))
+                {
+                    dweller.harmony++;
+                    Debug.Log(dweller.name + " liked " + fish.name);
+                }
             }
-            else if(dweller.fish.lovedFish.Contains(fish))
+            else
             {
                 dweller.harmony++;
-                Debug.Log(dweller.name + " liked " + fish.name);
+                Debug.Log(dweller.name + " liked own breed " + fish.name);
             }
         }
         liveFish.Add(placeable);

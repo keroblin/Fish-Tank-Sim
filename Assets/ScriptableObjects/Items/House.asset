@@ -9,19 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 513763fb196a46546b4846a2ec4fb697, type: 3}
-  m_Name: Crushed Coral
+  m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
+  m_Name: House
   m_EditorClassIdentifier: 
-  tags: []
+  tags:
+  - {fileID: 11400000, guid: 2dbce00fd8f338d4bb67220bf8ac6407, type: 2}
+  - {fileID: 11400000, guid: 546d5185095acc942b8ab8db954fd5f1, type: 2}
   stackable: 0
   placeable: 1
   prefab: {fileID: 0}
   icon: {fileID: 0}
-  model: {fileID: 3523059709116458499, guid: 79ed50524491c4f4d993f5db0822d80d, type: 3}
+  model: {fileID: 4887216478360415443, guid: 8bba600e64968604f9d8eac0d0b28e9e, type: 3}
   material: {fileID: 2100000, guid: 3f38fd3c9dc3a8e4189d0f0a32ff0065, type: 2}
-  description: 
-  price: 8
+  description: Feels like home!
+  price: 6
   pHMod: 0
   dGHMod: 0
-  lightMod: 0
+  lightMod: -0.1
   tempMod: 0

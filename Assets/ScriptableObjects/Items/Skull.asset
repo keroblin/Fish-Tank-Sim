@@ -10,21 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 592f2fee0885cf448b0880dcb87035ca, type: 3}
-  m_Name: Chest
+  m_Name: Skull
   m_EditorClassIdentifier: 
   tags:
   - {fileID: 11400000, guid: 6f1e86c62d805794ab56acf5181ceeb1, type: 2}
-  - {fileID: 11400000, guid: 00e46ca41d9ffe84897aa475e9b67a60, type: 2}
   - {fileID: 11400000, guid: 2dbce00fd8f338d4bb67220bf8ac6407, type: 2}
-  stackable: 1
+  stackable: 0
   placeable: 1
   prefab: {fileID: 0}
   icon: {fileID: 0}
-  model: {fileID: -69760931014144829, guid: 9a2b2544608df9843a89412e48adbeb6, type: 3}
-  material: {fileID: -5296931037203074916, guid: ea9beb54f3b2096488b6256dcb02980c, type: 3}
-  description: Unburied treaures await!
-  price: 9
+  model: {fileID: 5275773004055656219, guid: fd2ec142f5f9e4f4b8d508e98d482299, type: 3}
+  material: {fileID: 2100000, guid: fa9a6a3d95ee328488fd3efa1529dd17, type: 2}
+  description: How did we get this? None of your business!
+  price: 12
   pHMod: 0
   dGHMod: 0
-  lightMod: -0.01
+  lightMod: -0.02
   tempMod: 0
